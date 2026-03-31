@@ -155,13 +155,88 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| — | — | — |
+| FRMW-01 | Phase 0 | Pending |
+| FRMW-02 | Phase 0 | Pending |
+| FRMW-03 | Phase 0 | Pending |
+| FRMW-04 | Phase 0 | Pending |
+| FRMW-05 | Phase 0 | Pending |
+| FRMW-06 | Phase 0 | Pending |
+| SRC-01 | Phase 0 | Pending |
+| SRC-02 | Phase 1 | Pending |
+| SRC-03 | Phase 1 | Pending |
+| SRC-04 | Phase 1 | Pending |
+| SRC-05 | Phase 1 | Pending |
+| SRC-06 | Phase 1 | Pending |
+| SRC-07 | Phase 1 | Pending |
+| SRC-08 | Phase 1 | Pending |
+| SRC-09 | Phase 3 | Pending |
+| SRC-10 | Phase 1 | Pending |
+| PROC-01 | Phase 0 | Pending |
+| PROC-02 | Phase 0 | Pending |
+| PROC-03 | Phase 0 | Pending |
+| PROC-04 | Phase 2 | Pending |
+| PROC-05 | Phase 0 | Pending |
+| PROC-06 | Phase 2 | Pending |
+| PROC-07 | Phase 0 | Pending |
+| PROC-08 | Phase 0 | Pending |
+| EVT-01 | Phase 2 | Pending |
+| EVT-02 | Phase 2 | Pending |
+| EVT-03 | Phase 2 | Pending |
+| EVT-04 | Phase 2 | Pending |
+| EVT-05 | Phase 2 | Pending |
+| PREF-01 | Phase 1 | Pending |
+| PREF-02 | Phase 0 | Pending |
+| PREF-03 | Phase 1 | Pending |
+| PREF-04 | Phase 3 | Pending |
+| PREF-05 | Phase 1 | Pending |
+| PREF-06 | Phase 3 | Pending |
+| PREF-07 | Phase 3 | Pending |
+| ANTI-01 | Phase 2 | Pending |
+| ANTI-02 | Phase 2 | Pending |
+| ANTI-03 | Phase 2 | Pending |
+| ANTI-04 | Phase 2 | Pending |
+| ANTI-05 | Phase 2 | Pending |
+| OUT-01 | Phase 0 | Pending |
+| OUT-02 | Phase 1 | Pending |
+| OUT-03 | Phase 3 | Pending |
+| OUT-04 | Phase 2 | Pending |
+| OUT-05 | Phase 0 | Pending |
+| OUT-06 | Phase 1 | Pending |
+| FB-01 | Phase 1 | Pending |
+| FB-02 | Phase 1 | Pending |
+| FB-03 | Phase 1 | Pending |
+| FB-04 | Phase 1 | Pending |
+| FB-05 | Phase 1 | Pending |
+| COST-01 | Phase 0 | Pending |
+| COST-02 | Phase 1 | Pending |
+| COST-03 | Phase 1 | Pending |
+| COST-04 | Phase 1 | Pending |
+| MON-01 | Phase 0 | Pending |
+| MON-02 | Phase 2 | Pending |
+| MON-03 | Phase 2 | Pending |
+| MON-04 | Phase 2 | Pending |
+| HIST-01 | Phase 3 | Pending |
+| HIST-02 | Phase 3 | Pending |
+| HIST-03 | Phase 3 | Pending |
+| HIST-04 | Phase 3 | Pending |
+| HIST-05 | Phase 3 | Pending |
+| HIST-06 | Phase 3 | Pending |
+| PLAT-01 | Phase 0 | Pending |
+| PLAT-02 | Phase 0 | Pending |
+| PLAT-03 | Phase 0 | Pending |
+| PLAT-04 | Phase 0 | Pending |
 
 **Coverage:**
-- v1 requirements: 56 total
-- Mapped to phases: 0
-- Unmapped: 56 ⚠️
+- v1 requirements: 70 total
+- Mapped to phases: 70
+- Unmapped: 0
+
+**By phase:**
+- Phase 0: 22 requirements (FRMW x6, SRC x1, PROC x6, PREF x1, OUT x2, COST x1, MON x1, PLAT x4)
+- Phase 1: 21 requirements (SRC x7, PREF x3, OUT x2, FB x5, COST x3)
+- Phase 2: 16 requirements (PROC x2, EVT x5, ANTI x5, OUT x1, MON x3)
+- Phase 3: 11 requirements (SRC x1, PREF x3, OUT x1, HIST x6)
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after initial definition*
+*Last updated: 2026-03-31 after roadmap creation -- traceability complete*
