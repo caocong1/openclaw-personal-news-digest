@@ -56,7 +56,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **PREF-04**: 偏好衰减（每 30 天向均值回归 5%：w_new = w + (0.5 - w) × 0.05）
 - [x] **PREF-05**: 偏好自动备份（更新前备份，保留最近 10 个）
 - [x] **PREF-06**: 偏好可视化（文字化描述当前偏好状态）
-- [ ] **PREF-07**: 扩展回 7 层模型（新增 depth_preference + judgment_angles）
+- [x] **PREF-07**: 扩展回 7 层模型（新增 depth_preference + judgment_angles）
 
 ### Anti-Echo-Chamber
 
@@ -190,7 +190,7 @@ Which phases cover which requirements. Updated during roadmap creation and miles
 | PREF-04 | Phase 3 | Complete |
 | PREF-05 | Phase 1 | Complete |
 | PREF-06 | Phase 3 | Complete |
-| PREF-07 | Phase 5 | Pending |
+| PREF-07 | Phase 5 | Complete |
 | ANTI-01 | Phase 2 | Complete |
 | ANTI-02 | Phase 2 | Complete |
 | ANTI-03 | Phase 2 | Complete |

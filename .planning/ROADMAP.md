@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Smart Processing** - Title dedup, event merging, timeline, anti-echo-chamber, multi-language
 - [ ] **Phase 3: Closed Loop** - Full feedback loop, 7-layer preferences, weekly report, history query
 - [ ] **Phase 4: Integration Wiring Fixes** - Close cross-phase integration gaps found by milestone audit
-- [ ] **Phase 5: Daily Depth Control Wiring** - Finish the daily summarize preference injection path left partial by the v1.0 audit
+- [x] **Phase 5: Daily Depth Control Wiring** - Finish the daily summarize preference injection path left partial by the v1.0 audit (completed 2026-04-01)
 - [ ] **Phase 6: Per-Source Metrics Continuity** - Add the per_source metrics contract and producer needed by source health, monitoring, and auto-recovery flows
 
 ## Phase Details
@@ -122,7 +122,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 05-01-PLAN.md — Wire depth_preference and judgment_angles through the daily summarize path and align prompt/output instructions
+- [x] 05-01-PLAN.md — Wire depth_preference and judgment_angles through the daily summarize path and align prompt/output instructions
 
 ### Phase 6: Per-Source Metrics Continuity
 **Goal**: Finish the per_source DailyMetrics contract and producer wiring so source health, monitoring, and degrade/recover automation operate end-to-end
@@ -151,5 +151,5 @@ Phases execute in numeric order: 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. Smart Processing | 0/4 | Not started | - |
 | 3. Closed Loop | 0/4 | Not started | - |
 | 4. Integration Wiring Fixes | 0/1 | Not started | - |
-| 5. Daily Depth Control Wiring | 0/1 | Not started | - |
+| 5. Daily Depth Control Wiring | 1/1 | Complete   | 2026-04-01 |
 | 6. Per-Source Metrics Continuity | 0/1 | Not started | - |
