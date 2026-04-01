@@ -26,7 +26,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **SRC-06**: 热门榜单采集（web_fetch 或 browser + LLM 提取排名条目）
 - [x] **SRC-07**: 自然语言来源管理（添加/删除/启用/禁用/调权重，删除需二次确认）
 - [x] **SRC-08**: 来源健康度指标（quality_score / dedup_rate / selection_rate 自动计算）
-- [ ] **SRC-09**: 来源自动降级与恢复（quality_score < 0.2 连续 14 天降级，> 0.3 连续 7 天恢复）
+- [x] **SRC-09**: 来源自动降级与恢复（quality_score < 0.2 连续 14 天降级，> 0.3 连续 7 天恢复）
 - [x] **SRC-10**: 输入歧义处理（多义操作追问确认，相似来源列候选）
 
 ### Content Processing
@@ -56,7 +56,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **PREF-04**: 偏好衰减（每 30 天向均值回归 5%：w_new = w + (0.5 - w) × 0.05）
 - [x] **PREF-05**: 偏好自动备份（更新前备份，保留最近 10 个）
 - [x] **PREF-06**: 偏好可视化（文字化描述当前偏好状态）
-- [ ] **PREF-07**: 扩展回 7 层模型（新增 depth_preference + judgment_angles）
+- [x] **PREF-07**: 扩展回 7 层模型（新增 depth_preference + judgment_angles）
 
 ### Anti-Echo-Chamber
 
@@ -64,12 +64,12 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **ANTI-02**: 配额执行算法（按 final_score 降序 → 分组取 top-K → 单向链式让渡）
 - [x] **ANTI-03**: 反向多样性约束（同主题 > 60% 连续 3 天 → 上限 50%；同来源 > 30% → 上限 20%；同事件 > 3 天 → 仅新进展推送）
 - [x] **ANTI-04**: 热点注入（importance ≥ 0.8 强制进入候选池，仍经质量判断和去重）
-- [ ] **ANTI-05**: 偏好纠偏（类目最小 2% 曝光，周报 ≥ 5 类目，每 7 天 exploration_appetite +0.05 上限 0.4）
+- [x] **ANTI-05**: 偏好纠偏（类目最小 2% 曝光，周报 ≥ 5 类目，每 7 天 exploration_appetite +0.05 上限 0.4）
 
 ### Output Generation
 
 - [x] **OUT-01**: 日报生成（核心关注 + 相关动态 + 今日热点 + 探索发现 + 事件跟踪，15-25 条）
-- [ ] **OUT-02**: 快讯输出（importance ≥ 0.85 触发，无内容不输出，宁缺毋滥）
+- [x] **OUT-02**: 快讯输出（importance ≥ 0.85 触发，无内容不输出，宁缺毋滥）
 - [x] **OUT-03**: 周报生成（一周趋势回顾 + 事件时间线 + 跨领域总结，30-50 条）
 - [x] **OUT-04**: 输出解释字段（探索/热点位附推荐理由）
 - [x] **OUT-05**: 质量感知输出（内容不足时缩短而非硬凑，空输入不生成空日报）
@@ -169,7 +169,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SRC-06 | Phase 1 | Complete |
 | SRC-07 | Phase 1 | Complete |
 | SRC-08 | Phase 1 | Complete |
-| SRC-09 | Phase 4 | Pending |
+| SRC-09 | Phase 4 | Complete |
 | SRC-10 | Phase 1 | Complete |
 | PROC-01 | Phase 0 | Complete |
 | PROC-02 | Phase 0 | Complete |
@@ -190,14 +190,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PREF-04 | Phase 3 | Complete |
 | PREF-05 | Phase 1 | Complete |
 | PREF-06 | Phase 3 | Complete |
-| PREF-07 | Phase 4 | Pending |
+| PREF-07 | Phase 4 | Complete |
 | ANTI-01 | Phase 2 | Complete |
 | ANTI-02 | Phase 2 | Complete |
 | ANTI-03 | Phase 2 | Complete |
 | ANTI-04 | Phase 2 | Complete |
-| ANTI-05 | Phase 4 | Pending |
+| ANTI-05 | Phase 4 | Complete |
 | OUT-01 | Phase 0 | Complete |
-| OUT-02 | Phase 4 | Pending |
+| OUT-02 | Phase 4 | Complete |
 | OUT-03 | Phase 3 | Complete |
 | OUT-04 | Phase 2 | Complete |
 | OUT-05 | Phase 0 | Complete |

@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-04-01T07:50:47.662Z"
+last_updated: "2026-04-01T09:01:24.571Z"
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 15
-  completed_plans: 15
+  total_phases: 5
+  completed_phases: 5
+  total_plans: 16
+  completed_plans: 16
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Replace "pushing messages to user" with "continuously observing the world on behalf of the user" -- deep personalization with anti-echo-chamber awareness
-**Current focus:** Phase 3: Closed Loop
+**Current focus:** Phase 4: Integration Wiring Fixes -- COMPLETE
 
 ## Current Position
 
-Phase: 3 of 3 (Closed Loop) -- COMPLETE
-Plan: 4 of 4 in current phase (all complete)
+Phase: 4 of 4 (Integration Wiring Fixes) -- COMPLETE
+Plan: 1 of 1 in current phase (all complete)
 Status: All phases complete
-Last activity: 2026-04-01 -- Completed 03-04-PLAN.md (history query system)
+Last activity: 2026-04-01 -- Completed 04-01-PLAN.md (integration wiring fixes)
 
-Progress: [██████████████] 100%
+Progress: [████████████████] 100%
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Progress: [██████████████] 100%
 | Phase 03 P01 | 3min | 2 tasks | 5 files |
 | Phase 03 P03 | 2min | 2 tasks | 5 files |
 | Phase 03 P04 | 4min | 2 tasks | 3 files |
+| Phase 04 P01 | 2min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,9 @@ Recent decisions affecting current work:
 - [Phase 03]: Pre-filter weekly items to digest-selected (quota_group set) then cap at 150 to prevent LLM context overflow
 - [Phase 03]: Strong model tier for weekly One Week Overview and Cross-Domain Connections sections
 - [Phase 03]: SKILL.md compacted Processing Phase steps 8-13 to accommodate history query routing within 950-word budget
+- [Phase 04]: All integration fixes are additive-only with backward-compatible defaults -- no existing behavior changed
+- [Phase 04]: depth_preference/judgment_angles wired into summarize prompt only, confirmed NOT scoring formula
+- [Phase 04]: moderate depth produces identical 2-3 sentence output to preserve backward compatibility
 
 ### Pending Todos
 
@@ -122,5 +126,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 03-04-PLAN.md (history query system -- all phases complete)
+Stopped at: Completed 04-01-PLAN.md (integration wiring fixes -- all phases complete)
 Resume file: None
