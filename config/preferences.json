@@ -25,7 +25,8 @@
     "density": "medium",
     "repetition_tolerance": "low",
     "exploration_appetite": 0.3,
-    "rumor_tolerance": "low"
+    "rumor_tolerance": "low",
+    "last_exploration_increase": null
   },
   "feedback_samples": {
     "liked_items": [],
