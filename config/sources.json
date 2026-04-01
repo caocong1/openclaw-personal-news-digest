@@ -21,5 +21,135 @@
       "selection_rate": 0.0
     },
     "status": "active"
+  },
+  {
+    "id": "src-github-langchain",
+    "name": "LangChain Releases",
+    "type": "github",
+    "url": "https://api.github.com/repos/langchain-ai/langchain/releases",
+    "weight": 1.0,
+    "credibility": 0.9,
+    "topics": ["ai-models", "dev-tools"],
+    "enabled": false,
+    "fetch_config": {
+      "owner": "langchain-ai",
+      "repo": "langchain",
+      "endpoint": "releases",
+      "per_page": 10
+    },
+    "stats": {
+      "total_fetched": 0,
+      "last_fetch": null,
+      "last_hit_count": 0,
+      "avg_daily_items": 0,
+      "consecutive_failures": 0,
+      "last_error": null,
+      "quality_score": 0.5,
+      "dedup_rate": 0.0,
+      "selection_rate": 0.0
+    },
+    "status": "active"
+  },
+  {
+    "id": "src-search-ai-regulation",
+    "name": "AI Regulation News",
+    "type": "search",
+    "url": "",
+    "weight": 0.8,
+    "credibility": 0.6,
+    "topics": ["macro-policy", "ai-models"],
+    "enabled": false,
+    "fetch_config": {
+      "keywords": ["AI regulation news 2026", "artificial intelligence policy"],
+      "max_results": 10
+    },
+    "stats": {
+      "total_fetched": 0,
+      "last_fetch": null,
+      "last_hit_count": 0,
+      "avg_daily_items": 0,
+      "consecutive_failures": 0,
+      "last_error": null,
+      "quality_score": 0.5,
+      "dedup_rate": 0.0,
+      "selection_rate": 0.0
+    },
+    "status": "active"
+  },
+  {
+    "id": "src-official-openai-blog",
+    "name": "OpenAI Blog",
+    "type": "official",
+    "url": "https://openai.com/blog",
+    "weight": 1.0,
+    "credibility": 0.9,
+    "topics": ["ai-models", "tech-products"],
+    "enabled": false,
+    "fetch_config": {
+      "prefer_browser": false
+    },
+    "stats": {
+      "total_fetched": 0,
+      "last_fetch": null,
+      "last_hit_count": 0,
+      "avg_daily_items": 0,
+      "consecutive_failures": 0,
+      "last_error": null,
+      "quality_score": 0.5,
+      "dedup_rate": 0.0,
+      "selection_rate": 0.0
+    },
+    "status": "active"
+  },
+  {
+    "id": "src-community-hackernews",
+    "name": "Hacker News",
+    "type": "community",
+    "url": "https://news.ycombinator.com",
+    "weight": 0.9,
+    "credibility": 0.7,
+    "topics": ["dev-tools", "tech-products", "open-source"],
+    "enabled": false,
+    "fetch_config": {
+      "max_items": 15
+    },
+    "stats": {
+      "total_fetched": 0,
+      "last_fetch": null,
+      "last_hit_count": 0,
+      "avg_daily_items": 0,
+      "consecutive_failures": 0,
+      "last_error": null,
+      "quality_score": 0.5,
+      "dedup_rate": 0.0,
+      "selection_rate": 0.0
+    },
+    "status": "active"
+  },
+  {
+    "id": "src-ranking-github-trending",
+    "name": "GitHub Trending",
+    "type": "ranking",
+    "url": "https://github.com/trending",
+    "weight": 0.8,
+    "credibility": 0.8,
+    "topics": ["dev-tools", "open-source"],
+    "enabled": false,
+    "fetch_config": {
+      "prefer_browser": false,
+      "max_items": 20
+    },
+    "stats": {
+      "total_fetched": 0,
+      "last_fetch": null,
+      "last_hit_count": 0,
+      "avg_daily_items": 0,
+      "consecutive_failures": 0,
+      "last_error": null,
+      "quality_score": 0.5,
+      "dedup_rate": 0.0,
+      "selection_rate": 0.0
+    },
+    "status": "active"
   }
 ]

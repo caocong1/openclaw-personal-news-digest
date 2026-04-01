@@ -66,8 +66,8 @@ Source definition as stored in `config/sources.json`.
 {
   "id": "string (src-{name})",
   "name": "string (display name)",
-  "type": "rss",
-  "url": "string (feed URL)",
+  "type": "rss | github | search | official | community | ranking",
+  "url": "string (feed URL, API URL, page URL, or empty for search type)",
   "weight": 1.0,
   "credibility": 0.8,
   "topics": ["string (expected topic category IDs)"],
@@ -89,11 +89,23 @@ Source definition as stored in `config/sources.json`.
 ```
 
 **Field notes:**
+- `type`: Source type determines fetch strategy. See `references/collection-instructions.md` for per-type collection steps.
 - `weight`: Source weight multiplier for scoring (default 1.0)
-- `credibility`: Base trust score for this source (0.0-1.0)
-- `stats.quality_score`: Rolling quality assessment (0.0-1.0), initialized at 0.5
+- `credibility`: Base trust score for this source (0.0-1.0). New sources default to 0.5.
+- `stats.quality_score`: Rolling quality assessment (0.0-1.0), initialized at 0.5. Recomputed after each pipeline run per collection-instructions.md Section 11.
 - `stats.dedup_rate`: Fraction of fetched items that are duplicates
 - `stats.selection_rate`: Fraction of fetched items selected for output
+
+**`fetch_config` variants by type:**
+
+| Type | `fetch_config` Fields | Description |
+|------|----------------------|-------------|
+| `rss` | `{}` | No extra config needed |
+| `github` | `{ owner, repo, endpoint, per_page, token? }` | `owner`: GitHub org/user. `repo`: repository name. `endpoint`: "releases" or "commits". `per_page`: items per request (default 10). `token`: optional GitHub PAT for higher rate limits. |
+| `search` | `{ keywords, max_results }` | `keywords`: array of search query strings. `max_results`: max results per keyword (default 10). |
+| `official` | `{ prefer_browser }` | `prefer_browser`: boolean (default false). If true, skip web_fetch and use browser directly. |
+| `community` | `{ max_items }` | `max_items`: max items to extract per page (default 15). |
+| `ranking` | `{ prefer_browser, max_items }` | `prefer_browser`: boolean (default false). `max_items`: max items to extract (default 20). |
 
 ---
 

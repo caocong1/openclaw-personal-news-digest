@@ -189,3 +189,334 @@ Each line is one complete NewsItem JSON object, following the schema in `referen
 4. Write to temporary file: `data/news/YYYY-MM-DD.jsonl.tmp.{run_id}`
 5. Rename temporary file to target path
 6. On crash: temp files older than 15 minutes are cleaned up on next run (per SKILL.md Operational Rules)
+
+---
+
+## GitHub Release/Repo Collection
+
+### When to Use
+
+Sources with `type: "github"`. Fetches structured release or commit data from the GitHub public API.
+
+### Source Config Example
+
+```json
+{
+  "id": "src-github-langchain",
+  "type": "github",
+  "url": "https://api.github.com/repos/langchain-ai/langchain/releases",
+  "fetch_config": {
+    "owner": "langchain-ai",
+    "repo": "langchain",
+    "endpoint": "releases",
+    "per_page": 10,
+    "token": null
+  }
+}
+```
+
+### Fetch Steps
+
+1. Construct API URL: `https://api.github.com/repos/{fetch_config.owner}/{fetch_config.repo}/{fetch_config.endpoint}?per_page={fetch_config.per_page}`
+2. `web_fetch(url, extractMode="text")` to get JSON text
+3. Parse JSON array of release/commit objects
+4. Map fields per endpoint:
+   - **releases**: `name` -> title, `html_url` -> url, `body` (truncated to 500 chars) -> content_snippet, `published_at` -> published_at
+   - **commits**: `commit.message` (first line) -> title, `html_url` -> url, `commit.message` (truncated to 500 chars) -> content_snippet, `commit.author.date` -> published_at
+5. If `fetch_config.token` is set, include header `Authorization: token {token}` for authenticated requests (5000 req/hr vs 60 req/hr unauthenticated)
+6. Follow shared normalize-dedup-write pipeline (Section 2, 3, 4)
+
+### Error Handling
+
+- **HTTP 403 / rate limit**: Increment `stats.consecutive_failures`, set `stats.last_error` to "rate_limited", skip source for this run
+- **HTTP 404**: Source misconfigured. Set `stats.last_error` to "repo_not_found", skip source
+- **Empty array**: Valid response (no new releases). Set `stats.last_hit_count` to 0, continue
+- **Malformed JSON**: Increment `stats.consecutive_failures`, set `stats.last_error` to "parse_error", skip source
+
+---
+
+## Search-Based Collection
+
+### When to Use
+
+Sources with `type: "search"`. Uses `web_search` with keywords to find recent news, then LLM-filters results for relevance.
+
+### Source Config Example
+
+```json
+{
+  "id": "src-search-ai-regulation",
+  "type": "search",
+  "url": "",
+  "fetch_config": {
+    "keywords": ["AI regulation news 2026", "artificial intelligence policy"],
+    "max_results": 10
+  }
+}
+```
+
+### Fetch Steps
+
+1. For each keyword in `fetch_config.keywords`:
+   - Append current year to keyword if not already present (for freshness)
+   - Call `web_search(keyword)` to get search results
+   - Collect results (title, url, snippet) up to `fetch_config.max_results` per keyword
+2. Deduplicate collected results by URL (within this source's batch)
+3. Prepare LLM filter input: format all results as title/url/snippet blocks separated by `---`
+4. Load `references/prompts/filter-search.md` prompt template
+5. Fill template placeholders: `{source_topics}` from `source.topics`, `{filter_context}` from source description, `{search_results}` with formatted results
+6. Call LLM with the filled prompt
+7. Parse LLM response as JSON array of kept items (title, url, snippet)
+8. Map fields: `title` -> title, `url` -> url, `snippet` -> content_snippet, current timestamp -> fetched_at
+9. Follow shared normalize-dedup-write pipeline (Section 2, 3, 4)
+
+### Error Handling
+
+- **web_search returns empty**: Log warning, set `stats.last_hit_count` to 0, continue to next keyword
+- **LLM filter returns invalid JSON**: Retry once. If still invalid, skip this source for this run, increment `stats.consecutive_failures`
+- **LLM filter returns empty array**: Valid response (all results filtered out). Set `stats.last_hit_count` to 0
+
+---
+
+## Official Announcement Collection
+
+### When to Use
+
+Sources with `type: "official"`. Fetches official blog posts, press releases, and announcements from organization websites.
+
+### Source Config Example
+
+```json
+{
+  "id": "src-official-openai-blog",
+  "type": "official",
+  "url": "https://openai.com/blog",
+  "fetch_config": {
+    "prefer_browser": false
+  }
+}
+```
+
+### Fetch Steps
+
+1. Try `web_fetch(source.url, extractMode="text")` first
+2. Check result quality:
+   - If result text is too short (< 200 chars) or appears to be only navigation/boilerplate, the page likely requires JavaScript rendering
+   - If `fetch_config.prefer_browser` is `true`, skip directly to browser
+3. If web_fetch result is insufficient, fall back to `browser(source.url)` to render the page
+4. Load `references/prompts/extract-content.md` prompt template
+5. Fill template: `{extraction_type}` = "official_announcement", `{page_text}` = rendered text, `{base_url}` = source URL base
+6. Call LLM with the filled prompt
+7. Parse LLM response as JSON array of extracted items (title, url, snippet)
+8. Map fields: `title` -> title, `url` -> url, `snippet` -> content_snippet, current timestamp -> fetched_at
+9. Follow shared normalize-dedup-write pipeline (Section 2, 3, 4)
+
+### Error Handling
+
+- **web_fetch returns empty/short content**: Fall back to browser (not an error)
+- **browser fails**: Increment `stats.consecutive_failures`, set `stats.last_error` to "browser_failed", skip source
+- **LLM extraction returns invalid JSON**: Retry once. If still invalid, skip source, increment `stats.consecutive_failures`
+- **LLM extraction returns empty array**: Valid response (no new announcements). Set `stats.last_hit_count` to 0
+
+---
+
+## Community Page Collection
+
+### When to Use
+
+Sources with `type: "community"`. Renders JavaScript-heavy community pages (forums, aggregators) and extracts post listings via LLM.
+
+### Source Config Example
+
+```json
+{
+  "id": "src-community-hackernews",
+  "type": "community",
+  "url": "https://news.ycombinator.com",
+  "fetch_config": {
+    "max_items": 15
+  }
+}
+```
+
+### Fetch Steps
+
+1. Use `browser(source.url)` to render the page (community pages typically require JavaScript)
+2. Load `references/prompts/extract-content.md` prompt template
+3. Fill template: `{extraction_type}` = "community_posts", `{page_text}` = rendered text, `{base_url}` = source URL base
+4. Call LLM with the filled prompt
+5. Parse LLM response as JSON array of extracted items (title, url, snippet)
+6. Trim results to `fetch_config.max_items` (default 15) if LLM returns more
+7. Map fields: `title` -> title, `url` -> url, `snippet` -> content_snippet, current timestamp -> fetched_at
+8. Follow shared normalize-dedup-write pipeline (Section 2, 3, 4)
+
+### Error Handling
+
+- **browser fails**: This is the primary fetch method with no fallback. Increment `stats.consecutive_failures`, set `stats.last_error` to "browser_failed", skip source for this run
+- **LLM extraction returns invalid JSON**: Retry once. If still invalid, skip source, increment `stats.consecutive_failures`
+- **LLM extraction returns empty array**: Valid response (page may have changed structure). Log warning, set `stats.last_hit_count` to 0
+- **consecutive_failures > 3**: Source may need URL update or browser may be unreliable. Status remains `active` but source is effectively degraded
+
+---
+
+## Hot Ranking Collection
+
+### When to Use
+
+Sources with `type: "ranking"`. Fetches trending/hot lists from ranking pages (e.g., GitHub Trending, Hacker News front page rankings).
+
+### Source Config Example
+
+```json
+{
+  "id": "src-ranking-github-trending",
+  "type": "ranking",
+  "url": "https://github.com/trending",
+  "fetch_config": {
+    "prefer_browser": false,
+    "max_items": 20
+  }
+}
+```
+
+### Fetch Steps
+
+1. Try `web_fetch(source.url, extractMode="text")` first
+2. Check result quality:
+   - If result appears incomplete (< 200 chars, or missing expected ranking structure), fall back to browser
+   - If `fetch_config.prefer_browser` is `true`, skip directly to browser
+3. If web_fetch is insufficient, use `browser(source.url)` to render the page
+4. Load `references/prompts/extract-content.md` prompt template
+5. Fill template: `{extraction_type}` = "ranking_list", `{page_text}` = rendered/fetched text, `{base_url}` = source URL base
+6. Call LLM with the filled prompt
+7. Parse LLM response as JSON array of extracted items (title, url, snippet)
+8. Trim results to `fetch_config.max_items` (default 20) if LLM returns more
+9. Map fields: `title` -> title, `url` -> url, `snippet` -> content_snippet, current timestamp -> fetched_at
+10. Follow shared normalize-dedup-write pipeline (Section 2, 3, 4)
+
+### Error Handling
+
+- **web_fetch returns incomplete content**: Fall back to browser (not an error)
+- **browser fails after web_fetch fallback**: Increment `stats.consecutive_failures`, set `stats.last_error` to "browser_failed", skip source
+- **LLM extraction returns invalid JSON**: Retry once. If still invalid, skip source, increment `stats.consecutive_failures`
+- **LLM extraction returns empty array**: Valid response. Set `stats.last_hit_count` to 0
+
+---
+
+## Source Management Commands
+
+### When to Use
+
+When user intent is detected as source management (add, delete, enable, disable, adjust weight). Referenced from SKILL.md "User Commands" section.
+
+### Add Source
+
+1. Parse user description (e.g., "add LangChain GitHub releases", "monitor AI safety news")
+2. Infer source type from keywords:
+   - GitHub / release / repo / repository -> `github`
+   - search / find / monitor / track keywords -> `search`
+   - official / blog / announcement / press -> `official`
+   - community / forum / reddit / discussion -> `community`
+   - ranking / trending / hot / top -> `ranking`
+   - RSS / feed / atom / XML -> `rss`
+3. Construct source config with sensible defaults:
+   - `id`: `src-{type}-{slugified-name}`
+   - `weight`: 1.0
+   - `credibility`: 0.5 (new sources start at neutral credibility)
+   - `enabled`: false (user must explicitly enable after confirming)
+   - `stats`: all zeros with `quality_score: 0.5`
+   - `status`: "active"
+4. For `github` type: extract owner/repo from URL or description, set `fetch_config.endpoint` to "releases" by default
+5. For `search` type: extract keywords from user description, set `fetch_config.max_results` to 10
+6. Present constructed source config to user for confirmation before writing to `config/sources.json`
+
+### Delete Source
+
+1. Match source by name (case-insensitive substring) or by ID (exact match)
+2. If multiple matches, list candidates and ask user to pick
+3. **ALWAYS require second confirmation** per Standing Orders: "Delete source '{name}'? This cannot be undone. Confirm yes/no."
+4. On confirmation: remove source from `config/sources.json`, write atomically
+
+### Enable / Disable Source
+
+1. Match source by name or ID (same matching as delete)
+2. Toggle the `enabled` field
+3. Confirm action to user: "Source '{name}' is now {enabled/disabled}."
+
+### Adjust Weight
+
+1. Match source by name or ID
+2. Accept relative adjustments: "increase weight of X" -> +0.2, "decrease weight" -> -0.2
+3. Accept absolute adjustments: "set X weight to 0.5" -> direct set
+4. Clamp result to [0.1, 2.0]
+5. If single change > 0.3, escalate per Standing Orders (require human confirmation)
+6. Confirm new weight to user: "Source '{name}' weight updated: {old} -> {new}."
+
+### Input Disambiguation (SRC-10)
+
+When user input is ambiguous, do NOT guess. Instead:
+
+1. **Multi-meaning operations**: If "add Apple" could mean Apple Inc news (official) or Apple developer blog (official) or Apple stock (search), list 2-3 candidate interpretations:
+   ```
+   "add Apple" could mean:
+   1. Apple Newsroom (official announcements) - https://www.apple.com/newsroom/
+   2. Apple Developer Blog (official dev updates) - https://developer.apple.com/news/
+   3. "Apple news" keyword search (search type)
+   Please pick a number or clarify.
+   ```
+
+2. **Similar existing sources**: Before adding, check existing sources. If a source name has edit distance <= 2 or is a substring match with an existing source:
+   ```
+   Warning: Source "36Kr Tech" is similar to existing source "36Kr" (src-36kr).
+   Did you mean to modify the existing source, or add a new one?
+   ```
+
+3. **Ambiguous type**: If type cannot be inferred from keywords, ask:
+   ```
+   What type of source is "TechCrunch"?
+   1. RSS feed (if you have the feed URL)
+   2. Official blog (web page scraping)
+   3. Keyword search (search for TechCrunch articles)
+   ```
+
+---
+
+## Source Health Metrics Computation
+
+### When to Compute
+
+After each pipeline run, during the Processing Phase (after item processing, before output generation). Referenced from SKILL.md Processing Phase step "Compute source stats".
+
+### Metrics Formula
+
+For each source that contributed items in the current run, compute updated stats using the last 7 days of data:
+
+**selection_rate** = items_selected_for_output / total_fetched
+- `items_selected_for_output`: count of items from this source that appear in the final digest output (last 7 days of daily metrics files)
+- `total_fetched`: sum of items fetched from this source (last 7 days of JSONL data, counted by `source_id`)
+
+**dedup_rate** = items_deduped / total_fetched
+- `items_deduped`: count of items from this source that were deduplicated (appeared in dedup-index already at fetch time, last 7 days)
+- `total_fetched`: same as above
+
+**fetch_success_rate** = successful_fetches / total_fetch_attempts
+- `successful_fetches`: count of runs where this source fetched >= 1 item (from daily metrics files, last 7 days)
+- `total_fetch_attempts`: count of runs where this source was attempted (from daily metrics files, last 7 days)
+
+**quality_score** = selection_rate * 0.4 + (1 - dedup_rate) * 0.3 + fetch_success_rate * 0.3
+
+### Minimum Data Requirement
+
+If `total_fetched < 7` for a source (insufficient data for meaningful rates):
+- Keep all rates at 0.5 (neutral default)
+- `quality_score` remains at 0.5
+- Do NOT recompute until the source accumulates at least 7 fetched items
+
+### Write-Back Procedure
+
+1. Read current `config/sources.json`
+2. For each source with updated stats:
+   - Update `stats.quality_score`, `stats.dedup_rate`, `stats.selection_rate`
+   - Update `stats.total_fetched`, `stats.last_fetch`, `stats.last_hit_count`
+   - Reset `stats.consecutive_failures` to 0 on successful fetch
+3. Write updated `config/sources.json` atomically (write `.tmp.{run_id}`, then rename)
