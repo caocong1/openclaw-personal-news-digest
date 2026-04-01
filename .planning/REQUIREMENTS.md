@@ -19,15 +19,15 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 ### Source Management
 
 - [x] **SRC-01**: RSS/Atom feed 采集（web_fetch 解析 XML，提取 title/link/description/pubDate）
-- [ ] **SRC-02**: GitHub Release/Repo 采集（GitHub API JSON 解析）
-- [ ] **SRC-03**: 搜索类来源采集（web_search 关键词搜索 + LLM 过滤）
-- [ ] **SRC-04**: 官方公告采集（web_fetch 或 browser + LLM 提取）
-- [ ] **SRC-05**: 社区页面采集（browser 渲染 + LLM 提取）
-- [ ] **SRC-06**: 热门榜单采集（web_fetch 或 browser + LLM 提取排名条目）
-- [ ] **SRC-07**: 自然语言来源管理（添加/删除/启用/禁用/调权重，删除需二次确认）
-- [ ] **SRC-08**: 来源健康度指标（quality_score / dedup_rate / selection_rate 自动计算）
+- [x] **SRC-02**: GitHub Release/Repo 采集（GitHub API JSON 解析）
+- [x] **SRC-03**: 搜索类来源采集（web_search 关键词搜索 + LLM 过滤）
+- [x] **SRC-04**: 官方公告采集（web_fetch 或 browser + LLM 提取）
+- [x] **SRC-05**: 社区页面采集（browser 渲染 + LLM 提取）
+- [x] **SRC-06**: 热门榜单采集（web_fetch 或 browser + LLM 提取排名条目）
+- [x] **SRC-07**: 自然语言来源管理（添加/删除/启用/禁用/调权重，删除需二次确认）
+- [x] **SRC-08**: 来源健康度指标（quality_score / dedup_rate / selection_rate 自动计算）
 - [ ] **SRC-09**: 来源自动降级与恢复（quality_score < 0.2 连续 14 天降级，> 0.3 连续 7 天恢复）
-- [ ] **SRC-10**: 输入歧义处理（多义操作追问确认，相似来源列候选）
+- [x] **SRC-10**: 输入歧义处理（多义操作追问确认，相似来源列候选）
 
 ### Content Processing
 
@@ -162,15 +162,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FRMW-05 | Phase 0 | Complete |
 | FRMW-06 | Phase 0 | Complete |
 | SRC-01 | Phase 0 | Complete |
-| SRC-02 | Phase 1 | Pending |
-| SRC-03 | Phase 1 | Pending |
-| SRC-04 | Phase 1 | Pending |
-| SRC-05 | Phase 1 | Pending |
-| SRC-06 | Phase 1 | Pending |
-| SRC-07 | Phase 1 | Pending |
-| SRC-08 | Phase 1 | Pending |
+| SRC-02 | Phase 1 | Complete |
+| SRC-03 | Phase 1 | Complete |
+| SRC-04 | Phase 1 | Complete |
+| SRC-05 | Phase 1 | Complete |
+| SRC-06 | Phase 1 | Complete |
+| SRC-07 | Phase 1 | Complete |
+| SRC-08 | Phase 1 | Complete |
 | SRC-09 | Phase 3 | Pending |
-| SRC-10 | Phase 1 | Pending |
+| SRC-10 | Phase 1 | Complete |
 | PROC-01 | Phase 0 | Complete |
 | PROC-02 | Phase 0 | Complete |
 | PROC-03 | Phase 0 | Complete |
