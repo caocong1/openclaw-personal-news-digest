@@ -148,3 +148,43 @@ These thresholds align with SKILL.md Standing Orders "Large preference weight ch
 - **Retention policy:** Keep the 10 most recent backups. When count exceeds 10, delete the oldest files.
 - **Timing:** Backup is created BEFORE each preference update, not after. This ensures the pre-update state is always recoverable.
 - **Restore procedure:** To restore, copy the desired backup file to `config/preferences.json`. The next pipeline run will process any unprocessed feedback entries from the log.
+
+---
+
+## Preference Visualization (PREF-06 / HIST-06)
+
+Generate a human-readable preference state description when the user queries their preference profile.
+
+### Trigger
+
+User asks about preferences: "what have you learned about me", "show my preferences", "我的偏好", "偏好状态", "what are my interests", or similar intent.
+
+### Procedure
+
+1. Read `config/preferences.json`
+2. Generate text description using the following structure:
+
+```
+## Your Preference Profile
+
+**Top interests:** {topics with weight >= 0.7, sorted descending, format: "TopicName (weight: X.X)"}
+**Lower interest:** {topics with weight <= 0.3, sorted ascending}
+**Neutral topics:** {topics with weight 0.4-0.6, list names only}
+
+**Trusted sources:** {source_trust entries > 0, format: "SourceName (trust: +X.X)"}
+**Distrusted sources:** {source_trust entries < 0, format: "SourceName (trust: X.X)"}
+{If source_trust is empty: "No source preferences yet -- will develop from feedback"}
+
+**Content style:** {Interpret form_preference values -- positive means preference, negative means avoidance. Example: "You prefer analysis over opinion pieces. You have low rumor tolerance."}
+**Exploration:** {Interpret exploration_appetite -- 0.0-0.2: "Low", 0.2-0.35: "Moderate", 0.35+: "High"} (appetite: {value}) -- {explain effect}
+
+**Depth preference:** {depth_preference value} -- {explain: brief=headlines only, moderate=balanced summaries, detailed=in-depth with context, technical=includes implementation details}
+**Judgment angles:** {If empty: "Not yet learned -- will develop over time". If set: list angles with explanations}
+
+**Feedback history:** {total_feedback_count} feedback signals processed
+**Last preference update:** {last_updated or "Never"}
+**Last decay applied:** {last_decay_at or "Never"}
+```
+
+3. Use LLM to polish the structured data into natural-sounding narrative text (not just template fill). The LLM should make it conversational while preserving all data points.
+4. Cap response to reasonable length -- all key preference dimensions but no verbose explanations.

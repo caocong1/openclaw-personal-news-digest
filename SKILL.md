@@ -85,7 +85,9 @@ Triggered by quick-check cron (every 2h):
 When user sends a message (not a cron trigger):
 1. **Source management**: If intent is add/delete/enable/disable/adjust source, follow `{baseDir}/references/collection-instructions.md` "Source Management Commands" section.
 2. **Feedback**: If intent is feedback (more/less/like/dislike/trust/distrust/block/style), follow `{baseDir}/references/feedback-rules.md`.
-3. **Query**: Otherwise, treat as a general query and respond helpfully.
+3. **Preference query**: If intent is asking about preferences or what the system has learned, follow `{baseDir}/references/feedback-rules.md` "Preference Visualization" section.
+4. **History query**: If intent is a data query (recent news, topic review, event tracking, hotspot scan, source analysis), follow `{baseDir}/references/prompts/history-query.md`.
+5. **General**: Otherwise, treat as a general query and respond helpfully.
 
 ## Operational Rules
 
