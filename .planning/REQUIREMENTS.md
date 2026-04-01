@@ -70,7 +70,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 - [x] **OUT-01**: 日报生成（核心关注 + 相关动态 + 今日热点 + 探索发现 + 事件跟踪，15-25 条）
 - [x] **OUT-02**: 快讯输出（importance ≥ 0.85 触发，无内容不输出，宁缺毋滥）
-- [ ] **OUT-03**: 周报生成（一周趋势回顾 + 事件时间线 + 跨领域总结，30-50 条）
+- [x] **OUT-03**: 周报生成（一周趋势回顾 + 事件时间线 + 跨领域总结，30-50 条）
 - [x] **OUT-04**: 输出解释字段（探索/热点位附推荐理由）
 - [x] **OUT-05**: 质量感知输出（内容不足时缩短而非硬凑，空输入不生成空日报）
 - [x] **OUT-06**: 运行透明化（输出尾部显示来源数、处理条数、LLM 调用次数、缓存命中）
@@ -198,7 +198,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ANTI-05 | Phase 2 | Complete |
 | OUT-01 | Phase 0 | Complete |
 | OUT-02 | Phase 1 | Complete |
-| OUT-03 | Phase 3 | Pending |
+| OUT-03 | Phase 3 | Complete |
 | OUT-04 | Phase 2 | Complete |
 | OUT-05 | Phase 0 | Complete |
 | OUT-06 | Phase 1 | Complete |
