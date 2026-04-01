@@ -50,11 +50,11 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Preference System
 
-- [ ] **PREF-01**: 5 层偏好模型（主题权重 + 来源信任 + 形态偏好 + 风格容忍度 + 样本反馈）
+- [x] **PREF-01**: 5 层偏好模型（主题权重 + 来源信任 + 形态偏好 + 风格容忍度 + 样本反馈）
 - [x] **PREF-02**: 冷启动策略（所有 topic_weights = 0.5，exploration_appetite = 0.3，无初始问卷）
-- [ ] **PREF-03**: 7 维个性化评分公式（importance × 0.25 + topic × 0.20 + source × 0.10 + form × 0.10 + feedback × 0.10 + recency × 0.15 + event × 0.10）
+- [x] **PREF-03**: 7 维个性化评分公式（importance × 0.25 + topic × 0.20 + source × 0.10 + form × 0.10 + feedback × 0.10 + recency × 0.15 + event × 0.10）
 - [ ] **PREF-04**: 偏好衰减（每 30 天向均值回归 5%：w_new = w + (0.5 - w) × 0.05）
-- [ ] **PREF-05**: 偏好自动备份（更新前备份，保留最近 10 个）
+- [x] **PREF-05**: 偏好自动备份（更新前备份，保留最近 10 个）
 - [ ] **PREF-06**: 偏好可视化（文字化描述当前偏好状态）
 - [ ] **PREF-07**: 扩展回 7 层模型（新增 depth_preference + judgment_angles）
 
@@ -77,11 +77,11 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Feedback Learning
 
-- [ ] **FB-01**: 8 种反馈类型（more/less/trust_source/distrust_source/like/dislike/block_pattern/adjust_style）
-- [ ] **FB-02**: 增量偏好更新（读取未处理反馈 → 按时间顺序应用 → 原子写入）
-- [ ] **FB-03**: 反馈引用消歧（消息回复 → 序号引用 → 关键词搜索 → 事件引用 → 列候选）
-- [ ] **FB-04**: Kill Switch（feedback_processing_enabled: false 冻结偏好更新）
-- [ ] **FB-05**: 大幅调整升级确认（单次变化 > 0.3 需人工确认）
+- [x] **FB-01**: 8 种反馈类型（more/less/trust_source/distrust_source/like/dislike/block_pattern/adjust_style）
+- [x] **FB-02**: 增量偏好更新（读取未处理反馈 → 按时间顺序应用 → 原子写入）
+- [x] **FB-03**: 反馈引用消歧（消息回复 → 序号引用 → 关键词搜索 → 事件引用 → 列候选）
+- [x] **FB-04**: Kill Switch（feedback_processing_enabled: false 冻结偏好更新）
+- [x] **FB-05**: 大幅调整升级确认（单次变化 > 0.3 需人工确认）
 
 ### Cost Control
 
@@ -184,11 +184,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EVT-03 | Phase 2 | Pending |
 | EVT-04 | Phase 2 | Pending |
 | EVT-05 | Phase 2 | Pending |
-| PREF-01 | Phase 1 | Pending |
+| PREF-01 | Phase 1 | Complete |
 | PREF-02 | Phase 0 | Complete |
-| PREF-03 | Phase 1 | Pending |
+| PREF-03 | Phase 1 | Complete |
 | PREF-04 | Phase 3 | Pending |
-| PREF-05 | Phase 1 | Pending |
+| PREF-05 | Phase 1 | Complete |
 | PREF-06 | Phase 3 | Pending |
 | PREF-07 | Phase 3 | Pending |
 | ANTI-01 | Phase 2 | Pending |
@@ -202,11 +202,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OUT-04 | Phase 2 | Pending |
 | OUT-05 | Phase 0 | Complete |
 | OUT-06 | Phase 1 | Pending |
-| FB-01 | Phase 1 | Pending |
-| FB-02 | Phase 1 | Pending |
-| FB-03 | Phase 1 | Pending |
-| FB-04 | Phase 1 | Pending |
-| FB-05 | Phase 1 | Pending |
+| FB-01 | Phase 1 | Complete |
+| FB-02 | Phase 1 | Complete |
+| FB-03 | Phase 1 | Complete |
+| FB-04 | Phase 1 | Complete |
+| FB-05 | Phase 1 | Complete |
 | COST-01 | Phase 0 | Complete |
 | COST-02 | Phase 1 | Pending |
 | COST-03 | Phase 1 | Pending |
