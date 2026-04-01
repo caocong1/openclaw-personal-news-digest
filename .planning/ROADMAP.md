@@ -16,6 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 1: Multi-Source + Preferences** - Multiple source types, basic preferences, feedback, breaking news, LLM cache
 - [ ] **Phase 2: Smart Processing** - Title dedup, event merging, timeline, anti-echo-chamber, multi-language
 - [ ] **Phase 3: Closed Loop** - Full feedback loop, 7-layer preferences, weekly report, history query
+- [ ] **Phase 4: Integration Wiring Fixes** - Close cross-phase integration gaps found by milestone audit
 
 ## Phase Details
 
@@ -90,6 +91,22 @@ Plans:
 - [ ] 03-03-PLAN.md — Weekly trend report generation (40/20/20/20 quota, 5+ categories, cross-domain synthesis with strong model, Sunday 20:00 cron)
 - [ ] 03-04-PLAN.md — Natural language history queries (5 query types: recent activity, topic review, event tracking, hotspot scan, source analysis)
 
+### Phase 4: Integration Wiring Fixes
+**Goal**: Close all cross-phase integration gaps and broken E2E flows identified by the v1.0 milestone audit — targeted field/placeholder additions only, no new features
+**Depends on**: Phase 3
+**Requirements**: PREF-07, ANTI-05, SRC-09, OUT-02
+**Gap Closure:** Closes 4 requirement gaps, 5 integration gaps (MISSING-01 through MISSING-05), and 2 broken E2E flows (BROKEN-01, BROKEN-02) from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. Daily summarize.md prompt includes {depth_preference} and {judgment_angles} placeholders, producing variable-depth output matching user preference
+  2. preferences.json contains style.last_exploration_increase field, gating exploration_appetite increment to once per 7 days
+  3. scoring-formula.md documents the 0.5x degraded source penalty, and sources.json entries include degraded_since/recovery_streak_start stats fields
+  4. data-models.md DailyMetrics schema includes alerts_sent_today and alerted_urls fields for breaking news alert cap enforcement
+  5. Re-audit (`/gsd:audit-milestone`) passes with 0 integration gaps and 0 broken flows
+**Plans**: 1 plan
+
+Plans:
+- [ ] 04-01-PLAN.md — Fix all 5 integration wiring gaps: summarize.md placeholders, preferences.json field, scoring-formula.md penalty, sources.json stats fields, data-models.md alert fields
+
 ## Progress
 
 **Execution Order:**
@@ -101,3 +118,4 @@ Phases execute in numeric order: 0 -> 0.1 -> 1 -> 1.1 -> 2 -> 3
 | 1. Multi-Source + Preferences | 0/4 | Not started | - |
 | 2. Smart Processing | 0/4 | Not started | - |
 | 3. Closed Loop | 0/4 | Not started | - |
+| 4. Integration Wiring Fixes | 0/1 | Not started | - |
