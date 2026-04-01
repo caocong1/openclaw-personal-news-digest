@@ -99,11 +99,11 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### History Query
 
-- [ ] **HIST-01**: 最近动态查询（最近 24 小时）
-- [ ] **HIST-02**: 主题回顾（按类目过滤近 N 天）
-- [ ] **HIST-03**: 事件跟踪查询（查 active 事件后续）
-- [ ] **HIST-04**: 热点扫描（高 importance 但不在偏好中的内容）
-- [ ] **HIST-05**: 来源分析与健康查询
+- [x] **HIST-01**: 最近动态查询（最近 24 小时）
+- [x] **HIST-02**: 主题回顾（按类目过滤近 N 天）
+- [x] **HIST-03**: 事件跟踪查询（查 active 事件后续）
+- [x] **HIST-04**: 热点扫描（高 importance 但不在偏好中的内容）
+- [x] **HIST-05**: 来源分析与健康查询
 - [x] **HIST-06**: 偏好状态查询（文字化描述）
 
 ### Platform Integration
@@ -215,11 +215,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MON-02 | Phase 2 | Complete |
 | MON-03 | Phase 2 | Complete |
 | MON-04 | Phase 2 | Complete |
-| HIST-01 | Phase 3 | Pending |
-| HIST-02 | Phase 3 | Pending |
-| HIST-03 | Phase 3 | Pending |
-| HIST-04 | Phase 3 | Pending |
-| HIST-05 | Phase 3 | Pending |
+| HIST-01 | Phase 3 | Complete |
+| HIST-02 | Phase 3 | Complete |
+| HIST-03 | Phase 3 | Complete |
+| HIST-04 | Phase 3 | Complete |
+| HIST-05 | Phase 3 | Complete |
 | HIST-06 | Phase 3 | Complete |
 | PLAT-01 | Phase 0 | Complete |
 | PLAT-02 | Phase 0 | Complete |
