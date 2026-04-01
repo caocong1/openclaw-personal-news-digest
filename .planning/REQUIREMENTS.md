@@ -9,12 +9,12 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Skill Framework
 
-- [ ] **FRMW-01**: Skill 目录结构完整搭建（SKILL.md + references/ + scripts/ + config/ + data/ + output/）
-- [ ] **FRMW-02**: SKILL.md 模块化编排（< 3000 tokens），详细规范拆分到 references/
-- [ ] **FRMW-03**: Standing Orders 定义（授权范围、升级条件、禁止事项）
-- [ ] **FRMW-04**: 文件锁互斥机制（获取失败即跳过，15 分钟过期）
-- [ ] **FRMW-05**: 原子写入（tmp + rename 模式，崩溃恢复清理 > 15min 的临时文件）
-- [ ] **FRMW-06**: Schema 版本化兼容读取（_schema_v 字段，缺失字段默认值推导）
+- [x] **FRMW-01**: Skill 目录结构完整搭建（SKILL.md + references/ + scripts/ + config/ + data/ + output/）
+- [x] **FRMW-02**: SKILL.md 模块化编排（< 3000 tokens），详细规范拆分到 references/
+- [x] **FRMW-03**: Standing Orders 定义（授权范围、升级条件、禁止事项）
+- [x] **FRMW-04**: 文件锁互斥机制（获取失败即跳过，15 分钟过期）
+- [x] **FRMW-05**: 原子写入（tmp + rename 模式，崩溃恢复清理 > 15min 的临时文件）
+- [x] **FRMW-06**: Schema 版本化兼容读取（_schema_v 字段，缺失字段默认值推导）
 
 ### Source Management
 
@@ -51,7 +51,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 ### Preference System
 
 - [ ] **PREF-01**: 5 层偏好模型（主题权重 + 来源信任 + 形态偏好 + 风格容忍度 + 样本反馈）
-- [ ] **PREF-02**: 冷启动策略（所有 topic_weights = 0.5，exploration_appetite = 0.3，无初始问卷）
+- [x] **PREF-02**: 冷启动策略（所有 topic_weights = 0.5，exploration_appetite = 0.3，无初始问卷）
 - [ ] **PREF-03**: 7 维个性化评分公式（importance × 0.25 + topic × 0.20 + source × 0.10 + form × 0.10 + feedback × 0.10 + recency × 0.15 + event × 0.10）
 - [ ] **PREF-04**: 偏好衰减（每 30 天向均值回归 5%：w_new = w + (0.5 - w) × 0.05）
 - [ ] **PREF-05**: 偏好自动备份（更新前备份，保留最近 10 个）
@@ -85,7 +85,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Cost Control
 
-- [ ] **COST-01**: 日预算上限（daily_llm_call_limit 默认 500，daily_token_limit 默认 1M）
+- [x] **COST-01**: 日预算上限（daily_llm_call_limit 默认 500，daily_token_limit 默认 1M）
 - [ ] **COST-02**: 熔断机制（超 80% 告警，100% 停止非必要调用仅保留日报生成）
 - [ ] **COST-03**: LLM 结果缓存（classify-cache + summary-cache，URL SHA 为 key，7 天 TTL）
 - [ ] **COST-04**: 分级模型策略（简单任务用快速模型，复杂任务用强模型）
@@ -155,12 +155,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FRMW-01 | Phase 0 | Pending |
-| FRMW-02 | Phase 0 | Pending |
-| FRMW-03 | Phase 0 | Pending |
-| FRMW-04 | Phase 0 | Pending |
-| FRMW-05 | Phase 0 | Pending |
-| FRMW-06 | Phase 0 | Pending |
+| FRMW-01 | Phase 0 | Complete |
+| FRMW-02 | Phase 0 | Complete |
+| FRMW-03 | Phase 0 | Complete |
+| FRMW-04 | Phase 0 | Complete |
+| FRMW-05 | Phase 0 | Complete |
+| FRMW-06 | Phase 0 | Complete |
 | SRC-01 | Phase 0 | Pending |
 | SRC-02 | Phase 1 | Pending |
 | SRC-03 | Phase 1 | Pending |
@@ -185,7 +185,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EVT-04 | Phase 2 | Pending |
 | EVT-05 | Phase 2 | Pending |
 | PREF-01 | Phase 1 | Pending |
-| PREF-02 | Phase 0 | Pending |
+| PREF-02 | Phase 0 | Complete |
 | PREF-03 | Phase 1 | Pending |
 | PREF-04 | Phase 3 | Pending |
 | PREF-05 | Phase 1 | Pending |
@@ -207,7 +207,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FB-03 | Phase 1 | Pending |
 | FB-04 | Phase 1 | Pending |
 | FB-05 | Phase 1 | Pending |
-| COST-01 | Phase 0 | Pending |
+| COST-01 | Phase 0 | Complete |
 | COST-02 | Phase 1 | Pending |
 | COST-03 | Phase 1 | Pending |
 | COST-04 | Phase 1 | Pending |

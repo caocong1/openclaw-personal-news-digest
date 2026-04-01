@@ -32,7 +32,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 00-01-PLAN.md — Scaffold directory structure, config files, data model references, and SKILL.md orchestration framework
+- [x] 00-01-PLAN.md — Scaffold directory structure, config files, data model references, and SKILL.md orchestration framework
 - [ ] 00-02-PLAN.md — LLM prompt templates, RSS collection instructions, processing/error-handling/output instructions
 - [ ] 00-03-PLAN.md — Cron job configs, delivery setup, platform verification checklist, maintenance scripts
 
