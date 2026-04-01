@@ -92,7 +92,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Monitoring
 
-- [ ] **MON-01**: 每日健康指标文件（sources/items/llm/output/feedback 维度）
+- [x] **MON-01**: 每日健康指标文件（sources/items/llm/output/feedback 维度）
 - [ ] **MON-02**: 告警条件（全来源连续 2 天失败、预算 80%、dedup 不一致、来源集中度、空日报）
 - [ ] **MON-03**: 每周健康巡检（dedup-index 一致性、空事件、长期未归档、成功率、偏好极端值、缓存清理）
 - [ ] **MON-04**: 数据生命周期管理（30 天 news、7 天 dedup-index、90 天 feedback 明细、7 天缓存）
@@ -108,10 +108,10 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Platform Integration
 
-- [ ] **PLAT-01**: Cron job 配置（日报 0 8 / 快讯 */2h / 周报周日 20:00 / 巡检周一 03:00）
-- [ ] **PLAT-02**: Delivery 配置（announce 模式推送到聊天渠道）
-- [ ] **PLAT-03**: Isolated session 执行（cron 触发独立会话）
-- [ ] **PLAT-04**: Platform 能力验证（isolated session / exec / browser / delivery / timeout）
+- [x] **PLAT-01**: Cron job 配置（日报 0 8 / 快讯 */2h / 周报周日 20:00 / 巡检周一 03:00）
+- [x] **PLAT-02**: Delivery 配置（announce 模式推送到聊天渠道）
+- [x] **PLAT-03**: Isolated session 执行（cron 触发独立会话）
+- [x] **PLAT-04**: Platform 能力验证（isolated session / exec / browser / delivery / timeout）
 
 ## v2 Requirements
 
@@ -211,7 +211,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COST-02 | Phase 1 | Pending |
 | COST-03 | Phase 1 | Pending |
 | COST-04 | Phase 1 | Pending |
-| MON-01 | Phase 0 | Pending |
+| MON-01 | Phase 0 | Complete |
 | MON-02 | Phase 2 | Pending |
 | MON-03 | Phase 2 | Pending |
 | MON-04 | Phase 2 | Pending |
@@ -221,10 +221,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HIST-04 | Phase 3 | Pending |
 | HIST-05 | Phase 3 | Pending |
 | HIST-06 | Phase 3 | Pending |
-| PLAT-01 | Phase 0 | Pending |
-| PLAT-02 | Phase 0 | Pending |
-| PLAT-03 | Phase 0 | Pending |
-| PLAT-04 | Phase 0 | Pending |
+| PLAT-01 | Phase 0 | Complete |
+| PLAT-02 | Phase 0 | Complete |
+| PLAT-03 | Phase 0 | Complete |
+| PLAT-04 | Phase 0 | Complete |
 
 **Coverage:**
 - v1 requirements: 70 total

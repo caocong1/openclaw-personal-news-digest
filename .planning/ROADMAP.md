@@ -12,7 +12,7 @@ This roadmap delivers a personalized news digest Skill on the OpenClaw platform 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 0: MVP Pipeline** - End-to-end single RSS: collect, dedup, classify/summarize, daily digest
+- [x] **Phase 0: MVP Pipeline** - End-to-end single RSS: collect, dedup, classify/summarize, daily digest
 - [ ] **Phase 1: Multi-Source + Preferences** - Multiple source types, basic preferences, feedback, breaking news, LLM cache
 - [ ] **Phase 2: Smart Processing** - Title dedup, event merging, timeline, anti-echo-chamber, multi-language
 - [ ] **Phase 3: Closed Loop** - Full feedback loop, 7-layer preferences, weekly report, history query
@@ -33,8 +33,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 00-01-PLAN.md — Scaffold directory structure, config files, data model references, and SKILL.md orchestration framework
-- [ ] 00-02-PLAN.md — LLM prompt templates, RSS collection instructions, processing/error-handling/output instructions
-- [ ] 00-03-PLAN.md — Cron job configs, delivery setup, platform verification checklist, maintenance scripts
+- [x] 00-02-PLAN.md — LLM prompt templates, RSS collection instructions, processing/error-handling/output instructions
+- [x] 00-03-PLAN.md — Cron job configs, delivery setup, platform verification checklist, maintenance scripts
 
 ### Phase 1: Multi-Source + Preferences
 **Goal**: User can add multiple source types, receives personalized content influenced by their stated preferences and feedback, and gets breaking news alerts for high-importance events
@@ -93,7 +93,7 @@ Phases execute in numeric order: 0 -> 0.1 -> 1 -> 1.1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 0. MVP Pipeline | 0/3 | Planned | - |
+| 0. MVP Pipeline | 3/3 | Complete | 2026-04-01 |
 | 1. Multi-Source + Preferences | 0/3 | Not started | - |
 | 2. Smart Processing | 0/3 | Not started | - |
 | 3. Closed Loop | 0/2 | Not started | - |
