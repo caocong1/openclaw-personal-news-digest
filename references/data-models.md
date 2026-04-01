@@ -356,6 +356,16 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
   "source_proportions": {
     "src-36kr": 0.0
   },
+  "per_source": {
+    "src-36kr": {
+      "fetched": 12,
+      "deduped": 3,
+      "title_deduped": 1,
+      "selected": 4,
+      "status": "success",
+      "error": null
+    }
+  },
   "alerts": [],
   "alerts_sent_today": 0,
   "alerted_urls": []
@@ -371,6 +381,17 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
 - `alerts`: Array of `AlertCondition` objects detected during this day's health check. Empty array if no alerts fired. Populated by `scripts/health-check.sh` daily mode.
 - `alerts_sent_today`: Integer count of breaking news alerts sent during quick-check runs today. Default 0. Read by quick-check flow to enforce 3-alert daily cap.
 - `alerted_urls`: Array of URL strings already alerted today. Default []. Read by quick-check flow for same-URL dedup.
+
+**Field notes (per_source):**
+- `per_source`: Per-source-id breakdown of pipeline counters for this run. Keyed by `source_id` string. Each value is an object with:
+  - `fetched` (integer): Items fetched from this source in this run
+  - `deduped` (integer): Items from this source that were URL-deduped (skipped because hash already in dedup-index)
+  - `title_deduped` (integer): Items from this source marked as title duplicates during Stage B/C title dedup
+  - `selected` (integer): Items from this source that received a `quota_group` tag (selected for digest output)
+  - `status` (string): `"success"` if source fetched >= 1 item, `"failed"` if fetch returned 0 items or encountered an error
+  - `error` (string or null): Error message if fetch failed, `null` on success
+- Sources not attempted in this run (e.g., disabled sources) are omitted from `per_source`
+- Historical metrics files from before Phase 6 will lack `per_source`; consumers MUST use `.get('per_source', {})` for backward compatibility
 
 ---
 
