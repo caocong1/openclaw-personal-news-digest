@@ -520,3 +520,25 @@ If `total_fetched < 7` for a source (insufficient data for meaningful rates):
    - Update `stats.total_fetched`, `stats.last_fetch`, `stats.last_hit_count`
    - Reset `stats.consecutive_failures` to 0 on successful fetch
 3. Write updated `config/sources.json` atomically (write `.tmp.{run_id}`, then rename)
+
+---
+
+## Degraded Source Handling
+
+### Collection Behavior for Degraded Sources
+
+Sources with `status: "degraded"` are still fetched during collection, with two exceptions:
+
+1. **Budget-tight skip**: If budget effective_usage >= 0.8 (circuit-breaker warning threshold), skip degraded sources entirely during collection. Prioritize healthy sources for remaining budget. Log: "Budget tight ({pct}%): skipping degraded source {name}".
+2. **All other runs**: Collect degraded sources normally. Their items receive a scoring penalty (0.5x source_trust dimension) but are otherwise processed through the full pipeline.
+
+### Source Management Display
+
+When displaying source lists to the user (source management commands), include degraded status:
+- Active sources: normal display
+- Degraded sources: append " (degraded since {date})" to display
+- Paused sources: append " (paused)" to display
+
+### Manual Override
+
+User can manually re-activate a degraded source via "activate {source_name}" or "restore {source_name}" command. This sets `status: "active"`, resets `degraded_since` and `recovery_streak_start` to null. Log: "Source {name} manually reactivated by user."

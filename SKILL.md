@@ -15,7 +15,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 
 1. **Acquire lock**: Read `{baseDir}/data/.lock`. If absent or `started_at` > 15 min ago, write `{ "run_id": "run-YYYYMMDD-HHmmss-XXXX", "started_at": "ISO8601" }`. If locked < 15 min, skip this run.
 2. **Generate run_id**: `run-YYYYMMDD-HHmmss-XXXX` (XXXX = random 4 chars).
-3. **Load sources**: Read `{baseDir}/config/sources.json`, filter `enabled: true`.
+3. **Load sources**: Read `{baseDir}/config/sources.json`, filter `enabled: true`. If budget effective_usage >= 0.8, additionally skip `status: "degraded"` sources.
 4. **Fetch by type**: For each source, route by `source.type`. If type == `rss`: web_fetch XML, parse RSS/Atom. If type == `github`: web_fetch GitHub API JSON, parse releases. If type == `search`: web_search keywords + LLM filter. If type == `official`: web_fetch or browser + LLM extract. If type == `community`: browser + LLM extract. If type == `ranking`: web_fetch or browser + LLM extract. See `{baseDir}/references/collection-instructions.md` per-type sections for detailed steps.
 5. **Normalize URLs**: Strip `utm_*` params, force `https`, remove `www.` prefix, lowercase host, remove trailing `/`.
 6. **Dedup**: Compute `SHA256(normalized_url)[:16]`. Check `{baseDir}/data/news/dedup-index.json` -- skip if hash exists.
@@ -24,6 +24,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 
 ## Processing Phase
 
+0. **Preference decay**: Check and apply preference decay per `{baseDir}/references/processing-instructions.md` Section 0. Runs once per 30-day period.
 1. **Load prompts**: Read `{baseDir}/references/prompts/classify.md` and `{baseDir}/references/prompts/summarize.md`.
 2. **Collect unprocessed**: Find items with `processing_status: "raw"` from today's JSONL.
 3. **Classify batch**: Group 5-10 items per LLM call. Assign `categories`, `importance_score`, `form_type`, `tags`.
@@ -36,6 +37,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 10. **Event merge**: For items with `dedup_status: "unique"`, run event merge per `{baseDir}/references/processing-instructions.md` Section 1C. Topic filter -> keyword match -> LLM merge/new decision.
 11. **Process pending feedback**: Read `data/feedback/log.jsonl` entries with timestamp > `preferences.last_updated`. Apply updates per `{baseDir}/references/feedback-rules.md`.
 12. **Compute source stats**: For each source that fetched items this run, update quality_score, dedup_rate, selection_rate per `{baseDir}/references/collection-instructions.md` "Source Health Metrics Computation".
+13. **Source status check**: Check source auto-demotion/recovery per `{baseDir}/references/processing-instructions.md` Section 6. Transition sources between active and degraded status based on quality_score thresholds.
 
 ## Output Phase
 
