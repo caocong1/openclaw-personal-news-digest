@@ -128,7 +128,9 @@ Source definition as stored in `config/sources.json`.
     "last_error": "string or null",
     "quality_score": 0.5,
     "dedup_rate": 0.0,
-    "selection_rate": 0.0
+    "selection_rate": 0.0,
+    "degraded_since": null,
+    "recovery_streak_start": null
   },
   "status": "active|paused|degraded"
 }
@@ -141,6 +143,10 @@ Source definition as stored in `config/sources.json`.
 - `stats.quality_score`: Rolling quality assessment (0.0-1.0), initialized at 0.5. Recomputed after each pipeline run per collection-instructions.md Section 11.
 - `stats.dedup_rate`: Fraction of fetched items that are duplicates
 - `stats.selection_rate`: Fraction of fetched items selected for output
+- `stats.degraded_since`: ISO8601 date or null. Set when quality_score first drops below 0.2 while status is "active". Reset to null when quality recovers (>= 0.2) or when source transitions to degraded. Used for the 14-day demotion countdown.
+- `stats.recovery_streak_start`: ISO8601 date or null. Set when quality_score first rises above 0.3 while status is "degraded". Reset to null when quality dips (<= 0.3) or when source recovers to active. Used for the 7-day recovery countdown.
+
+**Defaults for missing fields (older schema):** `degraded_since`: null, `recovery_streak_start`: null.
 
 **`fetch_config` variants by type:**
 
@@ -241,6 +247,65 @@ Each feedback signal from the user, stored in `data/feedback/log.jsonl` (one JSO
 - `context`: `null`
 - `status`: `"applied"`
 - `run_id`: `null`
+
+---
+
+## Preferences
+
+User preference state stored at `config/preferences.json`. Drives scoring, quota allocation, summary depth, and feedback processing.
+
+```json
+{
+  "topic_weights": { "ai-models": 0.5, "...": 0.5 },
+  "source_trust": {},
+  "form_preference": { "news": 0.0, "...": 0.0 },
+  "style": {
+    "density": "medium",
+    "repetition_tolerance": "low",
+    "exploration_appetite": 0.3,
+    "rumor_tolerance": "low",
+    "last_exploration_increase": null
+  },
+  "feedback_samples": {
+    "liked_items": [],
+    "disliked_items": [],
+    "trusted_sources": [],
+    "distrusted_sources": [],
+    "blocked_patterns": []
+  },
+  "depth_preference": "moderate",
+  "judgment_angles": [],
+  "version": 3,
+  "last_updated": null,
+  "last_decay_at": null,
+  "total_feedback_count": 0,
+  "feedback_processing_enabled": true,
+  "_schema_v": 2
+}
+```
+
+**Field notes:**
+
+| Field | Type | Range/Values | Default | Description |
+|-------|------|-------------|---------|-------------|
+| `topic_weights.*` | float | [0.0, 1.0] | 0.5 | Per-category interest weight. Higher = more items from this category. |
+| `source_trust.*` | float | [-1.0, 1.0] | (absent) | Per-source trust modifier. Absent key = use source base credibility. |
+| `form_preference.*` | float | [-1.0, 1.0] | 0.0 | Per-form-type preference. Positive = prefer, negative = avoid. |
+| `style.density` | string | "low" / "medium" / "high" | "medium" | Output density level. |
+| `style.repetition_tolerance` | string | "low" / "medium" / "high" | "low" | Tolerance for repeated topics. |
+| `style.exploration_appetite` | float | [0.0, 1.0] | 0.3 | Controls exploration slot sizing. Auto-incremented by ANTI-05. |
+| `style.rumor_tolerance` | string | "low" / "medium" / "high" | "low" | Tolerance for unverified content. |
+| `style.last_exploration_increase` | string (ISO8601) or null | - | null | Tracks last ANTI-05 auto-increase. |
+| `depth_preference` | string | "brief" / "moderate" / "detailed" / "technical" | "moderate" | Controls summary generation depth. "brief" = 1-sentence summaries, "moderate" = 2-3 sentences (current default), "detailed" = 3-5 sentences with background context, "technical" = adds implementation details where relevant. Wired into summarize prompt, NOT the scoring formula. |
+| `judgment_angles` | array of strings | "workflow_impact", "worth_trying", "hype_vs_real", "market_change", "long_term_value", "practical_use" | [] | Perspective tags the user prefers. Wired into weekly report synthesis and summarize prompt to emphasize relevant angles. NOT wired into scoring formula. Cold-start is empty (no angle preference). |
+| `last_decay_at` | string (ISO8601) or null | - | null | Timestamp of last decay application. Null means never decayed. See `references/processing-instructions.md` Section 0. |
+| `version` | integer | >= 1 | 1 | Incremented on each preference update. |
+| `last_updated` | string (ISO8601) or null | - | null | Timestamp of last feedback-driven update. |
+| `total_feedback_count` | integer | >= 0 | 0 | Total feedback signals processed. |
+| `feedback_processing_enabled` | boolean | true / false | true | Kill switch for feedback processing. See `references/feedback-rules.md`. |
+| `_schema_v` | integer | >= 1 | 2 | Schema version. Readers handle v1 (missing `depth_preference`, `judgment_angles`) with defaults: `depth_preference` = "moderate", `judgment_angles` = []. |
+
+**Decay behavior:** `topic_weights` decay toward 0.5, `source_trust` toward 0, `form_preference` toward 0. Fields `style.*`, `feedback_samples`, `depth_preference`, `judgment_angles` do NOT decay. See `references/processing-instructions.md` Section 0.
 
 ---
 

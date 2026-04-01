@@ -4,6 +4,60 @@ Detailed reference for the Processing Phase and Output Phase of the news digest 
 
 ---
 
+## Section 0: Preference Decay (PREF-04)
+
+Regress preference weights toward neutral values when not reinforced by user feedback, preventing interest fixation over time.
+
+### When to Run
+
+At the START of each daily pipeline run, before feedback processing (Section 11 of SKILL.md) and before any LLM calls.
+
+### Decay Check Procedure
+
+1. Read `config/preferences.json`
+2. Check `last_decay_at` field:
+   - If `last_decay_at` is null OR `(now - last_decay_at) >= 30 days`: proceed with decay
+   - Otherwise: skip decay, continue to next pipeline step
+3. **No catch-up rule**: If 60+ days have passed, still apply only ONE decay round. Do NOT accumulate missed periods.
+
+### Decay Formula
+
+For each field that decays:
+
+**topic_weights (decay toward 0.5 -- cold-start neutral):**
+```
+For each key in topic_weights:
+  topic_weights[key] = topic_weights[key] + (0.5 - topic_weights[key]) * 0.05
+```
+
+**source_trust (decay toward 0 -- neutral/absent):**
+```
+For each key in source_trust:
+  source_trust[key] = source_trust[key] + (0.0 - source_trust[key]) * 0.05
+  If abs(source_trust[key]) < 0.01: DELETE key (clean up near-zero entries)
+```
+
+**form_preference (decay toward 0 -- neutral):**
+```
+For each key in form_preference:
+  form_preference[key] = form_preference[key] + (0.0 - form_preference[key]) * 0.05
+```
+
+**Fields that do NOT decay:** style.*, feedback_samples, depth_preference, judgment_angles
+
+### Write-Back
+
+1. Set `last_decay_at` to current ISO8601 timestamp
+2. Backup-before-write (existing pattern from feedback-rules.md)
+3. Atomic write `config/preferences.json`
+4. Log to daily metrics: `"preference_decay_applied": true`
+
+### Interaction with Feedback
+
+Decay runs BEFORE feedback processing. This means user feedback in the same run adjusts from the post-decay baseline, which is correct -- recent feedback should override decay drift.
+
+---
+
 ## Section 0A: Circuit-Breaker Enforcement (COST-02)
 
 Before each LLM batch, check budget utilization and enforce hard limits.
@@ -600,3 +654,41 @@ All metrics are written to `data/metrics/daily-YYYY-MM-DD.json` at the end of ea
 The daily digest output phase reads these metrics to populate the Transparency Footer (see `references/output-templates.md` "Transparency Footer" section).
 
 The quick-check flow reads `alerts_sent_today` and `alerted_urls` to enforce the daily alert cap and URL dedup for breaking news.
+
+---
+
+## Section 6: Source Auto-Demotion and Recovery (SRC-09)
+
+Implements source auto-demotion and auto-recovery based on rolling quality_score thresholds.
+
+### When to Run
+
+After source health stats computation (SKILL.md Processing Phase step 12 "Compute source stats"), check all sources for status transitions.
+
+### Demotion Check (active -> degraded)
+
+For each source in sources.json where `status == "active"`:
+
+1. If `stats.quality_score < 0.2`:
+   a. If `stats.degraded_since` is null: set `stats.degraded_since = today` (ISO8601 date). This starts the countdown.
+   b. If `stats.degraded_since` is NOT null AND `(today - stats.degraded_since) >= 14 days`: set `status = "degraded"`. Log alert: `"Source {name} auto-demoted: quality_score < 0.2 for 14 consecutive days"`.
+2. If `stats.quality_score >= 0.2`: reset `stats.degraded_since = null`. Quality recovered before the 14-day trigger -- reset counter. This provides hysteresis against brief dips.
+
+### Recovery Check (degraded -> active)
+
+For each source in sources.json where `status == "degraded"`:
+
+1. If `stats.quality_score > 0.3`:
+   a. If `stats.recovery_streak_start` is null: set `stats.recovery_streak_start = today` (ISO8601 date). This starts the recovery countdown.
+   b. If `stats.recovery_streak_start` is NOT null AND `(today - stats.recovery_streak_start) >= 7 days`: set `status = "active"`, reset `stats.degraded_since = null`, reset `stats.recovery_streak_start = null`. Log: `"Source {name} auto-recovered: quality_score > 0.3 for 7 consecutive days"`.
+2. If `stats.quality_score <= 0.3`: reset `stats.recovery_streak_start = null`. Quality dipped again -- reset recovery counter.
+
+### Effect on Scoring
+
+Degraded sources are NOT removed from collection. They are still fetched each run. However, items from degraded sources receive a scoring penalty:
+- During scoring (Section 4), if `item.source.status == "degraded"`: apply a 0.5x multiplier to the `source_trust` dimension value before the weighted sum. This deprioritizes degraded source items without completely excluding them.
+- If budget is tight (effective_usage >= 0.8 per Section 0A circuit-breaker), skip degraded sources in collection to save budget for healthy sources.
+
+### Write-Back
+
+Atomic write `config/sources.json` after all status checks. Use backup-before-write pattern.
