@@ -278,9 +278,27 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
     "item_count": 0,
     "generated": false
   },
+  "quota_distribution": {
+    "core": 0,
+    "adjacent": 0,
+    "hotspot": 0,
+    "explore": 0
+  },
+  "category_proportions": {
+    "ai-models": 0.0,
+    "dev-tools": 0.0
+  },
+  "source_proportions": {
+    "src-36kr": 0.0
+  },
   "alerts": []
 }
 ```
+
+**Field notes (quota and proportions):**
+- `quota_distribution`: Count of items in each quota group for this digest. Written during output generation (Section 4 Step 8). Used for monitoring quota balance.
+- `category_proportions`: Fraction of selected items per `categories.primary` category (0.0-1.0). Only categories with > 0 items are included. Used by ANTI-03 reverse diversity constraints to check 3-day topic concentration history.
+- `source_proportions`: Fraction of selected items per `source_id` (0.0-1.0). Only sources with > 0 items are included. Used by ANTI-03 reverse diversity constraints to check 3-day source concentration history.
 
 **Field notes (alerts):**
 - `alerts`: Array of `AlertCondition` objects detected during this day's health check. Empty array if no alerts fired. Populated by `scripts/health-check.sh` daily mode.
@@ -319,3 +337,16 @@ Structured alert output from `scripts/health-check.sh`. Can be collected into `D
 | `dedup_inconsistency` | `warning` | >10% orphaned entries in dedup-index |
 | `source_concentration` | `warning` | Single source accounts for >50% of items |
 | `empty_digest` | `warning` | Items fetched but no digest generated |
+
+---
+
+## Preferences Auto-Update Fields (ANTI-05)
+
+The following fields in `config/preferences.json` are auto-managed by the quota algorithm (see `references/processing-instructions.md` Section 4, Step 7):
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `style.exploration_appetite` | float | 0.3 | Controls exploration slot sizing. Auto-incremented by +0.05 every 7 days (cap 0.4) by ANTI-05 preference correction. |
+| `style.last_exploration_increase` | string (ISO8601) or null | null | Tracks when the last auto-increase of `exploration_appetite` happened. Set to today's date after each auto-increment. If null, treated as "never increased" (triggers increase on next run). |
+
+**Write convention:** Always use backup-before-write pattern (write backup, then write new file atomically) when updating preferences.json. See existing pipeline convention for atomic writes.

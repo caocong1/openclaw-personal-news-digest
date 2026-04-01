@@ -475,18 +475,77 @@ Apply quality gate based on the number of scored items:
 | **0 items** | Do NOT generate output. Log "no content for digest" in metrics. Set `output.generated: false`. Release lock and exit. |
 | **1-2 items** | Generate a shortened digest with only the **Core Focus** section. Omit all other sections. |
 | **3-14 items** | Generate digest with available sections. Omit any section that would be empty. |
-| **15+ items** | Generate full digest per `references/output-templates.md`. Approximate section distribution: Core Focus ~50%, Adjacent Dynamics ~20%, Today's Hotspot ~15%, Exploration ~15%. |
+| **15+ items** | Generate full digest per `references/output-templates.md`. Section distribution enforced by quota algorithm below. |
 
-### Section Assignment
+### Quota-Based Section Assignment (ANTI-01, ANTI-02)
 
-For items going into the full digest (15+ items):
+For items going into the full digest (15+ items), apply the following deterministic quota algorithm. This replaces the previous approximate percentage targets.
 
-1. **Core Focus** (~50% of items): Highest-scored items where `categories.primary` matches user's top topic_weights
-2. **Adjacent Dynamics** (~20%): Items whose `categories.primary` is in the `adjacent` list of user's top categories (from `config/categories.json`)
-3. **Today's Hotspot** (~15%): High `importance_score` items regardless of user preference match
-4. **Exploration** (~15%): Items with `categories.primary = null` (partial processing), or items from categories with low user weight (`topic_weight < 0.3`), or items randomly selected for exploration based on `exploration_appetite`
+#### Step 1 -- Classify Items into Quota Groups
 
-These percentages are approximate targets for MVP, not strict requirements.
+Read `config/preferences.json` topic_weights and `config/categories.json` adjacent mappings. For each scored item, assign a quota group:
+
+- **"core"**: `item.categories.primary` has `topic_weight >= 0.7` in preferences.json
+- **"adjacent"**: `item.categories.primary` is in the `adjacent` list of any core category (from categories.json) AND is not itself core
+- **"hotspot"**: `item.importance_score >= 0.8` AND not core AND not adjacent
+- **"explore"**: everything else
+
+**Cold-start handling:** When NO topic reaches `topic_weight >= 0.7` (e.g., all weights are 0.5 at initial setup), use the **top-3 topics by weight** as pseudo-core. If multiple topics tie, break ties alphabetically by category ID. This preserves quota structure during cold start.
+
+#### Step 2 -- Compute Target Counts
+
+Given N = target item count (15-25 for daily digest):
+
+- `core_target = round(N * 0.50)`
+- `adjacent_target = round(N * 0.20)`
+- `hotspot_target = round(N * 0.15)`
+- `explore_target = round(N * 0.15)`
+
+#### Step 3 -- Fill from Each Group
+
+Select items from each group, ordered by `final_score` descending, up to the group's target count.
+
+#### Step 4 -- One-Way Chain Yielding (ANTI-02)
+
+If any group is underfilled (fewer available items than target), yield remaining slots in one direction only:
+
+1. If **explore** underfilled: yield remaining slots to **adjacent**
+2. If **adjacent** underfilled: yield remaining slots to **hotspot**
+3. If **hotspot** underfilled: yield remaining slots to **core**
+
+Direction is strictly one-way: explore -> adjacent -> hotspot -> core (one-way chain yielding). Slots never yield in the reverse direction (core never yields to explore). Each yield step selects the next-best items by `final_score` from the receiving group.
+
+#### Step 5 -- Reverse Diversity Constraints (ANTI-03)
+
+Read last 3 days of `data/metrics/daily-*.json` to get `category_proportions` and `source_proportions` history.
+
+- **Topic concentration cap:** If the same `categories.primary` topic exceeds 60% of the digest for 3 consecutive days, cap that topic at 50% today. Replace excess items with next-best items from other categories (by `final_score`).
+- **Source concentration cap:** If the same `source_id` exceeds 30% of the digest for 3 consecutive days, cap that source at 20% today. Replace excess items with next-best items from other sources.
+- **Stale event filter:** If the same event (`event_id`) has been pushed for > 3 consecutive days, include only if the item has `relation != "initial"` (i.e., new developments only).
+
+**Grace period:** If fewer than 3 days of metrics with `category_proportions` data exist, skip ANTI-03 constraints entirely. Log: `"ANTI-03 grace period: insufficient history."`
+
+#### Step 6 -- Hotspot Injection (ANTI-04)
+
+After quota fill, check for items with `importance_score >= 0.8` that were excluded from the selected list:
+
+1. Force-inject these items into the candidate pool (add to the selected list)
+2. Injected items are still subject to title dedup (no duplicates) and quality checks
+3. Tag injected items with `quota_group: "hotspot"`
+
+#### Step 7 -- Preference Correction (ANTI-05)
+
+After final selection:
+
+1. **Minimum category exposure:** Check if each of the 12 categories has >= 2% representation in the final list. If any category has 0% and items exist for it in the scored pool, swap the lowest-scored item in the largest quota group with the highest-scored item from the missing category.
+
+2. **Exploration appetite auto-increase:** Read `config/preferences.json` fields `style.exploration_appetite` and `style.last_exploration_increase`:
+   - If `last_exploration_increase` is null or >= 7 days ago: set `exploration_appetite += 0.05` (cap at 0.4), update `last_exploration_increase` to today's date (ISO8601)
+   - Write preferences.json atomically (backup-before-write pattern per existing convention)
+
+#### Step 8 -- Tag Items with Quota Group
+
+Each selected item gets a `quota_group` tag: `"core"` / `"adjacent"` / `"hotspot"` / `"explore"`. This tag is used by the output template to assign items to the correct digest section.
 
 ### Digest Assembly
 
