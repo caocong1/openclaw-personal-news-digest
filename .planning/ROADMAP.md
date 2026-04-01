@@ -46,12 +46,13 @@ Plans:
   3. Breaking news alerts fire when high-importance events occur (importance >= 0.85), and no alert fires when nothing qualifies
   4. LLM cache is operational with observable cache hit rate, and cost budget triggers warning at 80% and circuit-breaker at 100%
   5. Digest footer shows transparency stats (source count, items processed, LLM calls, cache hits)
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
+- [ ] 01-01-PLAN.md — Multi-source collection: 5 new source types (GitHub, search, official, community, ranking), NL source management, disambiguation, health metrics
+- [ ] 01-02-PLAN.md — Feedback system + preference scoring: 8 feedback types, incremental update, disambiguation, backup, kill switch, feedback_boost activation
+- [ ] 01-03-PLAN.md — LLM cache + cost controls: classify/summary cache with 7-day TTL, circuit-breaker (80% warn / 100% stop), tiered model strategy
+- [ ] 01-04-PLAN.md — Breaking news alerts + output transparency: importance >= 0.85 trigger with safeguards, digest footer stats wiring
 
 ### Phase 2: Smart Processing
 **Goal**: User sees deduplicated, event-merged content with timeline tracking and a balanced diet of topics enforced by anti-echo-chamber quotas, with multi-language support
@@ -94,6 +95,6 @@ Phases execute in numeric order: 0 -> 0.1 -> 1 -> 1.1 -> 2 -> 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 0. MVP Pipeline | 3/3 | Complete | 2026-04-01 |
-| 1. Multi-Source + Preferences | 0/3 | Not started | - |
+| 1. Multi-Source + Preferences | 0/4 | Not started | - |
 | 2. Smart Processing | 0/3 | Not started | - |
 | 3. Closed Loop | 0/2 | Not started | - |
