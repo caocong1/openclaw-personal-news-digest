@@ -40,6 +40,8 @@ Source: {source_name} | {form_type} | Importance: {importance_score}
 ---
 Sources: {source_count} | Processed: {total_items} items | Selected: {selected_items} items
 LLM calls: {llm_calls} | Cache hits: {cache_hits}
+
+Append Transparency Footer (see "Transparency Footer" section below) after all content sections.
 ```
 
 ---
@@ -79,16 +81,45 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 
 ---
 
-## Breaking News (Kuaixun) Template
+## Breaking News Alert (Kuaixun)
 
-For future use -- triggered when an item has importance >= 0.85.
+**Trigger condition:** Any item with `importance_score >= 0.85` during a quick-check run.
 
-```markdown
-**Breaking** -- {timestamp}
+**Conservative threshold policy:** Prefer to MISS a breaking story rather than send a false alarm. The threshold of 0.85 is deliberately high. Only events of genuine breaking significance (major policy changes, critical security incidents, landmark product launches by tier-1 companies, significant market events) should reach 0.85.
 
-**{title}**
-{2-3 sentence summary}
+**Additional safeguards:**
+- Only items classified with `form_type: "news"` or `form_type: "announcement"` qualify (no opinion/analysis alerts)
+- Maximum 3 alerts per day. If 3 alerts have already been sent today (tracked in daily metrics `alerts_sent_today`), skip further alerts.
+- Same-URL dedup: Do not alert for an item whose URL was already alerted (track in metrics `alerted_urls` array)
 
-Importance: {importance}/10 | Source: {source_name}
-{If linked event: "Related event: {event.title}"}
+**Alert format:**
 ```
+[Breaking] {title}
+
+{1-sentence summary}
+
+Source: {source_name} | Importance: {importance_score}
+Time: {published_at or fetch time}
+```
+
+**No-alert behavior:** If no items meet the threshold after a quick-check run, produce NO output. Do not send "no breaking news" messages. Silence means no breaking news.
+
+---
+
+## Transparency Footer
+
+Appended at the bottom of every daily digest output:
+
+```
+---
+Stats: {source_count} sources checked | {items_processed} items processed | {llm_calls} LLM calls | {cache_hits} cache hits
+```
+
+Where:
+- `source_count`: Number of enabled sources in sources.json at time of run
+- `items_processed`: Number of items that reached processing_status "complete" today
+- `llm_calls`: Value of budget.json calls_today at end of run
+- `cache_hits`: Sum of classify + summarize cache hits for this run (from daily metrics)
+
+If circuit-breaker was triggered, append: ` | Budget: EXHAUSTED`
+If budget warning was triggered, append: ` | Budget: {percentage}% used`
