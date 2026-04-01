@@ -42,6 +42,11 @@ Value: `preferences.source_trust[item.source_id]` if set, otherwise fall back to
 
 Range: 0.0-1.0
 
+**Degraded source penalty:** If `source.status == "degraded"` (see `config/sources.json`),
+multiply the `source_trust` value by **0.5** before including it in the weighted sum.
+This deprioritizes items from degraded sources without completely excluding them.
+See `references/processing-instructions.md` Section 6 for the full demotion/recovery state machine.
+
 ### 4. Form Preference (weight: 0.10)
 
 Value: Normalized form preference for the item's `form_type`.
@@ -141,9 +146,11 @@ event_boost = 0    otherwise
 
 **Phase 1:** feedback_boost activated -- computed from user feedback data in `preferences.feedback_samples` and `preferences.source_trust`. At cold start (no feedback data), feedback_boost remains 0.
 
-**Phase 2 (current):** event_boost is now **active** -- computed from event status and importance in `data/events/active.json`. Items linked to active events with importance >= 0.7 receive `event_boost = 0.5`. Items not linked to events or linked to non-active/low-importance events receive 0.
+**Phase 2:** event_boost is now **active** -- computed from event status and importance in `data/events/active.json`. Items linked to active events with importance >= 0.7 receive `event_boost = 0.5`. Items not linked to events or linked to non-active/low-importance events receive 0.
 
-Current effective formula (Phase 2, with both feedback and events active):
+**Phase 4 (current):** Added degraded source penalty documentation. When `source.status == "degraded"`, `source_trust` is multiplied by 0.5 before inclusion in the weighted sum. No formula weights changed -- this is a conditional modifier on the source_trust input value. See Section 3 above.
+
+Current effective formula (Phase 4, with degraded penalty documented):
 
 ```
 phase2_score =

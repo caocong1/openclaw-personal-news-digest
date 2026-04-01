@@ -356,7 +356,9 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
   "source_proportions": {
     "src-36kr": 0.0
   },
-  "alerts": []
+  "alerts": [],
+  "alerts_sent_today": 0,
+  "alerted_urls": []
 }
 ```
 
@@ -367,6 +369,8 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
 
 **Field notes (alerts):**
 - `alerts`: Array of `AlertCondition` objects detected during this day's health check. Empty array if no alerts fired. Populated by `scripts/health-check.sh` daily mode.
+- `alerts_sent_today`: Integer count of breaking news alerts sent during quick-check runs today. Default 0. Read by quick-check flow to enforce 3-alert daily cap.
+- `alerted_urls`: Array of URL strings already alerted today. Default []. Read by quick-check flow for same-URL dedup.
 
 ---
 
