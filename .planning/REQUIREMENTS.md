@@ -53,10 +53,10 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **PREF-01**: 5 层偏好模型（主题权重 + 来源信任 + 形态偏好 + 风格容忍度 + 样本反馈）
 - [x] **PREF-02**: 冷启动策略（所有 topic_weights = 0.5，exploration_appetite = 0.3，无初始问卷）
 - [x] **PREF-03**: 7 维个性化评分公式（importance × 0.25 + topic × 0.20 + source × 0.10 + form × 0.10 + feedback × 0.10 + recency × 0.15 + event × 0.10）
-- [ ] **PREF-04**: 偏好衰减（每 30 天向均值回归 5%：w_new = w + (0.5 - w) × 0.05）
+- [x] **PREF-04**: 偏好衰减（每 30 天向均值回归 5%：w_new = w + (0.5 - w) × 0.05）
 - [x] **PREF-05**: 偏好自动备份（更新前备份，保留最近 10 个）
-- [ ] **PREF-06**: 偏好可视化（文字化描述当前偏好状态）
-- [ ] **PREF-07**: 扩展回 7 层模型（新增 depth_preference + judgment_angles）
+- [x] **PREF-06**: 偏好可视化（文字化描述当前偏好状态）
+- [x] **PREF-07**: 扩展回 7 层模型（新增 depth_preference + judgment_angles）
 
 ### Anti-Echo-Chamber
 
@@ -104,7 +104,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [ ] **HIST-03**: 事件跟踪查询（查 active 事件后续）
 - [ ] **HIST-04**: 热点扫描（高 importance 但不在偏好中的内容）
 - [ ] **HIST-05**: 来源分析与健康查询
-- [ ] **HIST-06**: 偏好状态查询（文字化描述）
+- [x] **HIST-06**: 偏好状态查询（文字化描述）
 
 ### Platform Integration
 
@@ -187,10 +187,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PREF-01 | Phase 1 | Complete |
 | PREF-02 | Phase 0 | Complete |
 | PREF-03 | Phase 1 | Complete |
-| PREF-04 | Phase 3 | Pending |
+| PREF-04 | Phase 3 | Complete |
 | PREF-05 | Phase 1 | Complete |
-| PREF-06 | Phase 3 | Pending |
-| PREF-07 | Phase 3 | Pending |
+| PREF-06 | Phase 3 | Complete |
+| PREF-07 | Phase 3 | Complete |
 | ANTI-01 | Phase 2 | Complete |
 | ANTI-02 | Phase 2 | Complete |
 | ANTI-03 | Phase 2 | Complete |
@@ -220,7 +220,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HIST-03 | Phase 3 | Pending |
 | HIST-04 | Phase 3 | Pending |
 | HIST-05 | Phase 3 | Pending |
-| HIST-06 | Phase 3 | Pending |
+| HIST-06 | Phase 3 | Complete |
 | PLAT-01 | Phase 0 | Complete |
 | PLAT-02 | Phase 0 | Complete |
 | PLAT-03 | Phase 0 | Complete |

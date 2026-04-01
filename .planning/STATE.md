@@ -59,6 +59,7 @@ Progress: [█████████████░] 93%
 | Phase 02 P02 | 3min | 2 tasks | 6 files |
 | Phase 02 P03 | 3min | 2 tasks | 4 files |
 | Phase 03 P02 | 3min | 2 tasks | 4 files |
+| Phase 03 P01 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,9 @@ Recent decisions affecting current work:
 - [Phase 02]: ANTI-03 grace period skips diversity constraints when < 3 days of history exist
 - [Phase 02]: Recommendation reasons mandatory for hotspot and exploration, not for core/adjacent
 - [Phase 03]: Asymmetric demotion/recovery thresholds (0.2/14d vs 0.3/7d) with hysteresis counters to prevent oscillation
+- [Phase 03]: Decay runs as step 0 in Processing Phase, before all LLM calls and feedback processing
+- [Phase 03]: depth_preference and judgment_angles wired into summarize prompt, NOT scoring formula
+- [Phase 03]: Schema v2 with backward-compatible defaults for v1 readers (depth_preference="moderate", judgment_angles=[])
 
 ### Pending Todos
 
@@ -112,5 +116,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 03-02-PLAN.md (source auto-demotion)
+Stopped at: Completed 03-01-PLAN.md (preference decay, 7-layer model, visualization)
 Resume file: None
