@@ -31,12 +31,13 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 5. **Handle errors**: On LLM failure, retry once. If still fails, mark `processing_status: "partial"`. If classify fails but summarize succeeds, mark item for exploration slot.
 6. **Update budget**: Read `{baseDir}/config/budget.json`. If `current_date` differs from today, reset `calls_today` and `tokens_today` to 0. Increment counters.
 7. **Write results**: Update items in JSONL atomically, set `processing_status: "complete"`.
-8. **Process pending feedback**: Read `data/feedback/log.jsonl` entries with timestamp > `preferences.last_updated`. Apply updates per `{baseDir}/references/feedback-rules.md`.
-9. **Compute source stats**: For each source that fetched items this run, update quality_score, dedup_rate, selection_rate per `{baseDir}/references/collection-instructions.md` "Source Health Metrics Computation".
+8. **Title dedup**: Run 3-stage title dedup per `{baseDir}/references/processing-instructions.md` Section 1A. Detect `language` (zh/en), compute Jaccard bigram similarity on same-language pairs, LLM-judge candidates. Mark duplicates `dedup_status: "title_dup"`. Skip cross-language pairs.
+9. **Process pending feedback**: Read `data/feedback/log.jsonl` entries with timestamp > `preferences.last_updated`. Apply updates per `{baseDir}/references/feedback-rules.md`.
+10. **Compute source stats**: For each source that fetched items this run, update quality_score, dedup_rate, selection_rate per `{baseDir}/references/collection-instructions.md` "Source Health Metrics Computation".
 
 ## Output Phase
 
-1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items, sort by `final_score` descending.
+1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items, sort by `final_score` descending. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool.
 2. **Quality gate**: If < 3 items, output shortened version. If 0 items, skip output entirely.
 3. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.
 4. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
