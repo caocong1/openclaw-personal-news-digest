@@ -33,11 +33,11 @@ Each news item collected from a source.
   "published_at": "ISO8601 or null",
   "form_type": "news|analysis|opinion|announcement|other",
   "language": "zh|en",
-  "dedup_status": "unique|url_dup",
+  "dedup_status": "unique|url_dup|title_dup|event_merged",
   "content_hash": "string (SHA256(normalized_content)[:16])",
   "processing_status": "raw|partial|complete",
   "duplicate_of": null,
-  "_schema_v": 2
+  "_schema_v": 3
 }
 ```
 
@@ -47,7 +47,8 @@ Each news item collected from a source.
 - `processing_status`: `raw` = just fetched, `partial` = classification or summary failed, `complete` = fully processed
 - `form_type`: Content format -- `news` (factual report), `analysis` (in-depth analysis), `opinion` (editorial/opinion piece), `announcement` (official release/announcement), `other` (uncategorized)
 - `categories.primary`: Must be one of the 12 IDs defined in `config/categories.json`
-- `duplicate_of`: If `dedup_status` is `url_dup`, contains the `id` of the original item
+- `language`: Detected during title dedup Stage A (see `references/processing-instructions.md` Section 1A). CJK character majority (>50%) -> `"zh"`, otherwise `"en"`.
+- `duplicate_of`: If `dedup_status` is `url_dup` or `title_dup`, contains the `id` of the primary/original item
 
 **Defaults for missing fields (older schema versions):**
 - `content_hash`: `null`
@@ -55,6 +56,8 @@ Each news item collected from a source.
 - `duplicate_of`: `null`
 - `categories.secondary`: `[]`
 - `event_id`: `null`
+- `dedup_status`: `"unique"` (for records created before title dedup was added)
+- `language`: `"zh"` (for records created before language detection was added)
 
 ---
 

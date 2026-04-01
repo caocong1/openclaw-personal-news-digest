@@ -169,6 +169,96 @@ After each batch completes:
 
 ---
 
+## Section 1A: Title Near-Duplicate Detection (PROC-04)
+
+After URL dedup and batch LLM processing (classification + summarization), run title-level near-duplicate detection to merge items reporting the same story from different sources. This is a 3-stage funnel that progressively narrows candidates to minimize LLM calls.
+
+### Stage A: Rule Normalization
+
+For each item in today's batch:
+
+1. **Detect language**: Check if majority of characters are CJK (U+4E00-U+9FFF). If >50% CJK characters -> set `language: "zh"`, otherwise set `language: "en"`.
+2. **Strip common prefixes/suffixes** (comparison only, preserve original title for display):
+   - Chinese: "快讯:", "独家:", "【视频】", "【独家】", "突发:", "重磅:"
+   - English: "Breaking:", "Update:", "Exclusive:", "[Video]", "[Exclusive]", "BREAKING:"
+3. **Normalize**: Remove all punctuation, collapse whitespace, lowercase (for English) or keep as-is (for Chinese characters).
+4. Store normalized title separately -- original title is always preserved for display.
+
+### Stage B: Jaccard Bigram Similarity
+
+For each pair of items in the same day's batch with the **SAME** `language` value:
+
+1. Generate character bigrams from normalized title: `bigrams(text) = {text[i:i+2] for i in range(len(text)-1)}`
+2. Compute Jaccard similarity: `J = |intersection(bigrams_a, bigrams_b)| / |union(bigrams_a, bigrams_b)|`
+3. If `J >= 0.6`: add pair to candidate group for LLM judgment
+
+**Efficiency constraint**: Only compare items sharing the same `categories.primary` OR same `source_id`. This limits comparisons from O(n^2) to manageable clusters.
+
+**Cross-language prohibition (PROC-06)**: Stage B MUST skip pairs where `item_a.language != item_b.language`. Chinese and English titles are NEVER compared for title dedup. Cross-language merging happens only at event level in Plan 02.
+
+Expected volume: ~500 items/day -> 20-50 candidate pairs.
+
+### Stage C: LLM Precise Judgment
+
+Only for candidate groups identified in Stage B (not all items):
+
+1. Batch up to 10 candidate titles per LLM call using `references/prompts/dedup.md`
+2. Fill `{title_list_with_ids}` with candidate title IDs and original titles (not normalized)
+3. Parse LLM response: JSON array of duplicate group ID lists
+4. For each duplicate group:
+   - Keep the item with the highest `source.credibility` (from `config/sources.json`) as the primary item
+   - For each secondary item: set `dedup_status: "title_dup"` and `duplicate_of: <primary_item_id>`
+5. Items not in any duplicate group remain `dedup_status: "unique"`
+
+Expected volume: 5-15 LLM calls/day for this step.
+
+---
+
+## Section 1B: Multi-Language Processing (PROC-06)
+
+Rules for handling Chinese and English content across the pipeline.
+
+### Language Detection
+
+Set the `language` field on each NewsItem during Stage A of title dedup:
+- Compute CJK character ratio: count characters in U+4E00-U+9FFF range / total non-whitespace characters
+- If ratio > 0.5 -> `language: "zh"`
+- Otherwise -> `language: "en"`
+
+### Title Dedup: Per-Language Independent Pipelines
+
+- Chinese items are deduped only against other Chinese items
+- English items are deduped only against other English items
+- Cross-language title comparison NEVER happens (Jaccard bigram across scripts produces garbage results)
+
+### Summarization
+
+- All items receive Chinese-language summaries regardless of source language (existing behavior in `references/prompts/summarize.md`)
+- For English source items, the LLM reads the English content and produces a Chinese summary
+
+### Output Display Format for English Items
+
+English-language items appear in the digest with the original English title plus a Chinese translation:
+
+```
+### Original English Title (Chinese Translation of Title)
+{Chinese summary, 2-3 sentences}
+Source: {source_name} | {form_type} | Importance: {score}
+```
+
+Example:
+```
+### OpenAI Announces GPT-6 (OpenAI 发布 GPT-6)
+OpenAI 正式发布 GPT-6 模型，在多项基准测试中大幅超越前代。该模型引入了新的推理架构，定价降低 40%。
+Source: TechCrunch | news | Importance: 0.9
+```
+
+### Event Merging
+
+Cross-language event merging is allowed -- the same event reported in both Chinese and English sources can be merged at event level. This is handled in Plan 02 (not in title dedup).
+
+---
+
 ## Section 2: Error Handling
 
 Error handling matrix derived from the design document. Apply these rules during batch processing.
