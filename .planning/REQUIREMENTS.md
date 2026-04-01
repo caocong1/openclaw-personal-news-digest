@@ -18,7 +18,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Source Management
 
-- [ ] **SRC-01**: RSS/Atom feed 采集（web_fetch 解析 XML，提取 title/link/description/pubDate）
+- [x] **SRC-01**: RSS/Atom feed 采集（web_fetch 解析 XML，提取 title/link/description/pubDate）
 - [ ] **SRC-02**: GitHub Release/Repo 采集（GitHub API JSON 解析）
 - [ ] **SRC-03**: 搜索类来源采集（web_search 关键词搜索 + LLM 过滤）
 - [ ] **SRC-04**: 官方公告采集（web_fetch 或 browser + LLM 提取）
@@ -31,14 +31,14 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Content Processing
 
-- [ ] **PROC-01**: URL 规范化 + 链接级去重（去追踪参数 → SHA256[:16] → dedup-index 查询）
-- [ ] **PROC-02**: LLM 多标签分类（12 个顶层类目 + 细粒度 tags + importance_score + form_type）
-- [ ] **PROC-03**: LLM 摘要生成（2-3 句中文摘要，非中文新闻标题保留原文附中文翻译）
+- [x] **PROC-01**: URL 规范化 + 链接级去重（去追踪参数 → SHA256[:16] → dedup-index 查询）
+- [x] **PROC-02**: LLM 多标签分类（12 个顶层类目 + 细粒度 tags + importance_score + form_type）
+- [x] **PROC-03**: LLM 摘要生成（2-3 句中文摘要，非中文新闻标题保留原文附中文翻译）
 - [ ] **PROC-04**: 标题近似去重三阶段（规则归一化 → Jaccard bigram ≥ 0.6 → LLM 精确判断）
-- [ ] **PROC-05**: 批量 LLM 处理（分类和摘要 5-10 条/次，减少 per-call overhead）
+- [x] **PROC-05**: 批量 LLM 处理（分类和摘要 5-10 条/次，减少 per-call overhead）
 - [ ] **PROC-06**: 多语言处理（中文 + 英文，不同语言独立去重，允许跨语言事件归并）
-- [ ] **PROC-07**: 容错处理（分类失败但摘要成功 → 归入探索位；LLM 格式异常 → 重试 1 次）
-- [ ] **PROC-08**: 断点续跑（processing_status: "raw" 的记录下次运行补充分类/摘要）
+- [x] **PROC-07**: 容错处理（分类失败但摘要成功 → 归入探索位；LLM 格式异常 → 重试 1 次）
+- [x] **PROC-08**: 断点续跑（processing_status: "raw" 的记录下次运行补充分类/摘要）
 
 ### Event Tracking
 
@@ -68,11 +68,11 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Output Generation
 
-- [ ] **OUT-01**: 日报生成（核心关注 + 相关动态 + 今日热点 + 探索发现 + 事件跟踪，15-25 条）
+- [x] **OUT-01**: 日报生成（核心关注 + 相关动态 + 今日热点 + 探索发现 + 事件跟踪，15-25 条）
 - [ ] **OUT-02**: 快讯输出（importance ≥ 0.85 触发，无内容不输出，宁缺毋滥）
 - [ ] **OUT-03**: 周报生成（一周趋势回顾 + 事件时间线 + 跨领域总结，30-50 条）
 - [ ] **OUT-04**: 输出解释字段（探索/热点位附推荐理由）
-- [ ] **OUT-05**: 质量感知输出（内容不足时缩短而非硬凑，空输入不生成空日报）
+- [x] **OUT-05**: 质量感知输出（内容不足时缩短而非硬凑，空输入不生成空日报）
 - [ ] **OUT-06**: 运行透明化（输出尾部显示来源数、处理条数、LLM 调用次数、缓存命中）
 
 ### Feedback Learning
@@ -161,7 +161,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FRMW-04 | Phase 0 | Complete |
 | FRMW-05 | Phase 0 | Complete |
 | FRMW-06 | Phase 0 | Complete |
-| SRC-01 | Phase 0 | Pending |
+| SRC-01 | Phase 0 | Complete |
 | SRC-02 | Phase 1 | Pending |
 | SRC-03 | Phase 1 | Pending |
 | SRC-04 | Phase 1 | Pending |
@@ -171,14 +171,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SRC-08 | Phase 1 | Pending |
 | SRC-09 | Phase 3 | Pending |
 | SRC-10 | Phase 1 | Pending |
-| PROC-01 | Phase 0 | Pending |
-| PROC-02 | Phase 0 | Pending |
-| PROC-03 | Phase 0 | Pending |
+| PROC-01 | Phase 0 | Complete |
+| PROC-02 | Phase 0 | Complete |
+| PROC-03 | Phase 0 | Complete |
 | PROC-04 | Phase 2 | Pending |
-| PROC-05 | Phase 0 | Pending |
+| PROC-05 | Phase 0 | Complete |
 | PROC-06 | Phase 2 | Pending |
-| PROC-07 | Phase 0 | Pending |
-| PROC-08 | Phase 0 | Pending |
+| PROC-07 | Phase 0 | Complete |
+| PROC-08 | Phase 0 | Complete |
 | EVT-01 | Phase 2 | Pending |
 | EVT-02 | Phase 2 | Pending |
 | EVT-03 | Phase 2 | Pending |
@@ -196,11 +196,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ANTI-03 | Phase 2 | Pending |
 | ANTI-04 | Phase 2 | Pending |
 | ANTI-05 | Phase 2 | Pending |
-| OUT-01 | Phase 0 | Pending |
+| OUT-01 | Phase 0 | Complete |
 | OUT-02 | Phase 1 | Pending |
 | OUT-03 | Phase 3 | Pending |
 | OUT-04 | Phase 2 | Pending |
-| OUT-05 | Phase 0 | Pending |
+| OUT-05 | Phase 0 | Complete |
 | OUT-06 | Phase 1 | Pending |
 | FB-01 | Phase 1 | Pending |
 | FB-02 | Phase 1 | Pending |
