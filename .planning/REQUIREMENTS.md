@@ -60,18 +60,18 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Anti-Echo-Chamber
 
-- [ ] **ANTI-01**: 内容配额机制（日报：核心 50% / 邻近 20% / 热点 15% / 探索 15%）
-- [ ] **ANTI-02**: 配额执行算法（按 final_score 降序 → 分组取 top-K → 单向链式让渡）
-- [ ] **ANTI-03**: 反向多样性约束（同主题 > 60% 连续 3 天 → 上限 50%；同来源 > 30% → 上限 20%；同事件 > 3 天 → 仅新进展推送）
-- [ ] **ANTI-04**: 热点注入（importance ≥ 0.8 强制进入候选池，仍经质量判断和去重）
-- [ ] **ANTI-05**: 偏好纠偏（类目最小 2% 曝光，周报 ≥ 5 类目，每 7 天 exploration_appetite +0.05 上限 0.4）
+- [x] **ANTI-01**: 内容配额机制（日报：核心 50% / 邻近 20% / 热点 15% / 探索 15%）
+- [x] **ANTI-02**: 配额执行算法（按 final_score 降序 → 分组取 top-K → 单向链式让渡）
+- [x] **ANTI-03**: 反向多样性约束（同主题 > 60% 连续 3 天 → 上限 50%；同来源 > 30% → 上限 20%；同事件 > 3 天 → 仅新进展推送）
+- [x] **ANTI-04**: 热点注入（importance ≥ 0.8 强制进入候选池，仍经质量判断和去重）
+- [x] **ANTI-05**: 偏好纠偏（类目最小 2% 曝光，周报 ≥ 5 类目，每 7 天 exploration_appetite +0.05 上限 0.4）
 
 ### Output Generation
 
 - [x] **OUT-01**: 日报生成（核心关注 + 相关动态 + 今日热点 + 探索发现 + 事件跟踪，15-25 条）
 - [x] **OUT-02**: 快讯输出（importance ≥ 0.85 触发，无内容不输出，宁缺毋滥）
 - [ ] **OUT-03**: 周报生成（一周趋势回顾 + 事件时间线 + 跨领域总结，30-50 条）
-- [ ] **OUT-04**: 输出解释字段（探索/热点位附推荐理由）
+- [x] **OUT-04**: 输出解释字段（探索/热点位附推荐理由）
 - [x] **OUT-05**: 质量感知输出（内容不足时缩短而非硬凑，空输入不生成空日报）
 - [x] **OUT-06**: 运行透明化（输出尾部显示来源数、处理条数、LLM 调用次数、缓存命中）
 
@@ -191,15 +191,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PREF-05 | Phase 1 | Complete |
 | PREF-06 | Phase 3 | Pending |
 | PREF-07 | Phase 3 | Pending |
-| ANTI-01 | Phase 2 | Pending |
-| ANTI-02 | Phase 2 | Pending |
-| ANTI-03 | Phase 2 | Pending |
-| ANTI-04 | Phase 2 | Pending |
-| ANTI-05 | Phase 2 | Pending |
+| ANTI-01 | Phase 2 | Complete |
+| ANTI-02 | Phase 2 | Complete |
+| ANTI-03 | Phase 2 | Complete |
+| ANTI-04 | Phase 2 | Complete |
+| ANTI-05 | Phase 2 | Complete |
 | OUT-01 | Phase 0 | Complete |
 | OUT-02 | Phase 1 | Complete |
 | OUT-03 | Phase 3 | Pending |
-| OUT-04 | Phase 2 | Pending |
+| OUT-04 | Phase 2 | Complete |
 | OUT-05 | Phase 0 | Complete |
 | OUT-06 | Phase 1 | Complete |
 | FB-01 | Phase 1 | Complete |
