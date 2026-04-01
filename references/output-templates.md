@@ -32,10 +32,13 @@ Source: {source_name} | {form_type} | Importance: {importance_score}
 
 ## Event Tracking
 
-{Active events with new developments -- timeline format:}
+{For each active/stable event that had new items merged today:}
 ### {event_title}
-- {date}: {development summary}
-- {date}: {development summary}
+{event_summary (1-2 sentences, current state of the event)}
+Timeline:
+- [{date}] {brief} ({relation}) -- Source: {source_name}
+- [{date}] {brief} ({relation}) -- Source: {source_name}
+Status: {active|stable} | Items: {item_count} | First seen: {first_seen_date}
 
 ---
 Sources: {source_count} | Processed: {total_items} items | Selected: {selected_items} items
@@ -65,7 +68,7 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 ### Section Omission
 
 - Omit any section that has 0 items (do not render empty sections)
-- "Event Tracking" section only appears when active events have new developments
+- "Event Tracking" section appears only when active/stable events received new items merged today. Show most recent 5 timeline entries per event. Older entries omitted with "... and N earlier developments".
 - "Exploration" section only appears when exploration_appetite > 0
 
 ---

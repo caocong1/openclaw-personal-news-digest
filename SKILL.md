@@ -32,18 +32,21 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 6. **Update budget**: Read `{baseDir}/config/budget.json`. If `current_date` differs from today, reset `calls_today` and `tokens_today` to 0. Increment counters.
 7. **Write results**: Update items in JSONL atomically, set `processing_status: "complete"`.
 8. **Title dedup**: Run 3-stage title dedup per `{baseDir}/references/processing-instructions.md` Section 1A. Detect `language` (zh/en), compute Jaccard bigram similarity on same-language pairs, LLM-judge candidates. Mark duplicates `dedup_status: "title_dup"`. Skip cross-language pairs.
-9. **Process pending feedback**: Read `data/feedback/log.jsonl` entries with timestamp > `preferences.last_updated`. Apply updates per `{baseDir}/references/feedback-rules.md`.
-10. **Compute source stats**: For each source that fetched items this run, update quality_score, dedup_rate, selection_rate per `{baseDir}/references/collection-instructions.md` "Source Health Metrics Computation".
+9. **Event lifecycle**: Transition events per `{baseDir}/references/processing-instructions.md` Section 1D. Active -> stable (3d), stable -> archived (7d).
+10. **Event merge**: For items with `dedup_status: "unique"`, run event merge per `{baseDir}/references/processing-instructions.md` Section 1C. Topic filter -> keyword match -> LLM merge/new decision.
+11. **Process pending feedback**: Read `data/feedback/log.jsonl` entries with timestamp > `preferences.last_updated`. Apply updates per `{baseDir}/references/feedback-rules.md`.
+12. **Compute source stats**: For each source that fetched items this run, update quality_score, dedup_rate, selection_rate per `{baseDir}/references/collection-instructions.md` "Source Health Metrics Computation".
 
 ## Output Phase
 
-1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items, sort by `final_score` descending. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool.
+1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items (all 7 dimensions active, including event_boost from `data/events/active.json`), sort by `final_score` descending. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool.
 2. **Quality gate**: If < 3 items, output shortened version. If 0 items, skip output entirely.
 3. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.
-4. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
-5. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics.
-6. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Append to digest output.
-7. **Release lock**: Delete `{baseDir}/data/.lock`.
+4. **Event Tracking section**: For events with new items merged today, build timeline view per `{baseDir}/references/output-templates.md` Event Tracking section.
+5. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
+6. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics.
+7. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Append to digest output.
+8. **Release lock**: Delete `{baseDir}/data/.lock`.
 
 ## Quick-Check Flow (breaking news)
 

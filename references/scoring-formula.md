@@ -115,9 +115,23 @@ If `published_at` is null, use `fetched_at` instead.
 
 ### 7. Event Boost (weight: 0.10)
 
-**MVP: Always 0.** No event tracking in Phase 0.
+Value: Computed from the item's linked event status and importance.
 
-Future: Items linked to active events receive a boost based on event recency and importance.
+```
+event_boost = 0.5  if item.event_id is not null
+                     AND event.status == "active"
+                     AND event.importance >= 0.7
+event_boost = 0    otherwise
+```
+
+**Lookup procedure:**
+1. If `item.event_id` is null -> `event_boost = 0`
+2. Read `data/events/active.json`, find event with matching id
+3. If event not found (may have been archived) -> `event_boost = 0`
+4. If `event.status == "active"` AND `event.importance >= 0.7` -> `event_boost = 0.5`
+5. Otherwise -> `event_boost = 0`
+
+**Effect:** Items linked to high-importance active events receive a 0.05 boost to final_score (0.5 * 0.10 weight). This surfaces continuing stories that the user is likely tracking.
 
 ---
 
@@ -125,21 +139,21 @@ Future: Items linked to active events receive a boost based on event recency and
 
 **Phase 0 (MVP):** feedback_boost and event_boost were both hardcoded to 0.
 
-**Phase 1 (current):** feedback_boost is now **active** -- computed from user feedback data in `preferences.feedback_samples` and `preferences.source_trust`. At cold start (no feedback data), feedback_boost remains 0, preserving Phase 0 behavior.
+**Phase 1:** feedback_boost activated -- computed from user feedback data in `preferences.feedback_samples` and `preferences.source_trust`. At cold start (no feedback data), feedback_boost remains 0.
 
-**Event boost:** Still 0 (hardcoded). Event tracking activates in Phase 2.
+**Phase 2 (current):** event_boost is now **active** -- computed from event status and importance in `data/events/active.json`. Items linked to active events with importance >= 0.7 receive `event_boost = 0.5`. Items not linked to events or linked to non-active/low-importance events receive 0.
 
-Current effective formula (Phase 1, with feedback but no events):
+Current effective formula (Phase 2, with both feedback and events active):
 
 ```
-phase1_score =
+phase2_score =
     importance_score      * 0.25
   + topic_weight(primary) * 0.20
   + source_trust          * 0.10
   + form_preference_norm  * 0.10
-  + feedback_boost        * 0.10    <-- NOW ACTIVE (was 0 in Phase 0)
+  + feedback_boost        * 0.10    <-- ACTIVE (since Phase 1)
   + recency_score         * 0.15
-  + event_boost           * 0.10    <-- still 0, activates Phase 2
+  + event_boost           * 0.10    <-- NOW ACTIVE (was 0 in Phase 0-1)
 
-Effective max: 0.90 (with feedback data) or 0.80 (cold start, no feedback)
+Effective max: 1.00 (with both feedback data and active high-importance events)
 ```
