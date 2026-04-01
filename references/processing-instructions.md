@@ -336,3 +336,26 @@ After output and metrics are written:
 
 1. Delete `data/.lock`
 2. Pipeline run is complete
+
+---
+
+## Section 5: Metrics Collection for Transparency
+
+During each pipeline run, track these counters for the transparency footer and breaking news alerting:
+
+| Metric | Source | When Updated |
+|--------|--------|--------------|
+| source_count | Count of `enabled: true` in sources.json | At run start |
+| items_fetched | Items returned by collection phase | After collection |
+| items_new | Items that passed dedup | After dedup |
+| items_processed | Items reaching `processing_status: "complete"` | After processing |
+| llm_calls | `calls_today` from budget.json | After each LLM batch |
+| cache_hits | Classify + summarize cache hits | After each cache lookup |
+| alerts_sent_today | Breaking news alerts sent (integer, default 0) | After alert delivery |
+| alerted_urls | URLs already alerted today (array, default []) | After alert delivery |
+
+All metrics are written to `data/metrics/daily-YYYY-MM-DD.json` at the end of each run.
+
+The daily digest output phase reads these metrics to populate the Transparency Footer (see `references/output-templates.md` "Transparency Footer" section).
+
+The quick-check flow reads `alerts_sent_today` and `alerted_urls` to enforce the daily alert cap and URL dedup for breaking news.

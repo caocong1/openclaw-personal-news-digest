@@ -41,7 +41,16 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 3. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.
 4. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
 5. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics.
-6. **Release lock**: Delete `{baseDir}/data/.lock`.
+6. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Append to digest output.
+7. **Release lock**: Delete `{baseDir}/data/.lock`.
+
+## Quick-Check Flow (breaking news)
+
+Triggered by quick-check cron (every 2h):
+1. Run Collection + Processing phases (same as daily).
+2. **Breaking news scan**: Check today's items for `importance_score >= 0.85`, filtered by `form_type: "news"/"announcement"`, capped at 3 alerts/day, deduped by URL. See `{baseDir}/references/output-templates.md` "Breaking News Alert" and `{baseDir}/references/processing-instructions.md` "Metrics Collection" for thresholds and tracking fields (`alerts_sent_today`, `alerted_urls`).
+3. If qualifying items: generate alert, deliver, update metrics. If none: no output.
+4. Release lock.
 
 ## Standing Orders
 
