@@ -12,7 +12,8 @@
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] 5 层用户偏好模型（主题、来源信任、形态、风格、样本反馈） — Validated in Phase 3-4
+- [x] 日报深度偏好端对端贯通（depth_preference + judgment_angles → 日报摘要） — Validated in Phase 5: daily-depth-control-wiring
 
 ### Active
 
@@ -101,4 +102,4 @@
 | Phase 0 合并为单阶段 | Qwen 评审：三子阶段紧耦合，拆分增加管理开销 | — Pending |
 
 ---
-*Last updated: 2026-03-31 after initialization*
+*Last updated: 2026-04-02 after Phase 5 completion*
