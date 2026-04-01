@@ -55,9 +55,48 @@ This maps the [-1, 1] preference range to [0, 1] for scoring.
 
 ### 5. Feedback Boost (weight: 0.10)
 
-**MVP: Always 0.** No feedback data available at cold start.
+Value: Computed from `preferences.feedback_samples`, `preferences.source_trust`, and `preferences.feedback_samples.blocked_patterns`.
 
-Future: Computed from matching patterns in `preferences.feedback_samples`.
+**feedback_boost calculation:**
+
+```
+Read config/preferences.json -> feedback_samples, source_trust
+
+Initialize boost = 0
+
+1. Category match (liked):
+   If item.primary_category matches any liked_item's category
+   -> boost += 0.3
+
+2. Source trust:
+   If item.source_id exists in source_trust AND source_trust[source_id] > 0
+   -> boost += min(source_trust[source_id], 0.2)
+
+3. Category match (disliked):
+   If item.primary_category matches any disliked_item's category
+   -> boost -= 0.3
+
+4. Source distrust:
+   If item.source_id exists in source_trust AND source_trust[source_id] < 0
+   -> boost -= min(abs(source_trust[source_id]), 0.2)
+
+5. Blocked pattern:
+   If item matches any blocked_pattern (substring match on title or tags)
+   -> boost -= 0.5
+
+6. Clamp result to [0.0, 1.0]
+```
+
+**Cold-start behavior:** If feedback_samples is empty (no liked/disliked items, no trusted/distrusted sources, no blocked patterns), the boost resolves to zero. This preserves Phase 0 behavior until the user provides feedback.
+
+**5-Layer Preference Model (fully active):**
+- Layer 1: `topic_weights` -- used in topic_match dimension (weight 0.20)
+- Layer 2: `source_trust` -- used in source_score dimension (weight 0.10) and feedback_boost
+- Layer 3: `form_preference` -- used in form_match dimension (weight 0.10)
+- Layer 4: `style` -- used in output generation for density, exploration appetite
+- Layer 5: `feedback_samples` -- used in feedback_boost dimension (weight 0.10)
+
+See `references/feedback-rules.md` for how user feedback updates each layer.
 
 ### 6. Recency (weight: 0.15)
 
@@ -82,19 +121,25 @@ Future: Items linked to active events receive a boost based on event recency and
 
 ---
 
-## MVP Simplification
+## Phase Activation Status
 
-In MVP (Phase 0), feedback_boost and event_boost are both 0, so the effective formula is:
+**Phase 0 (MVP):** feedback_boost and event_boost were both hardcoded to 0.
+
+**Phase 1 (current):** feedback_boost is now **active** -- computed from user feedback data in `preferences.feedback_samples` and `preferences.source_trust`. At cold start (no feedback data), feedback_boost remains 0, preserving Phase 0 behavior.
+
+**Event boost:** Still 0 (hardcoded). Event tracking activates in Phase 2.
+
+Current effective formula (Phase 1, with feedback but no events):
 
 ```
-mvp_score =
+phase1_score =
     importance_score      * 0.25
   + topic_weight(primary) * 0.20
   + source_trust          * 0.10
   + form_preference_norm  * 0.10
+  + feedback_boost        * 0.10    <-- NOW ACTIVE (was 0 in Phase 0)
   + recency_score         * 0.15
+  + event_boost           * 0.10    <-- still 0, activates Phase 2
 
-Effective max: 0.80 (relative ordering is what matters)
+Effective max: 0.90 (with feedback data) or 0.80 (cold start, no feedback)
 ```
-
-The remaining 0.20 weight (feedback + event) activates in later phases.
