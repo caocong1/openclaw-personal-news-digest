@@ -740,3 +740,137 @@ Ensure >= 5 different categories are represented. If fewer than 5 categories hav
 1. Fill weekly report template from `references/output-templates.md`
 2. Write to `output/latest-weekly.md` atomically
 3. Write weekly metrics to `data/metrics/weekly-{start_date}.json` (separate from daily metrics)
+
+---
+
+## Section 8: History Query Execution (HIST-01 through HIST-05)
+
+### Overview
+
+When the user sends a natural language query (not source management, not feedback, not preference query), classify query type using `references/prompts/history-query.md`, then execute the matching procedure below. Cap all results at 20 items.
+
+### HIST-01: Recent Activity Query
+
+**Trigger:** User asks about recent/latest/today's news (e.g., "最新消息", "what's new", "今天有什么", "latest news").
+
+**Procedure:**
+1. Read today's `data/news/YYYY-MM-DD.jsonl`
+2. Filter items with `processing_status: "complete"`
+3. Sort by `final_score` descending (if available) or `importance_score` descending
+4. Cap at 20 items
+5. Format response: compact list with title, 1-sentence summary, source, importance
+
+**Response format:**
+```
+## Recent News (last 24 hours)
+Found {N} items.
+
+1. **{title}** -- {1-sentence summary}
+   Source: {source_name} | Importance: {score} | {time_ago}
+2. ...
+```
+
+### HIST-02: Topic Review Query
+
+**Trigger:** User asks about a specific topic over a time period (e.g., "这周的 AI 新闻", "AI news this week", "show me dev-tools from last 3 days").
+
+**Procedure:**
+1. Classify the topic using `config/categories.json` category IDs
+2. Read N days of `data/news/YYYY-MM-DD.jsonl` files (default 7, max 30)
+3. Filter items where `categories.primary == matched_topic` AND `processing_status: "complete"`
+4. Sort by `published_at` descending
+5. Cap at 20 items
+6. Use LLM to generate a brief trend summary of the filtered items (2-3 sentences)
+
+**Response format:**
+```
+## {Topic Name} News (last {N} days)
+{LLM trend summary: 2-3 sentences}
+
+Found {total} items, showing top {shown}:
+1. **{title}** -- {1-sentence summary}
+   Source: {source_name} | {date} | Importance: {score}
+2. ...
+```
+
+### HIST-03: Event Tracking Query
+
+**Trigger:** User asks about a specific event's developments (e.g., "某某事件后续", "what happened with X", "follow-up on the merger").
+
+**Procedure:**
+1. Read `data/events/active.json`
+2. Match event by keyword overlap: tokenize user query keywords, compare against `event.keywords` and `event.title`
+3. If multiple matches: present top 3 candidates and ask user to clarify
+4. If single match: present full event timeline
+
+**Response format:**
+```
+## Event: {event_title}
+Status: {status} | Importance: {importance} | First seen: {date}
+
+{event_summary}
+
+### Timeline
+- [{date}] {brief} ({relation}) -- Source: {source_name}
+- [{date}] {brief} ({relation}) -- Source: {source_name}
+...
+
+Related items: {item_count} total
+```
+
+If no event match found, also scan last 7 days of JSONL for items matching the query keywords and present those instead.
+
+### HIST-04: Hotspot Scan Query
+
+**Trigger:** User asks about missed or high-importance news outside their interests (e.g., "我错过了什么", "what did I miss", "有什么重要的我没关注的").
+
+**Procedure:**
+1. Read `config/preferences.json` to get `topic_weights`
+2. Read last 7 days of JSONL files
+3. Filter items where: `importance_score >= 0.7` AND `topic_weights[categories.primary] < 0.5`
+4. Sort by `importance_score` descending
+5. Cap at 20 items
+
+**Response format:**
+```
+## Things You Might Have Missed
+High-importance news outside your usual interests:
+
+1. **{title}** -- {1-sentence summary}
+   Category: {category} (your weight: {weight}) | Importance: {score}
+   Why shown: Important event in a category you don't usually follow
+2. ...
+```
+
+### HIST-05: Source Analysis Query
+
+**Trigger:** User asks about a specific source's performance (e.g., "36Kr 怎么样", "how is TechCrunch doing", "source health").
+
+**Procedure:**
+1. Read `config/sources.json`
+2. Match source by name (case-insensitive substring match)
+3. If multiple matches: list candidates and ask user to clarify
+4. If single match: format source health dashboard
+
+**Response format:**
+```
+## Source: {source_name}
+Type: {type} | Status: {status} | Enabled: {enabled}
+
+### Performance (7-day rolling)
+- Quality score: {quality_score}
+- Dedup rate: {dedup_rate} ({interpretation})
+- Selection rate: {selection_rate} ({interpretation})
+- Total fetched: {total_fetched}
+- Last fetch: {last_fetch}
+- Consecutive failures: {consecutive_failures}
+
+{If degraded: "Degraded since: {degraded_since}. Source will auto-recover when quality_score > 0.3 for 7 consecutive days."}
+```
+
+### Query Performance Guidelines
+
+- Default lookback: 1 day (HIST-01), 7 days (HIST-02, HIST-04), event lifetime (HIST-03)
+- Max lookback: 30 days. If user requests longer range, cap at 30 and inform: "Showing last 30 days (maximum range)."
+- JSONL files are date-partitioned so lookback maps directly to file count
+- If no results found for a query, inform the user and suggest broadening the search (longer time range or different topic)
