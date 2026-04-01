@@ -2,12 +2,12 @@
 
 ## Overview
 
-This roadmap delivers a personalized news digest Skill on the OpenClaw platform across 4 phases. Phase 0 establishes the end-to-end pipeline with a single RSS source. Phase 1 expands to multi-source collection with basic preferences and feedback. Phase 2 adds intelligent processing (event merging, timeline tracking, anti-echo-chamber). Phase 3 closes the loop with full feedback learning, advanced preferences, history query, and weekly reports.
+This roadmap delivers a personalized news digest Skill on the OpenClaw platform across 7 phases. Phase 0 establishes the end-to-end pipeline with a single RSS source. Phase 1 expands to multi-source collection with basic preferences and feedback. Phase 2 adds intelligent processing (event merging, timeline tracking, anti-echo-chamber). Phase 3 closes the loop with full feedback learning, advanced preferences, history query, and weekly reports. Phases 4-6 close residual milestone-audit wiring and coverage gaps that remained after the initial delivery phases.
 
 ## Phases
 
 **Phase Numbering:**
-- Integer phases (0, 1, 2, 3): Planned milestone work
+- Integer phases (0, 1, 2, 3, 4, 5, 6): Planned milestone work and audit follow-up phases
 - Decimal phases (1.1, 2.1): Urgent insertions (marked with INSERTED)
 
 Decimal phases appear between their surrounding integers in numeric order.
@@ -17,6 +17,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Smart Processing** - Title dedup, event merging, timeline, anti-echo-chamber, multi-language
 - [ ] **Phase 3: Closed Loop** - Full feedback loop, 7-layer preferences, weekly report, history query
 - [ ] **Phase 4: Integration Wiring Fixes** - Close cross-phase integration gaps found by milestone audit
+- [ ] **Phase 5: Daily Depth Control Wiring** - Finish the daily summarize preference injection path left partial by the v1.0 audit
+- [ ] **Phase 6: Per-Source Metrics Continuity** - Add the per_source metrics contract and producer needed by source health, monitoring, and auto-recovery flows
 
 ## Phase Details
 
@@ -96,6 +98,7 @@ Plans:
 **Depends on**: Phase 3
 **Requirements**: PREF-07, ANTI-05, SRC-09, OUT-02
 **Gap Closure:** Closes 4 requirement gaps, 5 integration gaps (MISSING-01 through MISSING-05), and 2 broken E2E flows (BROKEN-01, BROKEN-02) from v1.0 audit
+**Audit Outcome:** Re-audit partially closed this phase. Remaining PREF-07 and per-source metrics continuity gaps continue in Phases 5 and 6.
 **Success Criteria** (what must be TRUE):
   1. Daily summarize.md prompt includes {depth_preference} and {judgment_angles} placeholders, producing variable-depth output matching user preference
   2. preferences.json contains style.last_exploration_increase field, gating exploration_appetite increment to once per 7 days
@@ -107,10 +110,39 @@ Plans:
 Plans:
 - [ ] 04-01-PLAN.md — Fix all 5 integration wiring gaps: summarize.md placeholders, preferences.json field, scoring-formula.md penalty, sources.json stats fields, data-models.md alert fields
 
+### Phase 5: Daily Depth Control Wiring
+**Goal**: Finish the daily digest depth-control path so saved preference fields actually shape daily summarization output end-to-end
+**Depends on**: Phase 4
+**Requirements**: PREF-07
+**Gap Closure:** Closes 1 requirement gap (PREF-07), 1 integration gap (MISSING-01), and 1 broken E2E flow (BROKEN-01) from the v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. The daily summarization batch in references/processing-instructions.md reads and injects depth_preference and judgment_angles into summarize.md
+  2. SKILL.md and supporting references describe daily summaries as preference-driven variable depth rather than fixed 2-3 sentence output
+  3. Re-audit no longer reports MISSING-01 or BROKEN-01
+**Plans**: 1 plan
+
+Plans:
+- [ ] 05-01-PLAN.md — Wire depth_preference and judgment_angles through the daily summarize path and align prompt/output instructions
+
+### Phase 6: Per-Source Metrics Continuity
+**Goal**: Finish the per_source DailyMetrics contract and producer wiring so source health, monitoring, and degrade/recover automation operate end-to-end
+**Depends on**: Phase 4
+**Requirements**: SRC-08, SRC-09, MON-02, MON-03
+**Gap Closure:** Closes 4 requirement gaps (SRC-08, SRC-09, MON-02, MON-03), 1 integration gap (MISSING-06), and 1 broken E2E flow (BROKEN-03) from the v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. references/data-models.md documents a DailyMetrics per_source schema with the fields consumed by source health and monitoring
+  2. references/processing-instructions.md defines how per_source metrics are produced and persisted during daily runs
+  3. references/collection-instructions.md source-health formulas and scripts/health-check.sh monitoring checks use the documented per_source contract consistently
+  4. Source quality history is sufficient to recompute degrade/recover continuity, and re-audit no longer reports MISSING-06 or BROKEN-03
+**Plans**: 1 plan
+
+Plans:
+- [ ] 06-01-PLAN.md — Add and wire the per_source DailyMetrics contract across collection, processing, monitoring, and source-state continuity
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 0 -> 0.1 -> 1 -> 1.1 -> 2 -> 3
+Phases execute in numeric order: 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -119,3 +151,5 @@ Phases execute in numeric order: 0 -> 0.1 -> 1 -> 1.1 -> 2 -> 3
 | 2. Smart Processing | 0/4 | Not started | - |
 | 3. Closed Loop | 0/4 | Not started | - |
 | 4. Integration Wiring Fixes | 0/1 | Not started | - |
+| 5. Daily Depth Control Wiring | 0/1 | Not started | - |
+| 6. Per-Source Metrics Continuity | 0/1 | Not started | - |

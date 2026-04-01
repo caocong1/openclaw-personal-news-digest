@@ -25,8 +25,8 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **SRC-05**: 社区页面采集（browser 渲染 + LLM 提取）
 - [x] **SRC-06**: 热门榜单采集（web_fetch 或 browser + LLM 提取排名条目）
 - [x] **SRC-07**: 自然语言来源管理（添加/删除/启用/禁用/调权重，删除需二次确认）
-- [x] **SRC-08**: 来源健康度指标（quality_score / dedup_rate / selection_rate 自动计算）
-- [x] **SRC-09**: 来源自动降级与恢复（quality_score < 0.2 连续 14 天降级，> 0.3 连续 7 天恢复）
+- [ ] **SRC-08**: 来源健康度指标（quality_score / dedup_rate / selection_rate 自动计算）
+- [ ] **SRC-09**: 来源自动降级与恢复（quality_score < 0.2 连续 14 天降级，> 0.3 连续 7 天恢复）
 - [x] **SRC-10**: 输入歧义处理（多义操作追问确认，相似来源列候选）
 
 ### Content Processing
@@ -56,7 +56,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **PREF-04**: 偏好衰减（每 30 天向均值回归 5%：w_new = w + (0.5 - w) × 0.05）
 - [x] **PREF-05**: 偏好自动备份（更新前备份，保留最近 10 个）
 - [x] **PREF-06**: 偏好可视化（文字化描述当前偏好状态）
-- [x] **PREF-07**: 扩展回 7 层模型（新增 depth_preference + judgment_angles）
+- [ ] **PREF-07**: 扩展回 7 层模型（新增 depth_preference + judgment_angles）
 
 ### Anti-Echo-Chamber
 
@@ -93,8 +93,8 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 ### Monitoring
 
 - [x] **MON-01**: 每日健康指标文件（sources/items/llm/output/feedback 维度）
-- [x] **MON-02**: 告警条件（全来源连续 2 天失败、预算 80%、dedup 不一致、来源集中度、空日报）
-- [x] **MON-03**: 每周健康巡检（dedup-index 一致性、空事件、长期未归档、成功率、偏好极端值、缓存清理）
+- [ ] **MON-02**: 告警条件（全来源连续 2 天失败、预算 80%、dedup 不一致、来源集中度、空日报）
+- [ ] **MON-03**: 每周健康巡检（dedup-index 一致性、空事件、长期未归档、成功率、偏好极端值、缓存清理）
 - [x] **MON-04**: 数据生命周期管理（30 天 news、7 天 dedup-index、90 天 feedback 明细、7 天缓存）
 
 ### History Query
@@ -151,7 +151,7 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
+Which phases cover which requirements. Updated during roadmap creation and milestone gap planning.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
@@ -168,8 +168,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SRC-05 | Phase 1 | Complete |
 | SRC-06 | Phase 1 | Complete |
 | SRC-07 | Phase 1 | Complete |
-| SRC-08 | Phase 1 | Complete |
-| SRC-09 | Phase 4 | Complete |
+| SRC-08 | Phase 6 | Pending |
+| SRC-09 | Phase 6 | Pending |
 | SRC-10 | Phase 1 | Complete |
 | PROC-01 | Phase 0 | Complete |
 | PROC-02 | Phase 0 | Complete |
@@ -190,7 +190,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PREF-04 | Phase 3 | Complete |
 | PREF-05 | Phase 1 | Complete |
 | PREF-06 | Phase 3 | Complete |
-| PREF-07 | Phase 4 | Complete |
+| PREF-07 | Phase 5 | Pending |
 | ANTI-01 | Phase 2 | Complete |
 | ANTI-02 | Phase 2 | Complete |
 | ANTI-03 | Phase 2 | Complete |
@@ -212,8 +212,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COST-03 | Phase 1 | Complete |
 | COST-04 | Phase 1 | Complete |
 | MON-01 | Phase 0 | Complete |
-| MON-02 | Phase 2 | Complete |
-| MON-03 | Phase 2 | Complete |
+| MON-02 | Phase 6 | Pending |
+| MON-03 | Phase 6 | Pending |
 | MON-04 | Phase 2 | Complete |
 | HIST-01 | Phase 3 | Complete |
 | HIST-02 | Phase 3 | Complete |
@@ -233,11 +233,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 **By phase:**
 - Phase 0: 22 requirements (FRMW x6, SRC x1, PROC x6, PREF x1, OUT x2, COST x1, MON x1, PLAT x4)
-- Phase 1: 20 requirements (SRC x7, PREF x3, OUT x1, FB x5, COST x3)
-- Phase 2: 15 requirements (PROC x2, EVT x5, ANTI x4, OUT x1, MON x3)
+- Phase 1: 19 requirements (SRC x7, PREF x3, OUT x1, FB x5, COST x3)
+- Phase 2: 13 requirements (PROC x2, EVT x5, ANTI x4, OUT x1, MON x1)
 - Phase 3: 9 requirements (PREF x2, OUT x1, HIST x6)
-- Phase 4: 4 requirements (PREF-07, ANTI-05, SRC-09, OUT-02) — gap closure
+- Phase 4: 2 requirements (ANTI-05, OUT-02) — initial gap closure
+- Phase 5: 1 requirement (PREF-07) — residual daily depth-control gap closure
+- Phase 6: 4 requirements (SRC-08, SRC-09, MON-02, MON-03) — per-source metrics continuity gap closure
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after roadmap creation -- traceability complete*
+*Last updated: 2026-04-01 after milestone gap planning -- traceability updated*
