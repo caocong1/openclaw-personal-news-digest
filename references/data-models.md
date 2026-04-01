@@ -118,6 +118,44 @@ Stored at `data/news/dedup-index.json`. Maps URL hashes to item references for f
 
 ---
 
+## CacheEntry
+
+Cache files for LLM result deduplication. Stored at `data/cache/classify-cache.json` and `data/cache/summary-cache.json`.
+
+JSON object keyed by `url_sha` (`SHA256(normalized_url)[:16]` -- same hash as NewsItem.id and DedupIndex keys).
+
+### Classify Cache Entry Value
+
+```json
+{
+  "_schema_v": 1,
+  "primary": "category_id",
+  "tags": ["tag1", "tag2"],
+  "importance_score": 0.0,
+  "form_type": "news|analysis|opinion|announcement|other",
+  "cached_at": "ISO8601"
+}
+```
+
+**Field notes:**
+- `primary`: One of the 12 category IDs from `config/categories.json`
+- `importance_score`: Range 0.0-1.0
+- `cached_at`: Timestamp of when this entry was cached; entries older than 7 days are evicted during cleanup
+
+### Summary Cache Entry Value
+
+```json
+{
+  "_schema_v": 1,
+  "summary": "2-3 sentence Chinese summary text",
+  "cached_at": "ISO8601"
+}
+```
+
+**TTL:** 7 days from `cached_at`. Stale entries are deleted during cache cleanup at the start of each pipeline run (see `references/processing-instructions.md` Section 0B).
+
+---
+
 ## FeedbackEntry
 
 Each feedback signal from the user, stored in `data/feedback/log.jsonl` (one JSON object per line).
