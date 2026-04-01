@@ -23,9 +23,9 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 2 of 3 (Smart Processing) -- IN PROGRESS
-Plan: 1 of 4 in current phase (1 complete)
+Plan: 4 of 4 in current phase (02-04 complete)
 Status: Executing phase 2
-Last activity: 2026-04-01 -- Completed 02-01-PLAN.md (title dedup + multi-language)
+Last activity: 2026-04-01 -- Completed 02-04-PLAN.md (monitoring, alerting, data lifecycle)
 
 Progress: [████████░░] 73%
 
@@ -55,6 +55,7 @@ Progress: [████████░░] 73%
 | Phase 01 P01 | 23min | 2 tasks | 6 files |
 | Phase 01 P04 | 5min | 2 tasks | 3 files |
 | Phase 02 P01 | 3min | 2 tasks | 4 files |
+| Phase 02 P04 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,9 @@ Recent decisions affecting current work:
 - Jaccard bigram threshold 0.6 with LLM Stage C as safety net for false positives
 - CJK character ratio >50% for language detection (zh vs en)
 - Cross-language title comparison prohibited; cross-language merging deferred to event level
+- Health-check.sh uses --mode daily|weekly flag for multi-mode execution (daily alerts + weekly full inspection)
+- All JSON modifications in data-archive.sh use atomic writes (tmp+mv) to prevent corruption
+- Weekly health inspection cron delivers only when alerts/warnings found to avoid noise
 
 ### Pending Todos
 
@@ -97,5 +101,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 02-01-PLAN.md (title dedup + multi-language)
+Stopped at: Completed 02-04-PLAN.md (monitoring, alerting, data lifecycle)
 Resume file: None

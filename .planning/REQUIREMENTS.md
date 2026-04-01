@@ -93,9 +93,9 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 ### Monitoring
 
 - [x] **MON-01**: 每日健康指标文件（sources/items/llm/output/feedback 维度）
-- [ ] **MON-02**: 告警条件（全来源连续 2 天失败、预算 80%、dedup 不一致、来源集中度、空日报）
-- [ ] **MON-03**: 每周健康巡检（dedup-index 一致性、空事件、长期未归档、成功率、偏好极端值、缓存清理）
-- [ ] **MON-04**: 数据生命周期管理（30 天 news、7 天 dedup-index、90 天 feedback 明细、7 天缓存）
+- [x] **MON-02**: 告警条件（全来源连续 2 天失败、预算 80%、dedup 不一致、来源集中度、空日报）
+- [x] **MON-03**: 每周健康巡检（dedup-index 一致性、空事件、长期未归档、成功率、偏好极端值、缓存清理）
+- [x] **MON-04**: 数据生命周期管理（30 天 news、7 天 dedup-index、90 天 feedback 明细、7 天缓存）
 
 ### History Query
 
@@ -212,9 +212,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COST-03 | Phase 1 | Complete |
 | COST-04 | Phase 1 | Complete |
 | MON-01 | Phase 0 | Complete |
-| MON-02 | Phase 2 | Pending |
-| MON-03 | Phase 2 | Pending |
-| MON-04 | Phase 2 | Pending |
+| MON-02 | Phase 2 | Complete |
+| MON-03 | Phase 2 | Complete |
+| MON-04 | Phase 2 | Complete |
 | HIST-01 | Phase 3 | Pending |
 | HIST-02 | Phase 3 | Pending |
 | HIST-03 | Phase 3 | Pending |
