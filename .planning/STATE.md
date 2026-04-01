@@ -8,7 +8,7 @@ progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 11
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -23,18 +23,18 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 2 of 3 (Smart Processing) -- IN PROGRESS
-Plan: 4 of 4 in current phase (02-04 complete)
+Plan: 3 of 4 in current phase (02-02 complete, 02-03 remaining)
 Status: Executing phase 2
-Last activity: 2026-04-01 -- Completed 02-04-PLAN.md (monitoring, alerting, data lifecycle)
+Last activity: 2026-04-01 -- Completed 02-02-PLAN.md (event merging, lifecycle, timeline, event_boost)
 
-Progress: [████████░░] 73%
+Progress: [████████░░] 82%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 7.3 min
-- Total execution time: 0.85 hours
+- Total plans completed: 9
+- Average duration: 6.9 min
+- Total execution time: 1.03 hours
 
 **By Phase:**
 
@@ -56,6 +56,7 @@ Progress: [████████░░] 73%
 | Phase 01 P04 | 5min | 2 tasks | 3 files |
 | Phase 02 P01 | 3min | 2 tasks | 4 files |
 | Phase 02 P04 | 3min | 2 tasks | 4 files |
+| Phase 02 P02 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,9 @@ Recent decisions affecting current work:
 - Health-check.sh uses --mode daily|weekly flag for multi-mode execution (daily alerts + weekly full inspection)
 - All JSON modifications in data-archive.sh use atomic writes (tmp+mv) to prevent corruption
 - Weekly health inspection cron delivers only when alerts/warnings found to avoid noise
+- Event re-summarization skipped for analysis relation type to save LLM budget
+- Cross-language event merging enabled (unlike per-language title dedup)
+- event_boost requires both active status AND importance >= 0.7
 
 ### Pending Todos
 
@@ -101,5 +105,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 02-04-PLAN.md (monitoring, alerting, data lifecycle)
+Stopped at: Completed 02-02-PLAN.md (event merging, lifecycle, timeline, event_boost)
 Resume file: None

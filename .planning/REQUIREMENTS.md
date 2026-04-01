@@ -42,11 +42,11 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 
 ### Event Tracking
 
-- [ ] **EVT-01**: 事件归并（topic 预筛选 → 关键词快速匹配 → LLM 精确归并）
-- [ ] **EVT-02**: 事件生命周期（active → 3 天无更新 → stable → 7 天无更新 → archived）
-- [ ] **EVT-03**: 时间线追踪（5 种关系类型：initial/update/correction/analysis/reversal）
-- [ ] **EVT-04**: 事件摘要随新关联新闻自动更新
-- [ ] **EVT-05**: 时间线 bullet list 格式展示（兼容聊天渠道）
+- [x] **EVT-01**: 事件归并（topic 预筛选 → 关键词快速匹配 → LLM 精确归并）
+- [x] **EVT-02**: 事件生命周期（active → 3 天无更新 → stable → 7 天无更新 → archived）
+- [x] **EVT-03**: 时间线追踪（5 种关系类型：initial/update/correction/analysis/reversal）
+- [x] **EVT-04**: 事件摘要随新关联新闻自动更新
+- [x] **EVT-05**: 时间线 bullet list 格式展示（兼容聊天渠道）
 
 ### Preference System
 
@@ -179,11 +179,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROC-06 | Phase 2 | Complete |
 | PROC-07 | Phase 0 | Complete |
 | PROC-08 | Phase 0 | Complete |
-| EVT-01 | Phase 2 | Pending |
-| EVT-02 | Phase 2 | Pending |
-| EVT-03 | Phase 2 | Pending |
-| EVT-04 | Phase 2 | Pending |
-| EVT-05 | Phase 2 | Pending |
+| EVT-01 | Phase 2 | Complete |
+| EVT-02 | Phase 2 | Complete |
+| EVT-03 | Phase 2 | Complete |
+| EVT-04 | Phase 2 | Complete |
+| EVT-05 | Phase 2 | Complete |
 | PREF-01 | Phase 1 | Complete |
 | PREF-02 | Phase 0 | Complete |
 | PREF-03 | Phase 1 | Complete |
