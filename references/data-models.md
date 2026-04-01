@@ -118,6 +118,36 @@ Stored at `data/news/dedup-index.json`. Maps URL hashes to item references for f
 
 ---
 
+## FeedbackEntry
+
+Each feedback signal from the user, stored in `data/feedback/log.jsonl` (one JSON object per line).
+
+```json
+{
+  "_schema_v": 1,
+  "timestamp": "ISO8601",
+  "type": "more|less|trust_source|distrust_source|like|dislike|block_pattern|adjust_style",
+  "target": "topic_id | source_id | item_url | pattern_string | style_field",
+  "context": "optional - the digest item or source that triggered this feedback",
+  "status": "applied | pending_confirmation | skipped",
+  "run_id": "which pipeline run processed this entry (null if unprocessed)"
+}
+```
+
+**Field notes:**
+- `type`: One of the 8 feedback types defined in `references/feedback-rules.md`
+- `target`: The resolved reference after disambiguation (see feedback-rules.md Disambiguation section)
+- `context`: Optional audit trail -- the full item title, source name, or digest sequence number that the user referenced
+- `status`: Processing state -- `applied` (change made), `pending_confirmation` (escalated, awaiting user confirm), `skipped` (cumulative cap hit or user rejected)
+- `run_id`: Set when the entry is processed by the feedback update procedure. `null` means unprocessed.
+
+**Defaults for missing fields (older schema versions):**
+- `context`: `null`
+- `status`: `"applied"`
+- `run_id`: `null`
+
+---
+
 ## DailyMetrics
 
 Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
