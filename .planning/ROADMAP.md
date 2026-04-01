@@ -82,11 +82,13 @@ Plans:
   3. User can query history in natural language ("what happened with X this week", "show me AI news from last 3 days") and get relevant results
   4. User can view their current preference state as a text description and understand what the system has learned about them
   5. Low-quality sources are automatically demoted after 14 days of poor scores and recover after 7 days of improvement, without manual intervention
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md — Preference decay (30-day 5% regression), 7-layer model extension (depth_preference + judgment_angles), preference state visualization (PREF-06/HIST-06)
+- [ ] 03-02-PLAN.md — Source auto-demotion (quality < 0.2 for 14 days) and auto-recovery (quality > 0.3 for 7 days), degraded source deprioritization in scoring
+- [ ] 03-03-PLAN.md — Weekly trend report generation (40/20/20/20 quota, 5+ categories, cross-domain synthesis with strong model, Sunday 20:00 cron)
+- [ ] 03-04-PLAN.md — Natural language history queries (5 query types: recent activity, topic review, event tracking, hotspot scan, source analysis)
 
 ## Progress
 
@@ -98,4 +100,4 @@ Phases execute in numeric order: 0 -> 0.1 -> 1 -> 1.1 -> 2 -> 3
 | 0. MVP Pipeline | 3/3 | Complete | 2026-04-01 |
 | 1. Multi-Source + Preferences | 0/4 | Not started | - |
 | 2. Smart Processing | 0/4 | Not started | - |
-| 3. Closed Loop | 0/2 | Not started | - |
+| 3. Closed Loop | 0/4 | Not started | - |

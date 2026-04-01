@@ -26,7 +26,7 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **SRC-06**: 热门榜单采集（web_fetch 或 browser + LLM 提取排名条目）
 - [x] **SRC-07**: 自然语言来源管理（添加/删除/启用/禁用/调权重，删除需二次确认）
 - [x] **SRC-08**: 来源健康度指标（quality_score / dedup_rate / selection_rate 自动计算）
-- [ ] **SRC-09**: 来源自动降级与恢复（quality_score < 0.2 连续 14 天降级，> 0.3 连续 7 天恢复）
+- [x] **SRC-09**: 来源自动降级与恢复（quality_score < 0.2 连续 14 天降级，> 0.3 连续 7 天恢复）
 - [x] **SRC-10**: 输入歧义处理（多义操作追问确认，相似来源列候选）
 
 ### Content Processing
@@ -169,7 +169,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SRC-06 | Phase 1 | Complete |
 | SRC-07 | Phase 1 | Complete |
 | SRC-08 | Phase 1 | Complete |
-| SRC-09 | Phase 3 | Pending |
+| SRC-09 | Phase 3 | Complete |
 | SRC-10 | Phase 1 | Complete |
 | PROC-01 | Phase 0 | Complete |
 | PROC-02 | Phase 0 | Complete |

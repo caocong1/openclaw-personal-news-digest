@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Replace "pushing messages to user" with "continuously observing the world on behalf of the user" -- deep personalization with anti-echo-chamber awareness
-**Current focus:** Phase 2: Smart Processing
+**Current focus:** Phase 3: Closed Loop
 
 ## Current Position
 
-Phase: 2 of 3 (Smart Processing) -- IN PROGRESS
-Plan: 4 of 4 in current phase (02-03 complete, 02-04 remaining)
-Status: Executing phase 2
-Last activity: 2026-04-01 -- Completed 02-03-PLAN.md (anti-echo-chamber quota algorithm)
+Phase: 3 of 3 (Closed Loop) -- IN PROGRESS
+Plan: 3 of 4 in current phase (03-01, 03-02 complete, 03-03 next)
+Status: Executing phase 3
+Last activity: 2026-04-01 -- Completed 03-01-PLAN.md (preference decay, 7-layer model, visualization)
 
-Progress: [█████████░] 91%
+Progress: [█████████████░] 93%
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [█████████░] 91%
 | Phase 02 P04 | 3min | 2 tasks | 4 files |
 | Phase 02 P02 | 3min | 2 tasks | 6 files |
 | Phase 02 P03 | 3min | 2 tasks | 4 files |
+| Phase 03 P02 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,7 @@ Recent decisions affecting current work:
 - [Phase 02]: Chain yielding is strictly one-way: explore -> adjacent -> hotspot -> core
 - [Phase 02]: ANTI-03 grace period skips diversity constraints when < 3 days of history exist
 - [Phase 02]: Recommendation reasons mandatory for hotspot and exploration, not for core/adjacent
+- [Phase 03]: Asymmetric demotion/recovery thresholds (0.2/14d vs 0.3/7d) with hysteresis counters to prevent oscillation
 
 ### Pending Todos
 
@@ -110,5 +112,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 02-03-PLAN.md (anti-echo-chamber quota algorithm)
+Stopped at: Completed 03-02-PLAN.md (source auto-demotion)
 Resume file: None
