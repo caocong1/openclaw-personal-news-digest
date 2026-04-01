@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-04-01T05:19:25.911Z"
+last_updated: "2026-04-01T06:54:38.234Z"
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 11
+  completed_plans: 8
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Replace "pushing messages to user" with "continuously observing the world on behalf of the user" -- deep personalization with anti-echo-chamber awareness
-**Current focus:** Phase 1: Multi-Source + Preferences
+**Current focus:** Phase 2: Smart Processing
 
 ## Current Position
 
-Phase: 1 of 3 (Multi-Source + Preferences) -- COMPLETE
-Plan: 4 of 4 in current phase (all complete)
-Status: Phase 1 complete
-Last activity: 2026-04-01 -- Completed 01-04-PLAN.md (breaking news alerts, transparency footer)
+Phase: 2 of 3 (Smart Processing) -- IN PROGRESS
+Plan: 1 of 4 in current phase (1 complete)
+Status: Executing phase 2
+Last activity: 2026-04-01 -- Completed 02-01-PLAN.md (title dedup + multi-language)
 
-Progress: [██████████] 100%
+Progress: [████████░░] 73%
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [██████████] 100%
 | Phase 01 P03 | 9min | 1 tasks | 4 files |
 | Phase 01 P01 | 23min | 2 tasks | 6 files |
 | Phase 01 P04 | 5min | 2 tasks | 3 files |
+| Phase 02 P01 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,9 @@ Recent decisions affecting current work:
 - New example sources disabled by default for safety -- user must explicitly enable
 - Collection-instructions.md headers use descriptive names without numbering for cleaner SKILL.md cross-references
 - Compact Quick-Check Flow in SKILL.md delegates detail to reference files to stay within 750-word budget
+- Jaccard bigram threshold 0.6 with LLM Stage C as safety net for false positives
+- CJK character ratio >50% for language detection (zh vs en)
+- Cross-language title comparison prohibited; cross-language merging deferred to event level
 
 ### Pending Todos
 
@@ -93,5 +97,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 01-04-PLAN.md (breaking news alerts, transparency footer) -- Phase 1 complete
+Stopped at: Completed 02-01-PLAN.md (title dedup + multi-language)
 Resume file: None

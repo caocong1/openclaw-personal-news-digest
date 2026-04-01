@@ -34,9 +34,9 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **PROC-01**: URL 规范化 + 链接级去重（去追踪参数 → SHA256[:16] → dedup-index 查询）
 - [x] **PROC-02**: LLM 多标签分类（12 个顶层类目 + 细粒度 tags + importance_score + form_type）
 - [x] **PROC-03**: LLM 摘要生成（2-3 句中文摘要，非中文新闻标题保留原文附中文翻译）
-- [ ] **PROC-04**: 标题近似去重三阶段（规则归一化 → Jaccard bigram ≥ 0.6 → LLM 精确判断）
+- [x] **PROC-04**: 标题近似去重三阶段（规则归一化 → Jaccard bigram ≥ 0.6 → LLM 精确判断）
 - [x] **PROC-05**: 批量 LLM 处理（分类和摘要 5-10 条/次，减少 per-call overhead）
-- [ ] **PROC-06**: 多语言处理（中文 + 英文，不同语言独立去重，允许跨语言事件归并）
+- [x] **PROC-06**: 多语言处理（中文 + 英文，不同语言独立去重，允许跨语言事件归并）
 - [x] **PROC-07**: 容错处理（分类失败但摘要成功 → 归入探索位；LLM 格式异常 → 重试 1 次）
 - [x] **PROC-08**: 断点续跑（processing_status: "raw" 的记录下次运行补充分类/摘要）
 
@@ -174,9 +174,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROC-01 | Phase 0 | Complete |
 | PROC-02 | Phase 0 | Complete |
 | PROC-03 | Phase 0 | Complete |
-| PROC-04 | Phase 2 | Pending |
+| PROC-04 | Phase 2 | Complete |
 | PROC-05 | Phase 0 | Complete |
-| PROC-06 | Phase 2 | Pending |
+| PROC-06 | Phase 2 | Complete |
 | PROC-07 | Phase 0 | Complete |
 | PROC-08 | Phase 0 | Complete |
 | EVT-01 | Phase 2 | Pending |
