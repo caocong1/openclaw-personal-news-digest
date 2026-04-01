@@ -45,6 +45,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 2. **Quality gate**: If < 3 items, output shortened version. If 0 items, skip output entirely.
 3. **Quota allocation**: Assign items to sections (Core/Adjacent/Hotspot/Explore) per `{baseDir}/references/processing-instructions.md` Section 4 quota algorithm. Tag each item with `quota_group`.
 4. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.
+4b. **Weekly report** (if triggered by weekly cron): Read `{baseDir}/references/processing-instructions.md` Section 7. Aggregate 7 days of data, apply weekly quota (40/20/20/20), use strong model for synthesis, write to `{baseDir}/output/latest-weekly.md`.
 5. **Event Tracking section**: For events with new items merged today, build timeline view per `{baseDir}/references/output-templates.md` Event Tracking section.
 6. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
 7. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics. Include `quota_distribution`, `category_proportions`, `source_proportions` in daily metrics.

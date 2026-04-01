@@ -72,6 +72,37 @@ Runs full health inspection and data lifecycle management every Monday at 03:00 
 }
 ```
 
+## Weekly Report Job (Phase 3+)
+
+Runs weekly report generation every Sunday at 20:00 CST. Aggregates 7 days of news data, computes category trends, collects event timelines, synthesizes cross-domain connections using strong model tier.
+
+```json
+{
+  "name": "news-weekly-report",
+  "schedule": { "kind": "cron", "expr": "0 20 * * 0", "tz": "Asia/Shanghai" },
+  "sessionTarget": "isolated",
+  "payload": {
+    "kind": "agentTurn",
+    "message": "Generate the weekly news digest report: aggregate last 7 days of news data, compute category trends, collect event timelines, synthesize cross-domain connections, generate weekly report, update weekly metrics.",
+    "lightContext": false,
+    "timeoutSeconds": 600
+  },
+  "delivery": {
+    "mode": "announce",
+    "channel": "telegram",
+    "to": "{target_chat_id}"
+  }
+}
+```
+
+Key config notes:
+- Schedule: `0 20 * * 0` = Sunday 20:00 CST (day 0 = Sunday)
+- Timeout: 600 seconds (10 min) -- weekly report needs LLM strong model synthesis which takes longer
+- lightContext: false (required for SKILL.md loading, per Phase 0 decision)
+- sessionTarget: isolated (clean session per cron run)
+
+---
+
 ## Configuration Notes
 
 ### Critical Settings
@@ -112,3 +143,4 @@ All management is done via the `cron` tool in an OpenClaw chat session:
 4. Verify digest appears in chat channel
 5. Optionally register the quick check job (Phase 1+)
 6. Register the weekly health inspection job (Phase 2+)
+7. Register the weekly report job (Phase 3+)
