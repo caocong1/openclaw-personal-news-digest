@@ -86,9 +86,9 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 ### Cost Control
 
 - [x] **COST-01**: 日预算上限（daily_llm_call_limit 默认 500，daily_token_limit 默认 1M）
-- [ ] **COST-02**: 熔断机制（超 80% 告警，100% 停止非必要调用仅保留日报生成）
-- [ ] **COST-03**: LLM 结果缓存（classify-cache + summary-cache，URL SHA 为 key，7 天 TTL）
-- [ ] **COST-04**: 分级模型策略（简单任务用快速模型，复杂任务用强模型）
+- [x] **COST-02**: 熔断机制（超 80% 告警，100% 停止非必要调用仅保留日报生成）
+- [x] **COST-03**: LLM 结果缓存（classify-cache + summary-cache，URL SHA 为 key，7 天 TTL）
+- [x] **COST-04**: 分级模型策略（简单任务用快速模型，复杂任务用强模型）
 
 ### Monitoring
 
@@ -208,9 +208,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FB-04 | Phase 1 | Complete |
 | FB-05 | Phase 1 | Complete |
 | COST-01 | Phase 0 | Complete |
-| COST-02 | Phase 1 | Pending |
-| COST-03 | Phase 1 | Pending |
-| COST-04 | Phase 1 | Pending |
+| COST-02 | Phase 1 | Complete |
+| COST-03 | Phase 1 | Complete |
+| COST-04 | Phase 1 | Complete |
 | MON-01 | Phase 0 | Complete |
 | MON-02 | Phase 2 | Pending |
 | MON-03 | Phase 2 | Pending |

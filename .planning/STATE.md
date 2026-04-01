@@ -8,7 +8,7 @@ progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 7
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -23,25 +23,25 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 1 of 3 (Multi-Source + Preferences) -- IN PROGRESS
-Plan: 2 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: Executing phase 1
-Last activity: 2026-04-01 -- Completed 01-02-PLAN.md (feedback processing rules + scoring activation)
+Last activity: 2026-04-01 -- Completed 01-03-PLAN.md (LLM cache, circuit-breaker, tiered model strategy)
 
-Progress: [█████░░░░░] 50%
+Progress: [██████░░░░] 57%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 4.8 min
-- Total execution time: 0.32 hours
+- Total plans completed: 5
+- Average duration: 5.6 min
+- Total execution time: 0.47 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 0. MVP Pipeline | 3/3 | 10 min | 3.3 min |
-| 1. Multi-Source + Preferences | 1/4 | 9 min | 9 min |
+| 1. Multi-Source + Preferences | 2/4 | 18 min | 9 min |
 
 **Recent Trend:**
 - Last 5 plans: -
@@ -51,6 +51,7 @@ Progress: [█████░░░░░] 50%
 | Phase 00 P02 | 3min | 2 tasks | 6 files |
 | Phase 00 P03 | 4min | 2 tasks | 4 files |
 | Phase 01 P02 | 9min | 2 tasks | 3 files |
+| Phase 01 P03 | 9min | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,10 @@ Recent decisions affecting current work:
 - Per-session cumulative cap of +/- 0.3 per field per run to prevent feedback loop runaway
 - Backup-before-write pattern with 10-backup retention for preference safety
 - 6-step disambiguation cascade for resolving feedback references
+- Cache keyed by same URL SHA as dedup-index for consistency across pipeline
+- Circuit-breaker uses higher of call ratio and token ratio as effective usage
+- Daily digest assembly exempt from circuit-breaker (1 final LLM call allowed)
+- Tiered model strategy documented but activation deferred until platform confirms model selection support
 
 ### Pending Todos
 
@@ -82,5 +87,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 01-02-PLAN.md (feedback processing rules + scoring activation)
+Stopped at: Completed 01-03-PLAN.md (LLM cache, circuit-breaker, tiered model strategy)
 Resume file: None
