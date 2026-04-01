@@ -29,12 +29,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Empty input does not produce an empty digest -- the system stays silent or outputs a shortened version
   4. LLM call counts are tracked in budget.json and daily health metrics file is generated
   5. Platform capabilities are verified (isolated session file access, cron delivery, exec permissions, timeout limits)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 00-01: TBD
-- [ ] 00-02: TBD
-- [ ] 00-03: TBD
+- [ ] 00-01-PLAN.md — Scaffold directory structure, config files, data model references, and SKILL.md orchestration framework
+- [ ] 00-02-PLAN.md — LLM prompt templates, RSS collection instructions, processing/error-handling/output instructions
+- [ ] 00-03-PLAN.md — Cron job configs, delivery setup, platform verification checklist, maintenance scripts
 
 ### Phase 1: Multi-Source + Preferences
 **Goal**: User can add multiple source types, receives personalized content influenced by their stated preferences and feedback, and gets breaking news alerts for high-importance events
@@ -93,7 +93,7 @@ Phases execute in numeric order: 0 -> 0.1 -> 1 -> 1.1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 0. MVP Pipeline | 0/3 | Not started | - |
+| 0. MVP Pipeline | 0/3 | Planned | - |
 | 1. Multi-Source + Preferences | 0/3 | Not started | - |
 | 2. Smart Processing | 0/3 | Not started | - |
 | 3. Closed Loop | 0/2 | Not started | - |
