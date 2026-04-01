@@ -14,6 +14,8 @@
 
 - [x] 5 层用户偏好模型（主题、来源信任、形态、风格、样本反馈） — Validated in Phase 3-4
 - [x] 日报深度偏好端对端贯通（depth_preference + judgment_angles → 日报摘要） — Validated in Phase 5: daily-depth-control-wiring
+- [x] 来源健康度动态评估与自动降级/恢复（per_source metrics → source health formulas → degrade/recover） — Validated in Phase 6: per-source-metrics-continuity
+- [x] 监控与可观测性（per_source DailyMetrics contract → health-check.sh consumer alignment） — Validated in Phase 6: per-source-metrics-continuity
 
 ### Active
 
@@ -29,7 +31,6 @@
 - [ ] 反馈学习系统（8 种反馈类型 → 偏好增量更新）
 - [ ] LLM 成本预算与熔断机制
 - [ ] LLM 结果缓存层
-- [ ] 来源健康度动态评估与自动降级/恢复
 - [ ] 监控与可观测性（健康指标、告警、巡检）
 - [ ] 多语言处理（中文 + 英文，统一中文摘要输出）
 - [ ] 自然语言历史查询
@@ -102,4 +103,4 @@
 | Phase 0 合并为单阶段 | Qwen 评审：三子阶段紧耦合，拆分增加管理开销 | — Pending |
 
 ---
-*Last updated: 2026-04-02 after Phase 5 completion*
+*Last updated: 2026-04-02 after Phase 6 completion*
