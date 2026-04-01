@@ -184,6 +184,7 @@ For each batch:
 For the same batch:
 
 1. **Load prompt**: Read `references/prompts/summarize.md`
+1.5. **Load depth preferences**: Read `config/preferences.json`. Extract `depth_preference` (default `"moderate"` if absent) and `judgment_angles` (default `[]` if absent). Fill the prompt's User Preferences Context section: replace `{depth_preference}` and `{judgment_angles}` placeholders.
 2. **Fill batch data**: For each item, format into the input template:
    ```
    ID: {item.id}
