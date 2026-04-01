@@ -41,12 +41,13 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 
 1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items (all 7 dimensions active, including event_boost from `data/events/active.json`), sort by `final_score` descending. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool.
 2. **Quality gate**: If < 3 items, output shortened version. If 0 items, skip output entirely.
-3. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.
-4. **Event Tracking section**: For events with new items merged today, build timeline view per `{baseDir}/references/output-templates.md` Event Tracking section.
-5. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
-6. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics.
-7. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Append to digest output.
-8. **Release lock**: Delete `{baseDir}/data/.lock`.
+3. **Quota allocation**: Assign items to sections (Core/Adjacent/Hotspot/Explore) per `{baseDir}/references/processing-instructions.md` Section 4 quota algorithm. Tag each item with `quota_group`.
+4. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.
+5. **Event Tracking section**: For events with new items merged today, build timeline view per `{baseDir}/references/output-templates.md` Event Tracking section.
+6. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
+7. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics. Include `quota_distribution`, `category_proportions`, `source_proportions` in daily metrics.
+8. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Append to digest output.
+9. **Release lock**: Delete `{baseDir}/data/.lock`.
 
 ## Quick-Check Flow (breaking news)
 

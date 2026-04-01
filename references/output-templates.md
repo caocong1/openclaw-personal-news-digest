@@ -22,13 +22,15 @@ Source: {source_name} | {form_type} | Importance: {importance_score}
 
 {Public trending news, even if outside user's core interests:}
 - **{title}** -- {1 sentence summary} ({source_name})
+  Recommendation reason: {reason}
+  {Examples: "High-importance event (score: {importance_score})" / "Widely covered across {N} sources" / "Hotspot injection: importance >= 0.8"}
 
 ## Exploration
 
 {Exploration content with recommendation reasons:}
 - **{title}** -- {1 sentence summary}
   Recommendation reason: {reason}
-  {Examples: "Topic trending recently" / "Follow-up to an event you track" / "High-signal cross-domain content"}
+  {Examples: "Low-exposure category -- broadening your perspective" / "Trending topic outside your usual interests" / "Cross-domain signal worth noting"}
 
 ## Event Tracking
 
@@ -46,6 +48,8 @@ LLM calls: {llm_calls} | Cache hits: {cache_hits}
 
 Append Transparency Footer (see "Transparency Footer" section below) after all content sections.
 ```
+
+**OUT-04: Recommendation reasons are mandatory for exploration and hotspot items.** They explain WHY the item was included despite not matching the user's core interests. Core Focus and Adjacent Dynamics items do NOT include recommendation reasons (these match user preferences, reasons are self-evident).
 
 ---
 
