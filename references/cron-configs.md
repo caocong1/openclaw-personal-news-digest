@@ -48,6 +48,30 @@ Runs every 2 hours to detect breaking news. If any item scores importance >= 0.8
 }
 ```
 
+## Weekly Health Inspection Job (Phase 2+)
+
+Runs full health inspection and data lifecycle management every Monday at 03:00 CST. Executes health-check.sh in weekly mode (daily checks + MON-03 inspection checklist) followed by data-archive.sh for TTL-based cleanup. Only delivers a report if alerts or warnings are found.
+
+```json
+{
+  "name": "weekly-health-inspection",
+  "schedule": { "kind": "cron", "expr": "0 3 * * 1", "tz": "Asia/Shanghai" },
+  "sessionTarget": "isolated",
+  "payload": {
+    "kind": "agentTurn",
+    "message": "Weekly health inspection and data lifecycle management. Steps: 1) Run bash scripts/health-check.sh {baseDir} --mode weekly. 2) Run bash scripts/data-archive.sh {baseDir}. 3) Report findings via delivery channel.",
+    "lightContext": false,
+    "timeoutSeconds": 300
+  },
+  "delivery": {
+    "mode": "announce",
+    "channel": "telegram",
+    "to": "{target_chat_id}",
+    "onlyIf": "alerts or warnings found"
+  }
+}
+```
+
 ## Configuration Notes
 
 ### Critical Settings
@@ -87,3 +111,4 @@ All management is done via the `cron` tool in an OpenClaw chat session:
 3. Wait for first execution at 08:00 CST next day, or trigger manually
 4. Verify digest appears in chat channel
 5. Optionally register the quick check job (Phase 1+)
+6. Register the weekly health inspection job (Phase 2+)
