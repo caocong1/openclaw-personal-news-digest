@@ -1,0 +1,42 @@
+{
+  "topic_weights": {
+    "ai-models": 0.5,
+    "dev-tools": 0.5,
+    "tech-products": 0.5,
+    "business": 0.5,
+    "finance": 0.5,
+    "macro-policy": 0.5,
+    "international": 0.5,
+    "security": 0.5,
+    "open-source": 0.5,
+    "gaming": 0.5,
+    "science": 0.5,
+    "breaking": 0.5
+  },
+  "source_trust": {},
+  "form_preference": {
+    "news": 0.0,
+    "analysis": 0.0,
+    "opinion": 0.0,
+    "announcement": 0.0,
+    "other": 0.0
+  },
+  "style": {
+    "density": "medium",
+    "repetition_tolerance": "low",
+    "exploration_appetite": 0.3,
+    "rumor_tolerance": "low"
+  },
+  "feedback_samples": {
+    "liked_items": [],
+    "disliked_items": [],
+    "trusted_sources": [],
+    "distrusted_sources": [],
+    "blocked_patterns": []
+  },
+  "version": 2,
+  "last_updated": null,
+  "last_decay_at": null,
+  "total_feedback_count": 0,
+  "feedback_processing_enabled": true
+}

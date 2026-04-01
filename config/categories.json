@@ -1,0 +1,86 @@
+[
+  {
+    "id": "ai-models",
+    "name_zh": "AI 模型",
+    "name_en": "AI Models",
+    "description": "Large language models, image generation, AI research breakthroughs, model releases and benchmarks",
+    "adjacent": ["dev-tools", "science", "open-source"]
+  },
+  {
+    "id": "dev-tools",
+    "name_zh": "开发工具",
+    "name_en": "Developer Tools",
+    "description": "IDEs, frameworks, libraries, DevOps tools, programming languages, developer productivity",
+    "adjacent": ["ai-models", "open-source", "tech-products"]
+  },
+  {
+    "id": "tech-products",
+    "name_zh": "科技产品",
+    "name_en": "Tech Products",
+    "description": "Consumer electronics, apps, platforms, product launches, hardware releases",
+    "adjacent": ["dev-tools", "business", "gaming"]
+  },
+  {
+    "id": "business",
+    "name_zh": "商业",
+    "name_en": "Business",
+    "description": "Startups, funding, acquisitions, corporate strategy, market competition",
+    "adjacent": ["finance", "tech-products", "macro-policy"]
+  },
+  {
+    "id": "finance",
+    "name_zh": "金融",
+    "name_en": "Finance",
+    "description": "Stock markets, crypto, fintech, banking, investment trends",
+    "adjacent": ["business", "macro-policy", "international"]
+  },
+  {
+    "id": "macro-policy",
+    "name_zh": "宏观政策",
+    "name_en": "Macro Policy",
+    "description": "Government regulations, tech policy, antitrust, data privacy laws, trade policy",
+    "adjacent": ["business", "finance", "international"]
+  },
+  {
+    "id": "international",
+    "name_zh": "国际",
+    "name_en": "International",
+    "description": "Global tech landscape, cross-border developments, geopolitics affecting tech",
+    "adjacent": ["macro-policy", "finance", "security"]
+  },
+  {
+    "id": "security",
+    "name_zh": "安全",
+    "name_en": "Security",
+    "description": "Cybersecurity, vulnerabilities, data breaches, privacy incidents, security tools",
+    "adjacent": ["international", "dev-tools", "open-source"]
+  },
+  {
+    "id": "open-source",
+    "name_zh": "开源",
+    "name_en": "Open Source",
+    "description": "Open source projects, community developments, license changes, major releases",
+    "adjacent": ["dev-tools", "ai-models", "security"]
+  },
+  {
+    "id": "gaming",
+    "name_zh": "游戏",
+    "name_en": "Gaming",
+    "description": "Game releases, gaming industry, esports, game development, gaming platforms",
+    "adjacent": ["tech-products", "business", "ai-models"]
+  },
+  {
+    "id": "science",
+    "name_zh": "科学",
+    "name_en": "Science",
+    "description": "Scientific discoveries, research papers, space exploration, biotech, climate",
+    "adjacent": ["ai-models", "open-source", "international"]
+  },
+  {
+    "id": "breaking",
+    "name_zh": "突发",
+    "name_en": "Breaking",
+    "description": "High-impact breaking news across any category, major incidents, urgent developments",
+    "adjacent": ["international", "security", "macro-policy"]
+  }
+]
