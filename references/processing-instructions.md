@@ -692,3 +692,51 @@ Degraded sources are NOT removed from collection. They are still fetched each ru
 ### Write-Back
 
 Atomic write `config/sources.json` after all status checks. Use backup-before-write pattern.
+
+---
+
+## Section 7: Weekly Report Generation (OUT-03)
+
+Generates a weekly trend report aggregating 7 days of data with cross-domain synthesis using the strong model tier.
+
+### Trigger
+
+Weekly cron job (Sunday 20:00 CST) or manual user request.
+
+### Data Collection (pre-LLM)
+
+1. Read last 7 days of `data/news/YYYY-MM-DD.jsonl` files. Collect all items with `processing_status: "complete"`.
+2. Read last 7 days of `data/metrics/daily-*.json` files. Aggregate totals.
+3. Read `data/events/active.json` for event timelines. Include events with status "active" or "stable" that have timeline entries in the last 7 days.
+4. Read `config/sources.json` for source health data.
+5. Read `config/preferences.json` for `depth_preference` and `judgment_angles`.
+
+### Pre-filtering (to avoid LLM context overflow)
+
+- From the 7-day item pool, use only items that were selected for daily digests (items with `quota_group` set). Expected: 15-25/day * 7 = ~105-175 items.
+- If still > 200 items: further filter to top 150 by `final_score`.
+- Group items by `categories.primary` for per-category summaries.
+- Pass event summaries rather than full item lists to the LLM.
+
+### Weekly Quota (different from daily)
+
+Apply weekly quota ratios: core 40% / adjacent 20% / hotspot 20% / explore 20%.
+The weekly report shows more exploration and hotspot content than daily (daily: 50/20/15/15).
+Target 30-50 items for weekly report. Apply the same quota algorithm from Section 4 but with weekly ratios.
+
+### Category Minimum
+
+Ensure >= 5 different categories are represented. If fewer than 5 categories have items, include the best item from each missing category that has ANY items in the 7-day pool (even if not selected for daily digests).
+
+### LLM Synthesis
+
+1. Use `references/prompts/weekly-report.md` template
+2. Fill placeholders with aggregated data
+3. Use **strong model tier** (COST-04) for this call -- cross-domain synthesis requires nuanced reasoning
+4. Parse LLM output: extract "One Week Overview" and "Cross-Domain Connections" sections
+
+### Assembly
+
+1. Fill weekly report template from `references/output-templates.md`
+2. Write to `output/latest-weekly.md` atomically
+3. Write weekly metrics to `data/metrics/weekly-{start_date}.json` (separate from daily metrics)

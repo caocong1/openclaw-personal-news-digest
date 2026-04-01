@@ -130,3 +130,50 @@ Where:
 
 If circuit-breaker was triggered, append: ` | Budget: EXHAUSTED`
 If budget warning was triggered, append: ` | Budget: {percentage}% used`
+
+---
+
+## Weekly Report Template (OUT-03)
+
+```markdown
+# Weekly News Digest: {start_date} - {end_date}
+
+## One Week Overview
+{LLM-generated trend narrative, 2-3 paragraphs. Cross-domain synthesis highlighting connections between categories. Written by strong model.}
+
+## Key Events & Timelines
+{Top 5-8 events by importance, each with full timeline:}
+### {event_title}
+{event_summary (current state)}
+Timeline:
+- [{date}] {brief} ({relation}) -- Source: {source_name}
+- [{date}] {brief} ({relation}) -- Source: {source_name}
+Status: {status} | Items: {item_count} | First seen: {first_seen_date}
+
+## Category Trends
+{Per-category highlights with comparison to previous week:}
+### {category_name}
+- This week: {item_count} items ({proportion}%)
+- Trend: {up/down/stable compared to previous week}
+- Key stories: {top 2-3 stories from this category}
+
+## Source Health Summary
+{Source performance overview:}
+- Active sources: {count}
+- Degraded sources: {count and names}
+- Quality changes: {sources with significant quality_score changes}
+- New sources added this week: {count}
+
+## Cross-Domain Connections
+{LLM-synthesized insights identifying connections across categories. E.g., "AI regulation developments (macro-policy) may affect developer tools adoption (dev-tools)" -- written by strong model.}
+
+---
+Week stats: {total_items_processed} items from {source_count} sources | {event_count} events tracked | {llm_calls} LLM calls total
+```
+
+### Quality Rules for Weekly Report
+
+- Must cover >= 5 different categories (ANTI-05 weekly requirement)
+- Use weekly quota: core 40% / adjacent 20% / hotspot 20% / explore 20% (more exploration than daily)
+- If fewer than 3 days of data available: output shortened version, omit trend comparisons
+- Use strong model tier for "One Week Overview" and "Cross-Domain Connections" sections (COST-04)
