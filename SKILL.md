@@ -28,7 +28,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 1. **Load prompts**: Read `{baseDir}/references/prompts/classify.md` and `{baseDir}/references/prompts/summarize.md`.
 2. **Collect unprocessed**: Find items with `processing_status: "raw"` from today's JSONL.
 3. **Classify batch**: Group 5-10 items per LLM call. Assign `categories`, `importance_score`, `form_type`, `tags`.
-4. **Summarize batch**: Group 5-10 items per LLM call. Generate 2-3 sentence Chinese summary.
+4. **Summarize batch**: Group 5-10 items per LLM call. Read `depth_preference` and `judgment_angles` from `config/preferences.json`, inject into `references/prompts/summarize.md`. Generate Chinese summary at configured depth.
 5. **Handle errors**: On LLM failure, retry once. If still fails, mark `processing_status: "partial"`. If classify fails but summarize succeeds, mark item for exploration slot.
 6. **Update budget**: Read `{baseDir}/config/budget.json`. If `current_date` differs from today, reset `calls_today` and `tokens_today` to 0. Increment counters.
 7. **Write results**: Update items in JSONL atomically, set `processing_status: "complete"`.

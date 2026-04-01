@@ -82,7 +82,7 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | Daily item count | 15-25 | Number of selected items in daily digest |
-| Summary length | 2-3 sentences | Per-item summary length |
+| Summary length | depth_preference-dependent | brief=1 sentence, moderate=2-3, detailed=3-5, technical=3-5+specs |
 | Exploration content | Enabled | Include exploration recommendations |
 | Low-content shortening | Enabled | Shorten output when insufficient content |
 
