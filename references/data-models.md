@@ -234,6 +234,45 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
     "type": "daily_digest",
     "item_count": 0,
     "generated": false
-  }
+  },
+  "alerts": []
 }
 ```
+
+**Field notes (alerts):**
+- `alerts`: Array of `AlertCondition` objects detected during this day's health check. Empty array if no alerts fired. Populated by `scripts/health-check.sh` daily mode.
+
+---
+
+## AlertCondition
+
+Structured alert output from `scripts/health-check.sh`. Can be collected into `DailyMetrics.alerts` array.
+
+```json
+{
+  "_schema_v": 1,
+  "type": "source_failure|budget_warning|budget_exhausted|dedup_inconsistency|source_concentration|empty_digest",
+  "severity": "warning|critical",
+  "message": "string (human-readable alert message)",
+  "details": {},
+  "detected_at": "ISO8601"
+}
+```
+
+**Field notes:**
+- `type`: One of 6 alert condition types checked by health-check.sh daily mode
+- `severity`: `warning` for threshold breaches (budget at 80%, dedup inconsistency), `critical` for operational failures (all sources failed 2 days, budget exhausted)
+- `message`: Human-readable alert text matching the `ALERT:` line from health-check.sh output
+- `details`: Optional structured data for the alert (e.g., `{"calls": 45, "limit": 50, "ratio": 0.9}` for budget alerts)
+- `detected_at`: ISO8601 timestamp when the alert was detected
+
+**Severity mapping:**
+
+| Type | Severity | Trigger |
+|------|----------|---------|
+| `source_failure` | `critical` | All sources failed for 2 consecutive days |
+| `budget_warning` | `warning` | LLM budget >= 80% of daily limit |
+| `budget_exhausted` | `critical` | LLM budget >= 100% (circuit breaker active) |
+| `dedup_inconsistency` | `warning` | >10% orphaned entries in dedup-index |
+| `source_concentration` | `warning` | Single source accounts for >50% of items |
+| `empty_digest` | `warning` | Items fetched but no digest generated |
