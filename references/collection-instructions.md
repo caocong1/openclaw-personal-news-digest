@@ -491,17 +491,19 @@ After each pipeline run, during the Processing Phase (after item processing, bef
 
 For each source that contributed items in the current run, compute updated stats using the last 7 days of data:
 
+**Data source:** Read `per_source` from `data/metrics/daily-YYYY-MM-DD.json` for each of the last 7 days. For each source_id, the `per_source[source_id]` object provides `fetched`, `deduped`, `title_deduped`, `selected`, `status`, and `error` fields. See `references/data-models.md` DailyMetrics schema for field definitions. If a metrics file lacks `per_source` (pre-Phase-6 files), treat as empty dict -- that source has no data for that day.
+
 **selection_rate** = items_selected_for_output / total_fetched
-- `items_selected_for_output`: count of items from this source that appear in the final digest output (last 7 days of daily metrics files)
-- `total_fetched`: sum of items fetched from this source (last 7 days of JSONL data, counted by `source_id`)
+- `items_selected_for_output`: sum of `per_source[source_id].selected` across last 7 days of daily metrics
+- `total_fetched`: sum of `per_source[source_id].fetched` across last 7 days of daily metrics
 
 **dedup_rate** = items_deduped / total_fetched
-- `items_deduped`: count of items from this source that were deduplicated (appeared in dedup-index already at fetch time, last 7 days)
+- `items_deduped`: sum of `per_source[source_id].deduped` across last 7 days of daily metrics
 - `total_fetched`: same as above
 
 **fetch_success_rate** = successful_fetches / total_fetch_attempts
-- `successful_fetches`: count of runs where this source fetched >= 1 item (from daily metrics files, last 7 days)
-- `total_fetch_attempts`: count of runs where this source was attempted (from daily metrics files, last 7 days)
+- `successful_fetches`: count of days where `per_source[source_id].status == 'success'` across last 7 days of daily metrics
+- `total_fetch_attempts`: count of days where `source_id` appears in `per_source` across last 7 days of daily metrics
 
 **quality_score** = selection_rate * 0.4 + (1 - dedup_rate) * 0.3 + fetch_success_rate * 0.3
 

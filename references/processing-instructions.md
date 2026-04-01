@@ -656,6 +656,25 @@ The daily digest output phase reads these metrics to populate the Transparency F
 
 The quick-check flow reads `alerts_sent_today` and `alerted_urls` to enforce the daily alert cap and URL dedup for breaking news.
 
+### Per-Source Metrics Accumulation
+
+During each pipeline run, accumulate per-source counters alongside aggregate metrics. These feed into the `per_source` field of DailyMetrics (see `references/data-models.md`).
+
+**Accumulation points (by pipeline step):**
+
+| Counter | When to Increment | Pipeline Step |
+|---------|-------------------|---------------|
+| `fetched` | Each item successfully fetched from a source | Collection Phase step 4 (fetch by type) |
+| `deduped` | Each item from a source skipped by URL dedup (hash exists in dedup-index) | Collection Phase step 6 (dedup) |
+| `status` | Set to `"success"` if fetched >= 1; `"failed"` if fetched == 0 or error | After Collection Phase step 4 completes for each source |
+| `error` | Set to error message string on fetch failure; `null` on success | After Collection Phase step 4 completes for each source |
+| `title_deduped` | Each item from a source marked `dedup_status: "title_dup"` | Processing Phase step 8 (title dedup) |
+| `selected` | Each item from a source that receives a `quota_group` tag | Output Phase step 3 (quota allocation, Section 4 Step 8) |
+
+**Persistence:** Write the accumulated `per_source` map as part of the daily metrics file during Output Phase step 7. The `per_source` field is additive to existing aggregate counters (`sources.*`, `items.*`); do not remove or modify existing fields.
+
+**Backward compatibility:** Metrics files from before this change lack `per_source`. All consumers (health-check.sh, source health computation) already use `.get('per_source', {})` which returns an empty dict gracefully. No backfill of historical metrics files is needed.
+
 ---
 
 ## Section 6: Source Auto-Demotion and Recovery (SRC-09)

@@ -16,7 +16,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 1. **Acquire lock**: Read `{baseDir}/data/.lock`. If absent or `started_at` > 15 min ago, write `{ "run_id": "run-YYYYMMDD-HHmmss-XXXX", "started_at": "ISO8601" }`. If locked < 15 min, skip this run.
 2. **Generate run_id**: `run-YYYYMMDD-HHmmss-XXXX` (XXXX = random 4 chars).
 3. **Load sources**: Read `{baseDir}/config/sources.json`, filter `enabled: true`. If budget effective_usage >= 0.8, additionally skip `status: "degraded"` sources.
-4. **Fetch by type**: For each source, route by `source.type`. If type == `rss`: web_fetch XML, parse RSS/Atom. If type == `github`: web_fetch GitHub API JSON, parse releases. If type == `search`: web_search keywords + LLM filter. If type == `official`: web_fetch or browser + LLM extract. If type == `community`: browser + LLM extract. If type == `ranking`: web_fetch or browser + LLM extract. See `{baseDir}/references/collection-instructions.md` per-type sections for detailed steps.
+4. **Fetch by type**: For each source, route by `source.type`. If type == `rss`: web_fetch XML, parse RSS/Atom. If type == `github`: web_fetch GitHub API JSON, parse releases. If type == `search`: web_search keywords + LLM filter. If type == `official`: web_fetch or browser + LLM extract. If type == `community`: browser + LLM extract. If type == `ranking`: web_fetch or browser + LLM extract. See `{baseDir}/references/collection-instructions.md` per-type sections for detailed steps. Track per-source counters (fetched, deduped, status, error) during collection for DailyMetrics `per_source` field.
 5. **Normalize URLs**: Strip `utm_*` params, force `https`, remove `www.` prefix, lowercase host, remove trailing `/`.
 6. **Dedup**: Compute `SHA256(normalized_url)[:16]`. Check `{baseDir}/data/news/dedup-index.json` -- skip if hash exists.
 7. **Write items**: Append new items to `{baseDir}/data/news/YYYY-MM-DD.jsonl` atomically (write `.tmp.{run_id}`, then rename).
@@ -48,7 +48,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 4b. **Weekly report** (if triggered by weekly cron): Read `{baseDir}/references/processing-instructions.md` Section 7. Aggregate 7 days of data, apply weekly quota (40/20/20/20), use strong model for synthesis, write to `{baseDir}/output/latest-weekly.md`.
 5. **Event Tracking section**: For events with new items merged today, build timeline view per `{baseDir}/references/output-templates.md` Event Tracking section.
 6. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
-7. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics. Include `quota_distribution`, `category_proportions`, `source_proportions` in daily metrics.
+7. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics. Include `quota_distribution`, `category_proportions`, `source_proportions`, and `per_source` (per-source pipeline counters) in daily metrics.
 8. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Append to digest output.
 9. **Release lock**: Delete `{baseDir}/data/.lock`.
 

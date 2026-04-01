@@ -25,8 +25,8 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 - [x] **SRC-05**: 社区页面采集（browser 渲染 + LLM 提取）
 - [x] **SRC-06**: 热门榜单采集（web_fetch 或 browser + LLM 提取排名条目）
 - [x] **SRC-07**: 自然语言来源管理（添加/删除/启用/禁用/调权重，删除需二次确认）
-- [ ] **SRC-08**: 来源健康度指标（quality_score / dedup_rate / selection_rate 自动计算）
-- [ ] **SRC-09**: 来源自动降级与恢复（quality_score < 0.2 连续 14 天降级，> 0.3 连续 7 天恢复）
+- [x] **SRC-08**: 来源健康度指标（quality_score / dedup_rate / selection_rate 自动计算）
+- [x] **SRC-09**: 来源自动降级与恢复（quality_score < 0.2 连续 14 天降级，> 0.3 连续 7 天恢复）
 - [x] **SRC-10**: 输入歧义处理（多义操作追问确认，相似来源列候选）
 
 ### Content Processing
@@ -93,8 +93,8 @@ Requirements for Phase 0-3 delivery. Each maps to roadmap phases.
 ### Monitoring
 
 - [x] **MON-01**: 每日健康指标文件（sources/items/llm/output/feedback 维度）
-- [ ] **MON-02**: 告警条件（全来源连续 2 天失败、预算 80%、dedup 不一致、来源集中度、空日报）
-- [ ] **MON-03**: 每周健康巡检（dedup-index 一致性、空事件、长期未归档、成功率、偏好极端值、缓存清理）
+- [x] **MON-02**: 告警条件（全来源连续 2 天失败、预算 80%、dedup 不一致、来源集中度、空日报）
+- [x] **MON-03**: 每周健康巡检（dedup-index 一致性、空事件、长期未归档、成功率、偏好极端值、缓存清理）
 - [x] **MON-04**: 数据生命周期管理（30 天 news、7 天 dedup-index、90 天 feedback 明细、7 天缓存）
 
 ### History Query
@@ -168,8 +168,8 @@ Which phases cover which requirements. Updated during roadmap creation and miles
 | SRC-05 | Phase 1 | Complete |
 | SRC-06 | Phase 1 | Complete |
 | SRC-07 | Phase 1 | Complete |
-| SRC-08 | Phase 6 | Pending |
-| SRC-09 | Phase 6 | Pending |
+| SRC-08 | Phase 6 | Complete |
+| SRC-09 | Phase 6 | Complete |
 | SRC-10 | Phase 1 | Complete |
 | PROC-01 | Phase 0 | Complete |
 | PROC-02 | Phase 0 | Complete |
@@ -212,8 +212,8 @@ Which phases cover which requirements. Updated during roadmap creation and miles
 | COST-03 | Phase 1 | Complete |
 | COST-04 | Phase 1 | Complete |
 | MON-01 | Phase 0 | Complete |
-| MON-02 | Phase 6 | Pending |
-| MON-03 | Phase 6 | Pending |
+| MON-02 | Phase 6 | Complete |
+| MON-03 | Phase 6 | Complete |
 | MON-04 | Phase 2 | Complete |
 | HIST-01 | Phase 3 | Complete |
 | HIST-02 | Phase 3 | Complete |

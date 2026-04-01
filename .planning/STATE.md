@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 05-01-PLAN.md (daily depth control wiring)
-last_updated: "2026-04-01T16:08:44.887Z"
+stopped_at: Completed 06-01-PLAN.md (per-source metrics continuity)
+last_updated: "2026-04-01T16:27:06.701Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
-  completed_phases: 6
-  total_plans: 17
+  completed_phases: 5
+  total_plans: 16
   completed_plans: 17
   percent: 100
 ---
@@ -25,8 +25,8 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 
 ## Current Position
 
-Phase: 6 of 4 (per source metrics continuity)
-Plan: Not started
+Phase: 4 of 4 (Integration Wiring Fixes) -- COMPLETE
+Plan: 1 of 1 in current phase (all complete)
 Status: Phase complete — ready for verification
 Last activity: 2026-04-01
 
@@ -68,7 +68,7 @@ Progress: [████████████████] 100%
 | Phase 03 P03 | 2min | 2 tasks | 5 files |
 | Phase 03 P04 | 4min | 2 tasks | 3 files |
 | Phase 04 P01 | 2min | 2 tasks | 5 files |
-| Phase 05 P01 | 1min | 2 tasks | 3 files |
+| Phase 06 P01 | 2min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -120,7 +120,7 @@ Recent decisions affecting current work:
 - [Phase 04]: All integration fixes are additive-only with backward-compatible defaults -- no existing behavior changed
 - [Phase 04]: depth_preference/judgment_angles wired into summarize prompt only, confirmed NOT scoring formula
 - [Phase 04]: moderate depth produces identical 2-3 sentence output to preserve backward compatibility
-- [Phase 05]: Step 1.5 placement mirrors Section 7 weekly report pattern for consistency
+- [Phase 06]: per_source schema uses 6 sub-fields matching health-check.sh consumers; backward compat via .get('per_source', {})
 
 ### Pending Todos
 
@@ -132,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T16:05:37.204Z
-Stopped at: Completed 05-01-PLAN.md (daily depth control wiring)
+Last session: 2026-04-01T16:27:06.695Z
+Stopped at: Completed 06-01-PLAN.md (per-source metrics continuity)
 Resume file: None
