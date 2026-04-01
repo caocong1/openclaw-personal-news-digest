@@ -64,12 +64,13 @@ Plans:
   3. Daily digest visibly follows quota proportions (core/adjacent/hot/exploration) and no single topic exceeds 60% for 3+ consecutive days
   4. English-language sources are correctly processed and appear in the digest with Chinese summaries alongside preserved original titles
   5. Weekly health check runs automatically, cleaning stale data and flagging anomalies (source failures, budget spikes, dedup inconsistencies)
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
+- [ ] 02-01-PLAN.md — Title near-duplicate detection (3-stage: normalize, Jaccard bigram >= 0.6, LLM judgment) and multi-language processing (Chinese + English independent dedup)
+- [ ] 02-02-PLAN.md — Event merging (3-step funnel: topic filter, keyword match, LLM merge), lifecycle (active/stable/archived), timeline tracking, event_boost scoring activation
+- [ ] 02-03-PLAN.md — Anti-echo-chamber quota system (core 50%/adjacent 20%/hotspot 15%/explore 15%), chain yielding, reverse diversity constraints, hotspot injection, recommendation reasons
+- [ ] 02-04-PLAN.md — Monitoring alerts (MON-02), weekly health inspection (MON-03), data lifecycle management with per-type TTL rules (MON-04)
 
 ### Phase 3: Closed Loop
 **Goal**: User has a fully adaptive system with preference decay preventing fixation, weekly trend reports, natural language history queries, and self-healing source management
@@ -96,5 +97,5 @@ Phases execute in numeric order: 0 -> 0.1 -> 1 -> 1.1 -> 2 -> 3
 |-------|----------------|--------|-----------|
 | 0. MVP Pipeline | 3/3 | Complete | 2026-04-01 |
 | 1. Multi-Source + Preferences | 0/4 | Not started | - |
-| 2. Smart Processing | 0/3 | Not started | - |
+| 2. Smart Processing | 0/4 | Not started | - |
 | 3. Closed Loop | 0/2 | Not started | - |
