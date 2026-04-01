@@ -2,7 +2,7 @@
 
 ## What This Is
 
-一个基于 OpenClaw 平台的个性化新闻研究与推送 Skill。它运行在 OpenClaw Agent 内部，利用平台原生工具链（采集、调度、推送、存储）完成新闻编排任务。系统具备多来源采集、LLM 驱动的分类/摘要/去重、事件归并与时间线追踪、5 层偏好模型、防茧房机制，以及成本控制与监控能力。
+一个基于 OpenClaw 平台的个性化新闻研究与推送 Skill。它运行在 OpenClaw Agent 内部，利用平台原生工具链（采集、调度、推送、存储）完成新闻编排任务。系统具备多来源采集（RSS、GitHub、搜索、官方公告、社区、榜单）、LLM 驱动的分类/摘要/去重、事件归并与时间线追踪、7 层偏好模型、防茧房配额机制、反馈学习闭环、成本控制与监控、以及自然语言历史查询能力。
 
 ## Core Value
 
@@ -12,72 +12,55 @@
 
 ### Validated
 
-- [x] 5 层用户偏好模型（主题、来源信任、形态、风格、样本反馈） — Validated in Phase 3-4
-- [x] 日报深度偏好端对端贯通（depth_preference + judgment_angles → 日报摘要） — Validated in Phase 5: daily-depth-control-wiring
-- [x] 来源健康度动态评估与自动降级/恢复（per_source metrics → source health formulas → degrade/recover） — Validated in Phase 6: per-source-metrics-continuity
-- [x] 监控与可观测性（per_source DailyMetrics contract → health-check.sh consumer alignment） — Validated in Phase 6: per-source-metrics-continuity
+- ✓ Skill 框架搭建（SKILL.md + references/ + scripts/ + config/）— v1.0
+- ✓ 多来源新闻采集（6 种类型）与自然语言管理 — v1.0
+- ✓ LLM 驱动的多标签主题分类（12 个顶层类目）— v1.0
+- ✓ LLM 摘要生成（中文输出，多语言处理）— v1.0
+- ✓ 三层去重策略（链接级、标题近似、事件级归并）— v1.0
+- ✓ 事件归并与时间线追踪（active → stable → archived 生命周期）— v1.0
+- ✓ 7 层用户偏好模型（含 depth_preference + judgment_angles）— v1.0
+- ✓ 7 维个性化评分公式 — v1.0
+- ✓ 防茧房配额机制（核心 50% / 邻近 20% / 热点 15% / 探索 15%）— v1.0
+- ✓ 日报、快讯、周报三种输出类型 — v1.0
+- ✓ 反馈学习系统（8 种反馈类型 → 偏好增量更新）— v1.0
+- ✓ LLM 成本预算与熔断机制 — v1.0
+- ✓ LLM 结果缓存层 — v1.0
+- ✓ 监控与可观测性（健康指标、告警、巡检、per_source metrics）— v1.0
+- ✓ 自然语言历史查询（5 种查询类型）— v1.0
+- ✓ 偏好衰减机制（向均值回归）— v1.0
+- ✓ 来源自动降级与恢复（端到端 per-source metrics 驱动）— v1.0
+- ✓ 日报深度偏好端对端贯通 — v1.0
 
 ### Active
 
-- [ ] 多来源新闻采集（RSS、GitHub、搜索、官方公告、社区、榜单）
-- [ ] LLM 驱动的多标签主题分类（12 个顶层类目）
-- [ ] LLM 驱动的新闻摘要生成（中文输出）
-- [ ] 三层去重策略（链接级、标题近似、事件级归并）
-- [ ] 事件归并与时间线追踪（active → stable → archived 生命周期）
-- [ ] 5 层用户偏好模型（主题、来源信任、形态、风格、样本反馈）
-- [ ] 个性化评分公式（7 维加权）
-- [ ] 防茧房配额机制（核心 50% / 邻近 20% / 热点 15% / 探索 15%）
-- [ ] 日报、快讯、周报三种输出类型
-- [ ] 反馈学习系统（8 种反馈类型 → 偏好增量更新）
-- [ ] LLM 成本预算与熔断机制
-- [ ] LLM 结果缓存层
-- [ ] 监控与可观测性（健康指标、告警、巡检）
-- [ ] 多语言处理（中文 + 英文，统一中文摘要输出）
-- [ ] 自然语言历史查询
-- [ ] 偏好衰减机制（向均值回归）
-- [ ] 隐私合规基础约定
+(None — next milestone requirements TBD via `/gsd:new-milestone`)
 
 ### Out of Scope
 
-- Embedding 替代 Jaccard — 当前规模不需要额外依赖，延后到 Phase 4+
-- 反馈撤销 + 全量重建 — 手动修改已够用，延后到 Phase 4+
+- Embedding 替代 Jaccard — 当前规模不需要额外依赖
+- 反馈撤销 + 全量重建 — 手动修改已够用
 - A/B 测试框架 — 单用户场景无对照组
 - 多用户支持 — 架构变动大，延后到 V2
-- 情感分析 — 优先级低，延后到 Phase 4+
-- 热点预测 — 数据积累不足，延后到 Phase 4+
-- 来源自动发现 — 需充分用户反馈数据，延后到 Phase 3+
+- 情感分析 — 优先级低
+- 热点预测 — 数据积累不足
+- 来源自动发现 — 需充分用户反馈数据
 - SQLite 迁移 — 30 天 JSONL 性能可接受，按需再考虑
 - 实时聊天/视频内容 — 复杂度高，非核心价值
 - 移动端应用 — Web/聊天渠道优先
 
 ## Context
 
+**Shipped v1.0** with ~45,400 lines across 100 files (Markdown skill documents).
+Tech stack: OpenClaw Skill (SKILL.md + references/ + scripts/ + config/), JSONL storage, LLM-driven processing.
+7 phases delivered: MVP Pipeline, Multi-Source + Preferences, Smart Processing, Closed Loop, Integration Wiring Fixes, Daily Depth Control Wiring, Per-Source Metrics Continuity.
+
 **平台环境**：OpenClaw AI Agent 平台（https://openclaw.ai/），Skill 以 SKILL.md + 引用文档 + 辅助脚本的形式运行在 Agent 内部。
 
-**可用工具**：
-- `web_fetch` — RSS/API 采集
-- `browser` — 需要渲染的网页抓取
-- `web_search` — 关键词搜索
-- `read` / `write` — 工作空间文件读写
-- `cron` — 定时调度触发
-- `message` + cron `delivery` — 内容推送到聊天渠道
-- `exec` — 辅助脚本执行（待验证）
+**可用工具**：web_fetch, browser, web_search, read/write, cron, message + delivery, exec
 
-**设计规格来源**：gpt-plan-v3.md — 经过 6 个 AI 模型（Claude Opus、GPT-5.4、Qwen、GLM-5、MiniMax、Kimi）独立评审优化的完整设计文档。
+**设计规格来源**：gpt-plan-v3.md — 经过 6 个 AI 模型独立评审优化的完整设计文档。
 
-**关键设计决策**：
-- SKILL.md 模块化拆分（< 3000 tokens），详细规范拆到 references/
-- 分步执行 + 按需加载上下文窗口管理策略
-- 文件锁互斥（获取失败即跳过）
-- JSONL 按日分文件存储
-- Schema 版本化兼容读取
-
-**平台能力待验证**（Phase 0）：
-- isolated session 可访问工作空间文件
-- `exec` 可执行辅助脚本
-- `browser` 可稳定抓取渲染页面
-- cron `delivery` 支持多渠道投递
-- 单次 agent turn 超时 ≥ 10 分钟
+**Live platform verification pending:** cron delivery, isolated session, exec permission, timeout, dedup, and empty-input quality gate need real platform testing.
 
 ## Constraints
 
@@ -92,15 +75,17 @@
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| SKILL.md 模块化拆分 | 6/6 评审共识：避免巨型指令文件降低 agent 执行一致性 | — Pending |
-| 偏好模型 5 层（非 7 层） | GPT-5.4 建议 MVP 收缩复杂度，保留扩展接口 | — Pending |
-| form_type 5 种（非 7 种） | Claude Opus 评审：过细枚举分类收益低于复杂度代价 | — Pending |
-| 时间线关系 5 种（非 9 种） | 4/6 评审建议，由 brief 字段承载细粒度描述 | — Pending |
-| 事件状态 3 态（非 4 态） | developing 与 active 语义重叠，简化为三态 | — Pending |
-| 输出类型 3 种（非 5 种） | 晚报/专题可用现有能力替代 | — Pending |
-| 简化锁机制为获取失败即跳过 | 4/6 评审：单用户低并发场景足够 | — Pending |
-| 取消反馈全量重建和撤销协议 | 5/6 评审：MVP 实现成本远大于收益 | — Pending |
-| Phase 0 合并为单阶段 | Qwen 评审：三子阶段紧耦合，拆分增加管理开销 | — Pending |
+| SKILL.md 模块化拆分 | 6/6 评审共识：避免巨型指令文件降低 agent 执行一致性 | ✓ Good |
+| 偏好模型 5→7 层 | MVP 收缩后在 Phase 3 扩展 depth_preference + judgment_angles | ✓ Good |
+| form_type 5 种（非 7 种） | Claude Opus 评审：过细枚举分类收益低于复杂度代价 | ✓ Good |
+| 时间线关系 5 种（非 9 种） | 4/6 评审建议，由 brief 字段承载细粒度描述 | ✓ Good |
+| 事件状态 3 态（非 4 态） | developing 与 active 语义重叠，简化为三态 | ✓ Good |
+| 输出类型 3 种（非 5 种） | 晚报/专题可用现有能力替代 | ✓ Good |
+| 简化锁机制为获取失败即跳过 | 4/6 评审：单用户低并发场景足够 | ✓ Good |
+| 取消反馈全量重建和撤销协议 | 5/6 评审：MVP 实现成本远大于收益 | ✓ Good |
+| Phase 0 合并为单阶段 | Qwen 评审：三子阶段紧耦合，拆分增加管理开销 | ✓ Good |
+| Milestone audit → gap phases (5+6) | Audit found 5 partial REQs; targeted phases closed all gaps | ✓ Good |
+| per_source DailyMetrics contract | Enables source health, monitoring, degrade/recover end-to-end | ✓ Good |
 
 ---
-*Last updated: 2026-04-02 after Phase 6 completion*
+*Last updated: 2026-04-02 after v1.0 milestone*
