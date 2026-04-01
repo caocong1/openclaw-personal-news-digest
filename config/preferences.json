@@ -34,9 +34,12 @@
     "distrusted_sources": [],
     "blocked_patterns": []
   },
-  "version": 2,
+  "depth_preference": "moderate",
+  "judgment_angles": [],
+  "version": 3,
   "last_updated": null,
   "last_decay_at": null,
   "total_feedback_count": 0,
-  "feedback_processing_enabled": true
+  "feedback_processing_enabled": true,
+  "_schema_v": 2
 }
