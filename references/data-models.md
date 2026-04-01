@@ -61,6 +61,49 @@ Each news item collected from a source.
 
 ---
 
+## Event
+
+Each event groups related news items about the same real-world occurrence, tracked through a lifecycle with timeline entries.
+
+```json
+{
+  "id": "string (evt-XXXXXXXX, 8-char random alphanumeric)",
+  "title": "string (event title)",
+  "summary": "string (current event summary, updated on merge)",
+  "first_seen": "ISO8601",
+  "last_updated": "ISO8601",
+  "status": "active|stable|archived",
+  "topic": "string (primary category ID)",
+  "importance": 0.0,
+  "keywords": ["string (3-5 keywords for matching)"],
+  "item_ids": ["string (NewsItem IDs linked to this event)"],
+  "timeline": [
+    {
+      "news_id": "string",
+      "relation": "initial|update|correction|analysis|reversal",
+      "timestamp": "ISO8601",
+      "brief": "string (one sentence describing this news in event context)"
+    }
+  ],
+  "_schema_v": 2
+}
+```
+
+**Field notes:**
+- `id`: Format `evt-` followed by 8 random alphanumeric characters
+- `status`: Lifecycle transitions -- `active` (receiving new items) -> `stable` (3 days no update) -> `archived` (7 days no update, moved to `data/events/archived/YYYY-MM.json`)
+- `importance`: Updated to `max(event.importance, item.importance_score)` on each merge
+- `keywords`: 3-5 keywords used for Step 2 keyword quick match during event merging (see `references/processing-instructions.md` Section 1C)
+- `timeline`: Array of timeline entries, one per merged news item. Relation types: `initial` (first report), `update` (new developments), `correction` (fact corrections), `analysis` (commentary/interpretation), `reversal` (situation reversal)
+- `summary`: Auto-updated when items with relation `update`, `correction`, or `reversal` are merged (not for `analysis`)
+
+**Defaults for missing fields (older schema versions):**
+- `keywords`: `[]`
+- `timeline`: `[]`
+- `item_ids`: `[]`
+
+---
+
 ## Source
 
 Source definition as stored in `config/sources.json`.

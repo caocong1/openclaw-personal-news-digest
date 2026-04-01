@@ -259,6 +259,98 @@ Cross-language event merging is allowed -- the same event reported in both Chine
 
 ---
 
+## Section 1C: Event Merging (EVT-01)
+
+After title dedup, run event merging for all items with `dedup_status: "unique"`. This is a 3-step funnel that progressively narrows candidate events to minimize LLM calls while maintaining merge accuracy.
+
+### Step 1 -- Topic Pre-filter
+
+1. Load `data/events/active.json`
+2. Filter events where `event.topic == item.categories.primary`
+3. Include events with status `"stable"` (they may reactivate if new related news appears)
+4. Exclude events with status `"archived"` (already moved to archive files)
+5. Expected: 50-200 total events -> 5-20 same-topic candidates
+
+### Step 2 -- Keyword Quick Match
+
+1. Tokenize the item title into words (split on whitespace and punctuation)
+2. For each candidate event from Step 1, count overlapping tokens with `event.keywords[]`
+3. Keep candidates with overlap >= 2 tokens
+4. If no candidates remain after this step, proceed directly to "new event" creation (skip Step 3)
+5. Expected: 5-20 candidates -> 1-5 candidates
+
+### Step 3 -- LLM Precise Merge
+
+1. Use `references/prompts/merge-event.md` with the 1-5 candidate events
+2. Use **strong model tier** per COST-04 (event merging requires nuanced reasoning about whether news reports the same core event)
+3. Fill prompt placeholders: `{news_title}`, `{news_summary}`, `{news_primary_category}`, `{event_list}` (candidate event id, title, summary, status)
+4. Parse LLM response JSON: `{ action, event_id, relation, brief, new_event_title, new_event_keywords }`
+
+**On "merge" action:**
+- Add `item.id` to `event.item_ids`
+- Add timeline entry: `{ news_id: item.id, relation, timestamp: now, brief }`
+- Update `event.last_updated` to now
+- If event status was `"stable"`, transition back to `"active"` (reactivation)
+- Update `event.importance` to `max(event.importance, item.importance_score)`
+- Set `item.event_id` to the merged event's id
+- If relation is not `"initial"`: set `item.dedup_status` to `"event_merged"`
+- If relation is `"update"`, `"correction"`, or `"reversal"`: re-summarize the event with 1 additional LLM call (strong model) incorporating the new information -- EVT-04. Skip re-summarization for `"analysis"` relation (opinion/interpretation, not new facts).
+
+**On "new" action:**
+- Create new Event object per the Event schema in `references/data-models.md`:
+  - `id`: `"evt-"` + random 8-char alphanumeric
+  - `title`: from LLM `new_event_title`
+  - `summary`: `item.content_summary`
+  - `first_seen`: now (ISO8601)
+  - `last_updated`: now (ISO8601)
+  - `status`: `"active"`
+  - `topic`: `item.categories.primary`
+  - `importance`: `item.importance_score`
+  - `keywords`: from LLM `new_event_keywords` (3-5 keywords)
+  - `item_ids`: `[item.id]`
+  - `timeline`: `[{ news_id: item.id, relation: "initial", timestamp: now, brief }]`
+  - `_schema_v`: 2
+- Append new event to `data/events/active.json`
+- Set `item.event_id` to the new event's id
+
+**Write:** Updated `data/events/active.json` atomically (write to tmp, then rename).
+
+### Cross-language Event Merging (PROC-06)
+
+Unlike title dedup, event merging DOES work cross-language. The LLM prompt handles Chinese and English titles together for merge decisions. A Chinese news report and an English news report about the same event can be merged into a single event entry.
+
+---
+
+## Section 1D: Event Lifecycle Management (EVT-02)
+
+Run at the **START** of each pipeline run, **before** event merging (Section 1C). This ensures the candidate event pool is current and manageable.
+
+### Lifecycle Transition Procedure
+
+1. Read `data/events/active.json`
+2. For each event in the array:
+   - **Active -> Stable:** If `status == "active"` and `(now - last_updated) > 3 days`, set `status = "stable"`
+   - **Stable -> Archived:** If `status == "stable"` and `(now - last_updated) > 7 days`, set `status = "archived"`, move event to archive file
+3. Write updated `data/events/active.json` atomically (excluding archived events)
+
+### Archive File Management
+
+- Archived events are stored in `data/events/archived/YYYY-MM.json` (grouped by month of archival)
+- Create the `data/events/archived/` directory if it does not exist
+- Each archive file is a JSON array of Event objects
+- If the archive file already exists, read it, append newly archived events, write atomically
+- Archived events are permanent records and are not deleted
+
+### State Transition Summary
+
+```
+active  ---(3 days no update)---> stable
+stable  ---(7 days no update)---> archived (moved to data/events/archived/YYYY-MM.json)
+stable  ---(new item merged)----> active   (reactivation, handled in Section 1C)
+```
+
+---
+
 ## Section 2: Error Handling
 
 Error handling matrix derived from the design document. Apply these rules during batch processing.
