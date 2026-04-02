@@ -777,8 +777,23 @@ Rules:
    - **Today's Hotspot**: Compact format (title, 1-sentence summary, source, structured evidence line)
    - **Exploration**: Compact format with structured evidence line
 4. Omit sections with 0 items (do not render empty section headers)
-5. Omit **Event Tracking** section in MVP (no active events)
+5. Render **Event Tracking** for active/stable events with new items merged today. Build the collapsed timeline view per `references/output-templates.md` and the dense-day rules below.
 6. Append footer with run statistics
+
+### Dense-Day Timeline Collapse (INTERACT-05)
+
+1. Build day buckets from `event.timeline` using the entry date in `YYYY-MM-DD`
+2. Sort day buckets newest first
+3. If a day bucket has `<= 5` timeline entries, render all entries for that day in chronological order
+4. If a day bucket has `> 5` timeline entries:
+   - render one summary line first:
+     `- [YYYY-MM-DD] collapsed_day_count={count}; latest={latest_brief}`
+   - then render the newest 2 timeline entries for that day
+   - then render one omission line:
+     `... earlier_same_day_updates={count_minus_two}`
+5. Keep raw `event.timeline` unchanged; this is presentation-only
+
+**Threshold note:** Collapse applies only when there are strictly `> 5` entries in a single day bucket. Do not collapse at "5 or more", and do not count 5 total entries across the full event timeline.
 
 ### Writing Output
 
