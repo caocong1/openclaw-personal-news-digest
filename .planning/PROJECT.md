@@ -33,7 +33,20 @@
 
 ### Active
 
-(None — next milestone requirements TBD via `/gsd:new-milestone`)
+#### Current Milestone: v2.0 Quality & Robustness
+
+**Goal:** Address all 27+ improvement items (IMPROVEMENTS.md) through output localization, noise filtering, dedup hardening, observability, and interaction UX improvements.
+
+**Target features:**
+- Full output localization (all labels → Chinese)
+- Text cleanliness & cache versioning infrastructure
+- Noise floor filtering (pre-classify + post-classify)
+- Classification quality improvements
+- Alert state & event memory (daily cap + per-event dedup + delta alerts)
+- Cross-digest repetition control
+- Observability integrity (run_log, schema registry, diagnostics)
+- Deployment UX (scheduling profiles, source visibility)
+- Interaction explainability & rolling coverage
 
 ### Out of Scope
 
@@ -88,4 +101,22 @@ Tech stack: OpenClaw Skill (SKILL.md + references/ + scripts/ + config/), JSONL 
 | per_source DailyMetrics contract | Enables source health, monitoring, degrade/recover end-to-end | ✓ Good |
 
 ---
-*Last updated: 2026-04-02 after v1.0 milestone*
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd:transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd:complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
+---
+*Last updated: 2026-04-02 after v2.0 milestone started*
