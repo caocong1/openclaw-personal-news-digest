@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Quality & Robustness
 status: executing
-stopped_at: Completed 12-01-PLAN.md
-last_updated: "2026-04-02T17:14:05.575Z"
+stopped_at: Completed 12-02-PLAN.md
+last_updated: "2026-04-02T17:34:41.887Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 16
-  completed_plans: 14
-  percent: 88
+  completed_plans: 15
+  percent: 94
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 12 (interaction-surface-deployment-ux) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-02
 
-Progress: [█████████░] 88%
+Progress: [█████████░] 94%
 
 ## Performance Metrics
 
@@ -77,6 +77,7 @@ Progress: [█████████░] 88%
 | Phase 11 P01 | 2min | 2 tasks | 3 files |
 | Phase 11 P03 | 3 | 2 tasks | 3 files |
 | Phase 12 P01 | 5min | 2 tasks | 5 files |
+| Phase 12 P02 | 12m11s | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -154,6 +155,9 @@ Recent decisions affecting current work:
 - [Phase 11]: Schema Version Registry maintained alongside New Fields Registry, both updated on schema changes
 - [Phase 12]: Scheduling presets live in config/schedule-profiles.json with stable profile IDs and active_profile selection.
 - [Phase 12]: Intent recognition examples are centralized in references/feedback-rules.md; SKILL.md only dispatches.
+- [Phase 12]: Use config/sources.json as the authoritative source list and enrich with recent DailyMetrics.per_source data instead of relying on metrics presence.
+- [Phase 12]: Derive recommendation evidence from scoring and quota state only; do not allow LLM-authored selection rationale.
+- [Phase 12]: Document recommendation_evidence as NewsItem schema v5 so explainability defaults are explicit for older records.
 
 ### Pending Todos
 
@@ -165,6 +169,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T17:14:05.569Z
-Stopped at: Completed 12-01-PLAN.md
+Last session: 2026-04-02T17:34:14.100Z
+Stopped at: Completed 12-02-PLAN.md
 Resume file: None

@@ -132,7 +132,7 @@ Plans:
 
 Plans:
 - [x] 12-01: TBD
-- [ ] 12-02: TBD
+- [x] 12-02: TBD
 - [ ] 12-03: TBD
 
 ## Progress
@@ -153,4 +153,4 @@ Plans:
 | 9. Noise Floor & Classification Quality | v2.0 | 2/3 | In Progress|  |
 | 10. Dedup Hardening & Alert Fatigue | v2.0 | 3/3 | Complete    | 2026-04-02 |
 | 11. Observability & Data Integrity | v2.0 | 3/3 | Complete    | 2026-04-02 |
-| 12. Interaction Surface & Deployment UX | v2.0 | 1/3 | In Progress|  |
+| 12. Interaction Surface & Deployment UX | v2.0 | 2/3 | In Progress|  |
