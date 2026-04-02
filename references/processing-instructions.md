@@ -211,6 +211,46 @@ After stripping, if the resulting string is unchanged, proceed. If characters we
 
 ---
 
+## Section 0E: Pre-Classify Noise Filter (NOISE-01, NOISE-04)
+
+Before LLM classification, apply pattern-based filtering to skip obvious noise items. This saves LLM budget by preventing promotional, aggregation, and low-signal content from reaching the classify call.
+
+### When to Run
+
+During Processing Phase, after collecting unprocessed items (step 2) and before classification batch (step 3). This filter operates on items with `processing_status: "raw"` only.
+
+### Filter Procedure
+
+1. Read `config/sources.json` to load `fetch_config.noise_patterns` and `fetch_config.title_discard_patterns` for each source
+2. For each item with `processing_status: "raw"`:
+   a. Look up the item's `source_id` in sources.json
+   b. Get `noise_patterns` array (default `[]` if absent or missing from fetch_config)
+   c. Get `title_discard_patterns` array (default `[]` if absent or missing from fetch_config)
+   d. Test `item.title` against each pattern in `noise_patterns` (case-insensitive regex partial match)
+   e. Test `item.title` against each pattern in `title_discard_patterns` (case-insensitive regex full match)
+   f. If ANY pattern matches:
+      - Set `processing_status: "noise_filtered"`
+      - Set `digest_eligible: false`
+      - Remove item from the LLM classification batch (do NOT send to classify or summarize)
+      - Increment `noise_filter_suppressed` counter in run metrics
+      - Log: `"Noise filtered: {item.title} (source: {source_id}, matched: {pattern})"`
+   g. If NO pattern matches: keep item in classification batch, proceed normally
+
+### Backward Compatibility
+
+- Sources without `noise_patterns` or `title_discard_patterns` in `fetch_config` default to empty arrays (no filtering applied)
+- Existing items without `digest_eligible` field default to `true` (eligible)
+- Items with `processing_status: "noise_filtered"` are NOT picked up by breakpoint resume (Section 3) -- they are permanently filtered for this run
+
+### Interaction with Other Pipeline Steps
+
+- Noise-filtered items remain in JSONL (written during Collection Phase step 7) -- they are NOT deleted
+- Noise-filtered items are excluded from classification (step 3), summarization (step 4), title dedup (step 8), and event merge (step 10)
+- Noise-filtered items are excluded from the scoring pool in Output Phase step 1
+- History queries (Section 8) that look for "all items from a source" should use `processing_status != "raw"` rather than `== "complete"` to include noise-filtered items in counts
+
+---
+
 ## Section 1: Batch LLM Processing
 
 ### Collecting Unprocessed Items

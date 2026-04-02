@@ -28,6 +28,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 0. **Preference decay**: Check and apply preference decay per `{baseDir}/references/processing-instructions.md` Section 0. Runs once per 30-day period.
 1. **Load prompts**: Read `{baseDir}/references/prompts/classify.md` and `{baseDir}/references/prompts/summarize.md`.
 2. **Collect unprocessed**: Find items with `processing_status: "raw"` from today's JSONL.
+2.5. **Pre-classify noise filter**: For each raw item, check `config/sources.json` `fetch_config.noise_patterns` and `title_discard_patterns`. Items matching any pattern: set `processing_status: "noise_filtered"`, `digest_eligible: false`, remove from batch, increment `noise_filter_suppressed`. See `{baseDir}/references/processing-instructions.md` Section 0E.
 3. **Classify batch**: Group 5-10 items per LLM call. Assign `categories`, `importance_score`, `form_type`, `tags`.
 4. **Summarize batch**: Group 5-10 items per LLM call. Read `depth_preference` and `judgment_angles` from `config/preferences.json`, inject into `references/prompts/summarize.md`. Generate Chinese summary at configured depth.
 5. **Handle errors**: On LLM failure, retry once. If still fails, mark `processing_status: "partial"`. If classify fails but summarize succeeds, mark item for exploration slot.
@@ -42,7 +43,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 
 ## Output Phase
 
-1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items (all 7 dimensions active, including event_boost from `data/events/active.json`), sort by `final_score` descending. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool.
+1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items (all 7 dimensions active, including event_boost from `data/events/active.json`), sort by `final_score` descending. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool. Exclude items with `digest_eligible: false` from the scoring pool.
 2. **Quality gate**: If < 3 items, output shortened version. If 0 items, skip output entirely.
 3. **Quota allocation**: Assign items to sections (Core/Adjacent/Hotspot/Explore) per `{baseDir}/references/processing-instructions.md` Section 4 quota algorithm. Tag each item with `quota_group`.
 4. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.
