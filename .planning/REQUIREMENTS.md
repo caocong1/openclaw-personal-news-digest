@@ -20,7 +20,7 @@ Requirements for quality & robustness release. Each maps to roadmap phases.
 
 ### Data Quality
 
-- [ ] **QUAL-01**: Pre-write quality contract validates UTF-8 sanitization and title validation for all source types
+- [x] **QUAL-01**: Pre-write quality contract validates UTF-8 sanitization and title validation for all source types
 - [x] **QUAL-02**: Quick-Check output strips JSON field names from alert rendering
 - [x] **QUAL-03**: Output templates define rendering contract separating user-facing vs internal fields
 
@@ -107,7 +107,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | L10N-02 | Phase 8 | Complete |
 | L10N-03 | Phase 8 | Complete |
 | L10N-04 | Phase 8 | Complete |
-| QUAL-01 | Phase 8 | Pending |
+| QUAL-01 | Phase 8 | Complete |
 | QUAL-02 | Phase 8 | Complete |
 | QUAL-03 | Phase 8 | Complete |
 | INFRA-01 | Phase 8 | Pending |
