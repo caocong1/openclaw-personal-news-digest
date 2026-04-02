@@ -13,7 +13,8 @@
     "title_deduped": 2,
     "classified": 18,
     "partial": 0,
-    "selected_for_output": 15
+    "selected_for_output": 15,
+    "noise_filter_suppressed": 3
   },
   "llm": {
     "calls": 12,
