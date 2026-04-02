@@ -41,6 +41,8 @@
 - ✓ 跨日报重复惩罚（DigestHistory + 0.7x repetition penalty + suppression footer）— v2.0 Phase 10
 - ✓ 可观测性完整贯通（透明度底部准确来源计数 + 失败来源标注 + run_log 结构化日志 + Schema Version Registry + diagnostics.sh）— v2.0 Phase 11
 
+- ✓ Interaction surface & deployment UX (repo-backed schedule profiles, canonical intent routing, source-status command, deterministic recommendation evidence, dense-day rolling coverage) — v2.0 Phase 12
+
 ### Active
 
 #### Current Milestone: v2.0 Quality & Robustness
