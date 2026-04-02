@@ -114,6 +114,32 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 
 ---
 
+## Delta Alert (Event Update)
+
+**Trigger condition:** Unified alert decision tree (Section 5A of processing-instructions.md) routes to delta path when item has event_id AND event has last_alerted_at.
+
+**Delta alert format:**
+```
+【快讯更新】{event_title}
+
+变化: {delta_summary}
+当前状态: {current_status}
+
+新进展:
+- [{timestamp}] {brief} ({relation display label})
+
+上次快讯: {last_alert_brief} ({last_alerted_at formatted})
+来源: {source_name} | 重要性: {importance_score}
+```
+
+**Rendering rules:**
+- Use Timeline Relation Display Mapping for relation labels (首报, 更新, 更正, 分析, 反转, 升级)
+- Show only timeline entries added since last_alerted_at (not full timeline)
+- `last_alerted_at` formatted as YYYY-MM-DD HH:MM
+- If delta-alert prompt fails (LLM error), fall back to standard alert format
+
+---
+
 ## Transparency Footer
 
 Appended at the bottom of every daily digest output:
@@ -212,6 +238,7 @@ These tables define how internal English enum values are rendered as Chinese lab
 | `correction` | 更正 |
 | `analysis` | 分析 |
 | `reversal` | 反转 |
+| `escalation` | 升级 |
 
 ---
 

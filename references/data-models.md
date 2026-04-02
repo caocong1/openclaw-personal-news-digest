@@ -82,12 +82,15 @@ Each event groups related news items about the same real-world occurrence, track
   "timeline": [
     {
       "news_id": "string",
-      "relation": "initial|update|correction|analysis|reversal",
+      "relation": "initial|update|correction|analysis|reversal|escalation",
       "timestamp": "ISO8601",
       "brief": "string (one sentence describing this news in event context)"
     }
   ],
-  "_schema_v": 2
+  "last_alerted_at": "ISO8601 or null",
+  "last_alert_news_id": "string or null",
+  "last_alert_brief": "string or null",
+  "_schema_v": 3
 }
 ```
 
@@ -96,13 +99,19 @@ Each event groups related news items about the same real-world occurrence, track
 - `status`: Lifecycle transitions -- `active` (receiving new items) -> `stable` (3 days no update) -> `archived` (7 days no update, moved to `data/events/archived/YYYY-MM.json`)
 - `importance`: Updated to `max(event.importance, item.importance_score)` on each merge
 - `keywords`: 3-5 keywords used for Step 2 keyword quick match during event merging (see `references/processing-instructions.md` Section 1C)
-- `timeline`: Array of timeline entries, one per merged news item. Relation types: `initial` (first report), `update` (new developments), `correction` (fact corrections), `analysis` (commentary/interpretation), `reversal` (situation reversal)
-- `summary`: Auto-updated when items with relation `update`, `correction`, or `reversal` are merged (not for `analysis`)
+- `timeline`: Array of timeline entries, one per merged news item. Relation types: `initial` (first report), `update` (new developments), `correction` (fact corrections), `analysis` (commentary/interpretation), `reversal` (situation reversal), `escalation` (situation escalation/intensification)
+- `summary`: Auto-updated when items with relation `update`, `correction`, `reversal`, or `escalation` are merged (not for `analysis`)
+- `last_alerted_at`: ISO8601 timestamp of when this event was last used in an alert. Null if never alerted.
+- `last_alert_news_id`: The news_id of the item that triggered the last alert for this event. Null if never alerted.
+- `last_alert_brief`: One-sentence summary of what the last alert communicated. Used by delta alerts to describe what changed. Null if never alerted.
 
 **Defaults for missing fields (older schema versions):**
 - `keywords`: `[]`
 - `timeline`: `[]`
 - `item_ids`: `[]`
+- `last_alerted_at`: `null`
+- `last_alert_news_id`: `null`
+- `last_alert_brief`: `null`
 
 ---
 
@@ -518,6 +527,9 @@ All fields added across phases, with version, default, and migration behavior.
 | `noise_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source noise regex patterns |
 | `title_discard_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source title discard patterns |
 | `alert_log` | AlertState | Phase 10 | v1 | `[]` | Audit trail of alerts sent today |
+| `last_alerted_at` | Event | Phase 10 | v3 | `null` | Timestamp of last alert for this event |
+| `last_alert_news_id` | Event | Phase 10 | v3 | `null` | News ID that triggered last alert |
+| `last_alert_brief` | Event | Phase 10 | v3 | `null` | Summary of last alert content |
 
 ### Schema Change Procedure
 

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "evt-fix00001",
+    "title": "测试事件：AI 安全法规推进",
+    "summary": "多国推进 AI 安全法规立法，预计年内出台新规。",
+    "first_seen": "2025-12-25T00:00:00Z",
+    "last_updated": "2026-01-01T00:00:00Z",
+    "status": "active",
+    "topic": "ai-models",
+    "importance": 0.8,
+    "keywords": ["AI", "安全", "法规", "监管"],
+    "item_ids": ["lang01chinese00", "fix01a2b3c4d5e6"],
+    "timeline": [
+      {
+        "news_id": "lang01chinese00",
+        "relation": "initial",
+        "timestamp": "2025-12-25T00:00:00Z",
+        "brief": "首次报道 AI 安全法规讨论"
+      },
+      {
+        "news_id": "fix01a2b3c4d5e6",
+        "relation": "update",
+        "timestamp": "2026-01-01T00:00:00Z",
+        "brief": "法规草案公开征求意见"
+      }
+    ],
+    "last_alerted_at": "2025-12-25T08:00:00Z",
+    "last_alert_news_id": "lang01chinese00",
+    "last_alert_brief": "多国开始讨论AI安全法规立法",
+    "_schema_v": 3
+  },
+  {
+    "id": "evt-fix00002",
+    "title": "测试事件：未曾报警的新事件",
+    "summary": "一个从未触发过快讯的事件，用于测试标准快讯路径。",
+    "first_seen": "2026-01-10T00:00:00Z",
+    "last_updated": "2026-01-12T00:00:00Z",
+    "status": "active",
+    "topic": "dev-tools",
+    "importance": 0.9,
+    "keywords": ["开源", "工具", "发布"],
+    "item_ids": ["fix02newevt0001"],
+    "timeline": [
+      {
+        "news_id": "fix02newevt0001",
+        "relation": "initial",
+        "timestamp": "2026-01-10T00:00:00Z",
+        "brief": "重大开源工具发布"
+      }
+    ],
+    "last_alerted_at": null,
+    "last_alert_news_id": null,
+    "last_alert_brief": null,
+    "_schema_v": 3
+  }
+]
