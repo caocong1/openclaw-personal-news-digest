@@ -30,6 +30,10 @@
 - ✓ 偏好衰减机制（向均值回归）— v1.0
 - ✓ 来源自动降级与恢复（端到端 per-source metrics 驱动）— v1.0
 - ✓ 日报深度偏好端对端贯通 — v1.0
+- ✓ 全输出中文化 + 渲染契约（用户字段 vs 内部字段分离）— v2.0 Phase 8
+- ✓ 缓存版本控制（prompt_version 驱动缓存失效）— v2.0 Phase 8
+- ✓ 写入前质量契约（UTF-8 清洗、标题/URL/ID 校验）— v2.0 Phase 8
+- ✓ 引导启动验证 + 确定性测试夹具（8 个场景文件）— v2.0 Phase 8
 
 ### Active
 
@@ -119,4 +123,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-02 after Phase 07 (README Documentation) complete — comprehensive README.md created with architecture, deployment, config, and ops docs*
+*Last updated: 2026-04-02 after Phase 08 (Output Quality Foundation & Infrastructure) complete — Chinese localization, cache versioning, pre-write quality contract, bootstrap verification, test fixtures*
