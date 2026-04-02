@@ -354,7 +354,8 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
     "classified": 0,
     "partial": 0,
     "selected_for_output": 0,
-    "noise_filter_suppressed": 0
+    "noise_filter_suppressed": 0,
+    "repeat_suppressed": 0
   },
   "llm": {
     "calls": 0,
@@ -562,6 +563,7 @@ All fields added across phases, with version, default, and migration behavior.
 | `last_alerted_at` | Event | Phase 10 | v3 | `null` | Timestamp of last alert for this event |
 | `last_alert_news_id` | Event | Phase 10 | v3 | `null` | News ID that triggered last alert |
 | `last_alert_brief` | Event | Phase 10 | v3 | `null` | Summary of last alert content |
+| `repeat_suppressed` | DailyMetrics.items | Phase 10 | - | `0` | Count of items penalized AND excluded from digest due to cross-digest repetition |
 | `runs` | DigestHistory | Phase 10 | v1 | `[]` | Rolling 5-run digest history with event snapshots |
 
 ### Schema Change Procedure
