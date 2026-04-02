@@ -25,7 +25,7 @@
 - [ ] **Phase 7: README Documentation** — Project root README with architecture, deployment, config, and ops docs [S]
 - [ ] **Phase 8: Output Quality Foundation & Infrastructure** — Chinese localization, data quality contracts, cache versioning, test fixtures [M]
 - [ ] **Phase 9: Noise Floor & Classification Quality** — Pre/post-classify noise filtering, classification prompt hardening [M]
-- [x] **Phase 10: Dedup Hardening & Alert Fatigue** — Alert daily cap, delta alerts, cross-digest repetition penalty, event memory [L] (completed 2026-04-02)
+- [x] **Phase 10: Dedup Hardening & Alert Fatigue** — Alert daily cap, delta alerts, cross-digest repetition penalty, event memory [L] (completed 2026-04-02)
 - [ ] **Phase 11: Observability & Data Integrity** — Correct source_count, run_log, schema registry, diagnostics command [M]
 - [ ] **Phase 12: Interaction Surface & Deployment UX** — Scheduling profiles, source status, recommendation explainability, rolling coverage [L]
 
@@ -110,10 +110,12 @@ Plans:
   2. DailyMetrics run_log array is populated with timestamped entries during pipeline execution
   3. Schema version registry exists with current versions and change history for all data models
   4. Diagnostics command reads metrics + alert-state + digest-history and produces a consolidated report
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 11-01: TBD
+- [ ] 11-01-PLAN.md — Source count accuracy and failed source footer in transparency output
+- [ ] 11-02-PLAN.md — Run log schema, pipeline instrumentation, and fixture update
+- [ ] 11-03-PLAN.md — Schema version registry and diagnostics command
 
 ### Phase 12: Interaction Surface & Deployment UX
 **Goal**: Users can configure scheduling, inspect source health, understand why items were recommended, and see collapsed timeline views for high-volume events
@@ -149,5 +151,5 @@ Plans:
 | 8. Output Quality Foundation & Infrastructure | v2.0 | 0/3 | Not started | - |
 | 9. Noise Floor & Classification Quality | v2.0 | 2/3 | In Progress|  |
 | 10. Dedup Hardening & Alert Fatigue | v2.0 | 3/3 | Complete    | 2026-04-02 |
-| 11. Observability & Data Integrity | v2.0 | 0/? | Not started | - |
+| 11. Observability & Data Integrity | v2.0 | 0/3 | Not started | - |
 | 12. Interaction Surface & Deployment UX | v2.0 | 0/? | Not started | - |
