@@ -4,83 +4,143 @@
     "name_zh": "AI 模型",
     "name_en": "AI Models",
     "description": "Large language models, image generation, AI research breakthroughs, model releases and benchmarks",
-    "adjacent": ["dev-tools", "science", "open-source"]
+    "adjacent": ["dev-tools", "science", "open-source"],
+    "negative_examples": [
+      "App using AI API without model innovation (-> tech-products)",
+      "AI company funding/acquisition (-> business)",
+      "Government AI regulation or policy (-> macro-policy)"
+    ]
   },
   {
     "id": "dev-tools",
     "name_zh": "开发工具",
     "name_en": "Developer Tools",
     "description": "IDEs, frameworks, libraries, DevOps tools, programming languages, developer productivity",
-    "adjacent": ["ai-models", "open-source", "tech-products"]
+    "adjacent": ["ai-models", "open-source", "tech-products"],
+    "negative_examples": [
+      "Consumer app that happens to use a framework (-> tech-products)",
+      "Developer hiring/salary trends (-> business)",
+      "Security vulnerability in a dev tool (-> security)"
+    ]
   },
   {
     "id": "tech-products",
     "name_zh": "科技产品",
     "name_en": "Tech Products",
     "description": "Consumer electronics, apps, platforms, product launches, hardware releases",
-    "adjacent": ["dev-tools", "business", "gaming"]
+    "adjacent": ["dev-tools", "business", "gaming"],
+    "negative_examples": [
+      "Developer SDK or API release (-> dev-tools)",
+      "Product company stock performance (-> finance)",
+      "Product company regulatory action (-> macro-policy)"
+    ]
   },
   {
     "id": "business",
     "name_zh": "商业",
     "name_en": "Business",
     "description": "Startups, funding, acquisitions, corporate strategy, market competition",
-    "adjacent": ["finance", "tech-products", "macro-policy"]
+    "adjacent": ["finance", "tech-products", "macro-policy"],
+    "negative_examples": [
+      "Product feature announcement (-> tech-products)",
+      "Stock price movement without business context (-> finance)",
+      "Company open-sources a project (-> open-source)"
+    ]
   },
   {
     "id": "finance",
     "name_zh": "金融",
     "name_en": "Finance",
     "description": "Stock markets, crypto, fintech, banking, investment trends",
-    "adjacent": ["business", "macro-policy", "international"]
+    "adjacent": ["business", "macro-policy", "international"],
+    "negative_examples": [
+      "Startup funding round (-> business)",
+      "Financial regulation law passed (-> macro-policy)",
+      "Fintech product feature launch (-> tech-products)"
+    ]
   },
   {
     "id": "macro-policy",
     "name_zh": "宏观政策",
     "name_en": "Macro Policy",
     "description": "Government regulations, tech policy, antitrust, data privacy laws, trade policy",
-    "adjacent": ["business", "finance", "international"]
+    "adjacent": ["business", "finance", "international"],
+    "negative_examples": [
+      "Company voluntary policy change (-> business)",
+      "Cross-border trade dispute (-> international)",
+      "Industry self-regulation standard (-> business)"
+    ]
   },
   {
     "id": "international",
     "name_zh": "国际",
     "name_en": "International",
     "description": "Global tech landscape, cross-border developments, geopolitics affecting tech",
-    "adjacent": ["macro-policy", "finance", "security"]
+    "adjacent": ["macro-policy", "finance", "security"],
+    "negative_examples": [
+      "Domestic-only policy change (-> macro-policy)",
+      "Single-country company news (-> business)",
+      "International scientific collaboration (-> science)"
+    ]
   },
   {
     "id": "security",
     "name_zh": "安全",
     "name_en": "Security",
     "description": "Cybersecurity, vulnerabilities, data breaches, privacy incidents, security tools",
-    "adjacent": ["international", "dev-tools", "open-source"]
+    "adjacent": ["international", "dev-tools", "open-source"],
+    "negative_examples": [
+      "Privacy policy update by company (-> macro-policy)",
+      "Security company funding round (-> business)",
+      "Security tool new feature release (-> dev-tools)"
+    ]
   },
   {
     "id": "open-source",
     "name_zh": "开源",
     "name_en": "Open Source",
     "description": "Open source projects, community developments, license changes, major releases",
-    "adjacent": ["dev-tools", "ai-models", "security"]
+    "adjacent": ["dev-tools", "ai-models", "security"],
+    "negative_examples": [
+      "Commercial product with open API (-> tech-products)",
+      "Open source company IPO (-> business)",
+      "Using open source in proprietary product (-> tech-products)"
+    ]
   },
   {
     "id": "gaming",
     "name_zh": "游戏",
     "name_en": "Gaming",
     "description": "Game releases, gaming industry, esports, game development, gaming platforms",
-    "adjacent": ["tech-products", "business", "ai-models"]
+    "adjacent": ["tech-products", "business", "ai-models"],
+    "negative_examples": [
+      "Gaming company stock/earnings (-> finance)",
+      "Game engine used for non-game purpose (-> dev-tools)",
+      "Gaming regulation by government (-> macro-policy)"
+    ]
   },
   {
     "id": "science",
     "name_zh": "科学",
     "name_en": "Science",
     "description": "Scientific discoveries, research papers, space exploration, biotech, climate",
-    "adjacent": ["ai-models", "open-source", "international"]
+    "adjacent": ["ai-models", "open-source", "international"],
+    "negative_examples": [
+      "Applied AI product using research (-> ai-models or tech-products)",
+      "Science funding policy (-> macro-policy)",
+      "Biotech company IPO (-> business)"
+    ]
   },
   {
     "id": "breaking",
     "name_zh": "突发",
     "name_en": "Breaking",
     "description": "High-impact breaking news across any category, major incidents, urgent developments",
-    "adjacent": ["international", "security", "macro-policy"]
+    "adjacent": ["international", "security", "macro-policy"],
+    "negative_examples": [
+      "Routine product update even if from major company (-> appropriate category)",
+      "Scheduled event or conference announcement (-> appropriate category)",
+      "Follow-up coverage of yesterday's breaking news (-> appropriate category)"
+    ]
   }
 ]

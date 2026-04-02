@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Quality & Robustness
-status: executing
-stopped_at: Completed 08-03-PLAN.md
-last_updated: "2026-04-02T07:19:28.798Z"
+milestone: v1.0
+milestone_name: milestone
+status: verifying
+stopped_at: Completed 09-02-PLAN.md (classification prompt hardening)
+last_updated: "2026-04-02T08:19:54.353Z"
 last_activity: 2026-04-02
 progress:
-  total_phases: 6
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_phases: 7
+  completed_phases: 5
+  total_plans: 16
+  completed_plans: 16
   percent: 100
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Replace "pushing messages to user" with "continuously observing the world on behalf of the user" -- deep personalization with anti-echo-chamber awareness
-**Current focus:** Phase 08 — output-quality-foundation-infrastructure
+**Current focus:** Phase 4: Integration Wiring Fixes -- COMPLETE
 
 ## Current Position
 
-Phase: 9
-Plan: Not started
-Status: Ready to execute
+Phase: 4 of 4 (Integration Wiring Fixes) -- COMPLETE
+Plan: 1 of 1 in current phase (all complete)
+Status: Phase complete — ready for verification
 Last activity: 2026-04-02
 
 Progress: [████████████████] 100%
@@ -68,9 +68,7 @@ Progress: [████████████████] 100%
 | Phase 03 P03 | 2min | 2 tasks | 5 files |
 | Phase 03 P04 | 4min | 2 tasks | 3 files |
 | Phase 04 P01 | 2min | 2 tasks | 5 files |
-| Phase 07 P01 | 2min | 2 tasks | 1 files |
-| Phase 08 P01 | 2min | 2 tasks | 2 files |
-| Phase 08 P03 | 1min | 1 tasks | 1 files |
+| Phase 09 P02 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -122,11 +120,9 @@ Recent decisions affecting current work:
 - [Phase 04]: All integration fixes are additive-only with backward-compatible defaults -- no existing behavior changed
 - [Phase 04]: depth_preference/judgment_angles wired into summarize prompt only, confirmed NOT scoring formula
 - [Phase 04]: moderate depth produces identical 2-3 sentence output to preserve backward compatibility
-- [Phase 07]: README links to reference docs rather than duplicating content to prevent drift
-- [Phase 07]: Bilingual approach: English documentation with Chinese project name and core value preserved
-- [Phase 08]: Developer-facing docs kept in English; only user-facing template content localized to Chinese
-- [Phase 08]: Rendering contract with display mapping tables separates internal fields from user-facing Chinese labels
-- [Phase 08]: Section 0D placed between 0C and 1 following existing numbering; cross-reference kept in processing-instructions.md (SKILL.md already updated by Plan 02)
+- [Phase 09]: Prompt version bumped to classify-v2 to force cache invalidation of all v1 entries
+- [Phase 09]: Negative examples use description (-> correct_category) format for clear alternative routing
+- [Phase 09]: Disambiguation rules classify by PRIMARY ACTION not subject domain
 
 ### Pending Todos
 
@@ -138,6 +134,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T05:23:27.237Z
-Stopped at: Completed 08-03-PLAN.md
+Last session: 2026-04-02T08:19:54.346Z
+Stopped at: Completed 09-02-PLAN.md (classification prompt hardening)
 Resume file: None
