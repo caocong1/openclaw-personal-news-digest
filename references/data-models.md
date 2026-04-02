@@ -192,12 +192,13 @@ JSON object keyed by `url_sha` (`SHA256(normalized_url)[:16]` -- same hash as Ne
 
 ```json
 {
-  "_schema_v": 1,
+  "_schema_v": 2,
   "primary": "category_id",
   "tags": ["tag1", "tag2"],
   "importance_score": 0.0,
   "form_type": "news|analysis|opinion|announcement|other",
-  "cached_at": "ISO8601"
+  "cached_at": "ISO8601",
+  "prompt_version": "classify-v1"
 }
 ```
 
@@ -205,16 +206,24 @@ JSON object keyed by `url_sha` (`SHA256(normalized_url)[:16]` -- same hash as Ne
 - `primary`: One of the 12 category IDs from `config/categories.json`
 - `importance_score`: Range 0.0-1.0
 - `cached_at`: Timestamp of when this entry was cached; entries older than 7 days are evicted during cleanup
+- `prompt_version`: Version string of the prompt used to generate this result. Format: `{prompt-name}-v{N}`. When prompt changes, increment version. Cache lookup treats version mismatch as cache miss.
 
 ### Summary Cache Entry Value
 
 ```json
 {
-  "_schema_v": 1,
+  "_schema_v": 2,
   "summary": "2-3 sentence Chinese summary text",
-  "cached_at": "ISO8601"
+  "cached_at": "ISO8601",
+  "prompt_version": "summarize-v1"
 }
 ```
+
+**Field notes:**
+- `prompt_version`: Same semantics as Classify Cache -- version mismatch forces re-summarization.
+
+**Defaults for missing fields (older schema versions):**
+- `prompt_version`: `"legacy"` (entries without this field are treated as legacy; will cache-miss on first run with versioned prompts)
 
 **TTL:** 7 days from `cached_at`. Stale entries are deleted during cache cleanup at the start of each pipeline run (see `references/processing-instructions.md` Section 0B).
 
@@ -419,3 +428,36 @@ The following fields in `config/preferences.json` are auto-managed by the quota 
 | `style.last_exploration_increase` | string (ISO8601) or null | null | Tracks when the last auto-increase of `exploration_appetite` happened. Set to today's date after each auto-increment. If null, treated as "never increased" (triggers increase on next run). |
 
 **Write convention:** Always use backup-before-write pattern (write backup, then write new file atomically) when updating preferences.json. See existing pipeline convention for atomic writes.
+
+---
+
+## Bootstrap & Migration
+
+### New Fields Registry
+
+All fields added across phases, with version, default, and migration behavior.
+
+| Field | Model | Added In | Schema Version | Default for Old Records | Notes |
+|-------|-------|----------|----------------|------------------------|-------|
+| `content_hash` | NewsItem | Phase 0 | v2 | `null` | SHA256 of normalized content |
+| `processing_status` | NewsItem | Phase 0 | v2 | `"raw"` | Pipeline progress tracking |
+| `duplicate_of` | NewsItem | Phase 0 | v2 | `null` | Points to primary item ID |
+| `dedup_status` | NewsItem | Phase 2 | v3 | `"unique"` | Title dedup result |
+| `language` | NewsItem | Phase 2 | v3 | `"zh"` | Detected content language |
+| `keywords` | Event | Phase 2 | v2 | `[]` | Event matching keywords |
+| `timeline` | Event | Phase 2 | v2 | `[]` | Chronological event entries |
+| `depth_preference` | Preferences | Phase 3 | v2 | `"moderate"` | Summary depth control |
+| `judgment_angles` | Preferences | Phase 3 | v2 | `[]` | User perspective preferences |
+| `degraded_since` | Source.stats | Phase 3 | - | `null` | Demotion countdown start |
+| `recovery_streak_start` | Source.stats | Phase 3 | - | `null` | Recovery countdown start |
+| `per_source` | DailyMetrics | Phase 6 | - | `{}` | Per-source pipeline counters |
+| `prompt_version` | CacheEntry | Phase 8 | v2 | `"legacy"` | Prompt version for cache invalidation |
+
+### Schema Change Procedure
+
+When adding a new field to any data model:
+1. Add the field to the schema in this document with current `_schema_v` + 1
+2. Define a default value for records lacking the field (backward compatibility)
+3. Add an entry to the New Fields Registry table above
+4. Update fixture files in `data/fixtures/` to include the new field
+5. Increment `_schema_v` in the model schema
