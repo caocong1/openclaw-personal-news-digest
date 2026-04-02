@@ -39,6 +39,10 @@
 时间线:
 - [{date}] {brief} ({relation display label}) -- 来源: {source_name}
 - [{date}] {brief} ({relation display label}) -- 来源: {source_name}
+- [2026-01-01] collapsed_day_count=7; latest=Regulator issued a new response
+- [2026-01-01 18:00] Regulator issued a new response (update) -- Source: Example Source
+- [2026-01-01 12:00] Company disclosed key details (update) -- Source: Example Source
+... earlier_same_day_updates=5
 状态: {status display label} | 条目: {item_count} | 首次出现: {first_seen_date}
 
 ---
@@ -71,7 +75,7 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 ### Section Omission
 
 - Omit any section that has 0 items (do not render empty sections)
-- "Event Tracking" section appears only when active/stable events received new items merged today. Show most recent 5 timeline entries per event. Older entries omitted with "... and N earlier developments".
+- "Event Tracking" section appears only when active/stable events received new items merged today. Same-day buckets with `>5` entries collapse, collapsed day blocks still show the newest 2 entries, and older non-rendered entries are summarized with omission text.
 - "Exploration" section only appears when exploration_appetite > 0
 
 ---

@@ -1,0 +1,89 @@
+[
+  {
+    "id": "evt-dense001",
+    "title": "Regulator response cycle intensifies for AI safety filing",
+    "summary": "A regulator and company exchanged multiple updates in a single day after a new AI safety filing, creating a dense active timeline.",
+    "first_seen": "2025-12-31T09:00:00Z",
+    "last_updated": "2026-01-01T20:00:00Z",
+    "status": "active",
+    "topic": "ai-models",
+    "importance": 0.88,
+    "keywords": [
+      "AI safety",
+      "regulator",
+      "filing",
+      "compliance"
+    ],
+    "item_ids": [
+      "dense-20251231-0900",
+      "dense-20251231-1500",
+      "dense-20260101-0800",
+      "dense-20260101-1000",
+      "dense-20260101-1200",
+      "dense-20260101-1400",
+      "dense-20260101-1600",
+      "dense-20260101-1800",
+      "dense-20260101-2000"
+    ],
+    "timeline": [
+      {
+        "news_id": "dense-20251231-0900",
+        "relation": "initial",
+        "timestamp": "2025-12-31T09:00:00Z",
+        "brief": "Company filed an AI safety compliance update"
+      },
+      {
+        "news_id": "dense-20251231-1500",
+        "relation": "analysis",
+        "timestamp": "2025-12-31T15:00:00Z",
+        "brief": "Analysts outlined the likely regulatory pressure points"
+      },
+      {
+        "news_id": "dense-20260101-0800",
+        "relation": "update",
+        "timestamp": "2026-01-01T08:00:00Z",
+        "brief": "Regulator requested clarifications on the filing"
+      },
+      {
+        "news_id": "dense-20260101-1000",
+        "relation": "update",
+        "timestamp": "2026-01-01T10:00:00Z",
+        "brief": "Company submitted a first clarification package"
+      },
+      {
+        "news_id": "dense-20260101-1200",
+        "relation": "update",
+        "timestamp": "2026-01-01T12:00:00Z",
+        "brief": "Company disclosed key details"
+      },
+      {
+        "news_id": "dense-20260101-1400",
+        "relation": "analysis",
+        "timestamp": "2026-01-01T14:00:00Z",
+        "brief": "Observers compared the filing to earlier cases"
+      },
+      {
+        "news_id": "dense-20260101-1600",
+        "relation": "update",
+        "timestamp": "2026-01-01T16:00:00Z",
+        "brief": "Regulator highlighted unresolved compliance gaps"
+      },
+      {
+        "news_id": "dense-20260101-1800",
+        "relation": "update",
+        "timestamp": "2026-01-01T18:00:00Z",
+        "brief": "Company issued a revised response"
+      },
+      {
+        "news_id": "dense-20260101-2000",
+        "relation": "update",
+        "timestamp": "2026-01-01T20:00:00Z",
+        "brief": "Regulator issued a new response"
+      }
+    ],
+    "last_alerted_at": null,
+    "last_alert_news_id": null,
+    "last_alert_brief": null,
+    "_schema_v": 3
+  }
+]
