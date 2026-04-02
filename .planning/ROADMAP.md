@@ -60,8 +60,8 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Localize all output templates to Chinese and add rendering contract
-- [ ] 08-02-PLAN.md — Cache versioning, data model registry, bootstrap verification, test fixtures
+- [x] 08-01-PLAN.md — Localize all output templates to Chinese and add rendering contract
+- [x] 08-02-PLAN.md — Cache versioning, data model registry, bootstrap verification, test fixtures
 - [ ] 08-03-PLAN.md — Pre-write quality contract for JSONL data validation
 
 ### Phase 9: Noise Floor & Classification Quality

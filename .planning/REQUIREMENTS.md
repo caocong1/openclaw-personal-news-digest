@@ -13,16 +13,16 @@ Requirements for quality & robustness release. Each maps to roadmap phases.
 
 ### Localization
 
-- [ ] **L10N-01**: Daily digest output uses Chinese labels for all section headers and metadata
-- [ ] **L10N-02**: Breaking alert output uses Chinese labels (【快讯】format)
-- [ ] **L10N-03**: Weekly report output uses Chinese labels for all sections
-- [ ] **L10N-04**: Summarize and weekly-report prompts enforce Chinese-output rule
+- [x] **L10N-01**: Daily digest output uses Chinese labels for all section headers and metadata
+- [x] **L10N-02**: Breaking alert output uses Chinese labels (【快讯】format)
+- [x] **L10N-03**: Weekly report output uses Chinese labels for all sections
+- [x] **L10N-04**: Summarize and weekly-report prompts enforce Chinese-output rule
 
 ### Data Quality
 
 - [ ] **QUAL-01**: Pre-write quality contract validates UTF-8 sanitization and title validation for all source types
-- [ ] **QUAL-02**: Quick-Check output strips JSON field names from alert rendering
-- [ ] **QUAL-03**: Output templates define rendering contract separating user-facing vs internal fields
+- [x] **QUAL-02**: Quick-Check output strips JSON field names from alert rendering
+- [x] **QUAL-03**: Output templates define rendering contract separating user-facing vs internal fields
 
 ### Infrastructure
 
@@ -103,13 +103,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | DOC-01 | Phase 7 | Pending |
-| L10N-01 | Phase 8 | Pending |
-| L10N-02 | Phase 8 | Pending |
-| L10N-03 | Phase 8 | Pending |
-| L10N-04 | Phase 8 | Pending |
+| L10N-01 | Phase 8 | Complete |
+| L10N-02 | Phase 8 | Complete |
+| L10N-03 | Phase 8 | Complete |
+| L10N-04 | Phase 8 | Complete |
 | QUAL-01 | Phase 8 | Pending |
-| QUAL-02 | Phase 8 | Pending |
-| QUAL-03 | Phase 8 | Pending |
+| QUAL-02 | Phase 8 | Complete |
+| QUAL-03 | Phase 8 | Complete |
 | INFRA-01 | Phase 8 | Pending |
 | INFRA-02 | Phase 8 | Pending |
 | INFRA-03 | Phase 8 | Pending |
