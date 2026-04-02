@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Quality & Robustness
 status: executing
-stopped_at: Completed 10-02-PLAN.md (Event v3 schema with alert memory and delta alert flow)
-last_updated: "2026-04-02T13:34:44.466Z"
+stopped_at: Completed 10-03-PLAN.md (DigestHistory model, cross-digest repetition penalty, suppression footer)
+last_updated: "2026-04-02T13:40:24.851Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 10
-  completed_plans: 9
+  completed_plans: 10
   percent: 80
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 10 of 12 (dedup hardening & alert fatigue)
-Plan: 2 of 3 in current phase (10-01 complete)
+Plan: 3 of 3 in current phase (10-01 complete)
 Status: Ready to execute
 Last activity: 2026-04-02
 
@@ -72,6 +72,7 @@ Progress: [████████░░] 80%
 | Phase 09 P01 | 3min | 2 tasks | 4 files |
 | Phase 09 P03 | 2min | 2 tasks | 4 files |
 | Phase 10 P02 | 2min | 2 tasks | 5 files |
+| Phase 10 P03 | 2min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -138,6 +139,9 @@ Recent decisions affecting current work:
 - [Phase 10]: Delta alerts filter for update/correction/reversal/escalation relations only -- initial and analysis excluded as non-substantive
 - [Phase 10]: Delta alert writes current_status (not delta_summary) to last_alert_brief for future delta comparison baseline
 - [Phase 10]: Standard alerts seed event memory on first alert to enable future delta alerts
+- [Phase 10]: DigestHistory uses rolling 5-run window comparing only against last digest (non-compounding 0.7x penalty)
+- [Phase 10]: repeat_suppressed_count tracks only items penalized AND excluded from digest (not all penalized items)
+- [Phase 10]: DigestHistory written after output, before lock release, using atomic write
 
 ### Pending Todos
 
@@ -149,6 +153,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T13:34:44.459Z
-Stopped at: Completed 10-02-PLAN.md (Event v3 schema with alert memory and delta alert flow)
+Last session: 2026-04-02T13:40:24.844Z
+Stopped at: Completed 10-03-PLAN.md (DigestHistory model, cross-digest repetition penalty, suppression footer)
 Resume file: None

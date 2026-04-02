@@ -25,7 +25,7 @@
 - [ ] **Phase 7: README Documentation** — Project root README with architecture, deployment, config, and ops docs [S]
 - [ ] **Phase 8: Output Quality Foundation & Infrastructure** — Chinese localization, data quality contracts, cache versioning, test fixtures [M]
 - [ ] **Phase 9: Noise Floor & Classification Quality** — Pre/post-classify noise filtering, classification prompt hardening [M]
-- [ ] **Phase 10: Dedup Hardening & Alert Fatigue** — Alert daily cap, delta alerts, cross-digest repetition penalty, event memory [L]
+- [x] **Phase 10: Dedup Hardening & Alert Fatigue** — Alert daily cap, delta alerts, cross-digest repetition penalty, event memory [L] (completed 2026-04-02)
 - [ ] **Phase 11: Observability & Data Integrity** — Correct source_count, run_log, schema registry, diagnostics command [M]
 - [ ] **Phase 12: Interaction Surface & Deployment UX** — Scheduling profiles, source status, recommendation explainability, rolling coverage [L]
 
@@ -93,12 +93,12 @@ Plans:
   3. Cross-digest repetition penalty (0.7x) is applied to events with no new timeline progress
   4. Event objects persist per-event alert memory (last_alerted_at, last_alert_news_id)
   5. Digest footer shows count of suppressed repeat items
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 10-01-PLAN.md — AlertState data model, unified alert decision tree, standard alert fallback
 - [x] 10-02-PLAN.md — Event v3 schema with alert memory, delta alert prompt and template
-- [ ] 10-03-PLAN.md — DigestHistory model, cross-digest repetition penalty, suppression footer
+- [x] 10-03-PLAN.md — DigestHistory model, cross-digest repetition penalty, suppression footer
 
 ### Phase 11: Observability & Data Integrity
 **Goal**: Operator can verify system health through accurate metrics, structured run logs, and a single diagnostics command
@@ -148,6 +148,6 @@ Plans:
 | 7. README Documentation | v2.0 | 0/1 | Not started | - |
 | 8. Output Quality Foundation & Infrastructure | v2.0 | 0/3 | Not started | - |
 | 9. Noise Floor & Classification Quality | v2.0 | 2/3 | In Progress|  |
-| 10. Dedup Hardening & Alert Fatigue | v2.0 | 2/3 | In Progress|  |
+| 10. Dedup Hardening & Alert Fatigue | v2.0 | 3/3 | Complete   | 2026-04-02 |
 | 11. Observability & Data Integrity | v2.0 | 0/? | Not started | - |
 | 12. Interaction Surface & Deployment UX | v2.0 | 0/? | Not started | - |

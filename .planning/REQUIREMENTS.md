@@ -56,9 +56,9 @@ Requirements for quality & robustness release. Each maps to roadmap phases.
 
 ### Dedup
 
-- [ ] **DEDUP-01**: DigestHistory tracks last 5 runs with event_timeline_snapshot
-- [ ] **DEDUP-02**: Cross-digest repetition penalty (0.7x) for events with no new timeline progress
-- [ ] **DEDUP-03**: Output footer shows count of suppressed repeat items
+- [x] **DEDUP-01**: DigestHistory tracks last 5 runs with event_timeline_snapshot
+- [x] **DEDUP-02**: Cross-digest repetition penalty (0.7x) for events with no new timeline progress
+- [x] **DEDUP-03**: Output footer shows count of suppressed repeat items
 
 ### Observability
 
@@ -128,9 +128,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ALERT-04 | Phase 10 | Complete |
 | ALERT-05 | Phase 10 | Complete |
 | ALERT-06 | Phase 10 | Complete |
-| DEDUP-01 | Phase 10 | Pending |
-| DEDUP-02 | Phase 10 | Pending |
-| DEDUP-03 | Phase 10 | Pending |
+| DEDUP-01 | Phase 10 | Complete |
+| DEDUP-02 | Phase 10 | Complete |
+| DEDUP-03 | Phase 10 | Complete |
 | OBS-01 | Phase 11 | Pending |
 | OBS-02 | Phase 11 | Pending |
 | OBS-03 | Phase 11 | Pending |
