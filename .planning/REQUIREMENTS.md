@@ -26,10 +26,10 @@ Requirements for quality & robustness release. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Cache entries include prompt_version field; version mismatch triggers cache miss
-- [ ] **INFRA-02**: Data models include bootstrap & migration section with new fields registry
-- [ ] **INFRA-03**: SKILL.md verifies required directories on first run
-- [ ] **INFRA-04**: Test fixture directory with deterministic fixture files for all verification scenarios
+- [x] **INFRA-01**: Cache entries include prompt_version field; version mismatch triggers cache miss
+- [x] **INFRA-02**: Data models include bootstrap & migration section with new fields registry
+- [x] **INFRA-03**: SKILL.md verifies required directories on first run
+- [x] **INFRA-04**: Test fixture directory with deterministic fixture files for all verification scenarios
 
 ### Noise Filtering
 
@@ -110,10 +110,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUAL-01 | Phase 8 | Complete |
 | QUAL-02 | Phase 8 | Complete |
 | QUAL-03 | Phase 8 | Complete |
-| INFRA-01 | Phase 8 | Pending |
-| INFRA-02 | Phase 8 | Pending |
-| INFRA-03 | Phase 8 | Pending |
-| INFRA-04 | Phase 8 | Pending |
+| INFRA-01 | Phase 8 | Complete |
+| INFRA-02 | Phase 8 | Complete |
+| INFRA-03 | Phase 8 | Complete |
+| INFRA-04 | Phase 8 | Complete |
 | NOISE-01 | Phase 9 | Pending |
 | NOISE-02 | Phase 9 | Pending |
 | NOISE-03 | Phase 9 | Pending |
