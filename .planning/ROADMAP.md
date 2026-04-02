@@ -110,11 +110,11 @@ Plans:
   2. DailyMetrics run_log array is populated with timestamped entries during pipeline execution
   3. Schema version registry exists with current versions and change history for all data models
   4. Diagnostics command reads metrics + alert-state + digest-history and produces a consolidated report
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] 11-01-PLAN.md — Source count accuracy and failed source footer in transparency output
-- [ ] 11-02-PLAN.md — Run log schema, pipeline instrumentation, and fixture update
+- [x] 11-02-PLAN.md — Run log schema, pipeline instrumentation, and fixture update
 - [ ] 11-03-PLAN.md — Schema version registry and diagnostics command
 
 ### Phase 12: Interaction Surface & Deployment UX
@@ -151,5 +151,5 @@ Plans:
 | 8. Output Quality Foundation & Infrastructure | v2.0 | 0/3 | Not started | - |
 | 9. Noise Floor & Classification Quality | v2.0 | 2/3 | In Progress|  |
 | 10. Dedup Hardening & Alert Fatigue | v2.0 | 3/3 | Complete    | 2026-04-02 |
-| 11. Observability & Data Integrity | v2.0 | 0/3 | Not started | - |
+| 11. Observability & Data Integrity | v2.0 | 1/3 | In Progress|  |
 | 12. Interaction Surface & Deployment UX | v2.0 | 0/? | Not started | - |

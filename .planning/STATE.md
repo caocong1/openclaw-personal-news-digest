@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Quality & Robustness
 status: executing
-stopped_at: Completed 10-03-PLAN.md (DigestHistory model, cross-digest repetition penalty, suppression footer)
-last_updated: "2026-04-02T13:46:01.999Z"
+stopped_at: Completed 11-02-PLAN.md (run log schema, pipeline instrumentation, fixture update)
+last_updated: "2026-04-02T15:23:34.465Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 13
+  completed_plans: 11
   percent: 80
 ---
 
@@ -73,6 +73,7 @@ Progress: [████████░░] 80%
 | Phase 09 P03 | 2min | 2 tasks | 4 files |
 | Phase 10 P02 | 2min | 2 tasks | 5 files |
 | Phase 10 P03 | 2min | 2 tasks | 6 files |
+| Phase 11 P02 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -142,6 +143,9 @@ Recent decisions affecting current work:
 - [Phase 10]: DigestHistory uses rolling 5-run window comparing only against last digest (non-compounding 0.7x penalty)
 - [Phase 10]: repeat_suppressed_count tracks only items penalized AND excluded from digest (not all penalized items)
 - [Phase 10]: DigestHistory written after output, before lock release, using atomic write
+- [Phase 11]: 8 run_log milestone steps cover pipeline_start through pipeline_end with step-specific detail schemas
+- [Phase 11]: run_log defaults to empty array for backward compatibility with pre-Phase-11 metrics
+- [Phase 11]: pipeline_end entry written via atomic update to already-persisted metrics file before lock release
 
 ### Pending Todos
 
@@ -153,6 +157,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T13:40:24.844Z
-Stopped at: Completed 10-03-PLAN.md (DigestHistory model, cross-digest repetition penalty, suppression footer)
+Last session: 2026-04-02T15:23:34.459Z
+Stopped at: Completed 11-02-PLAN.md (run log schema, pipeline instrumentation, fixture update)
 Resume file: None

@@ -63,7 +63,7 @@ Requirements for quality & robustness release. Each maps to roadmap phases.
 ### Observability
 
 - [ ] **OBS-01**: source_count reflects enabled sources; footer shows failed source names
-- [ ] **OBS-02**: DailyMetrics includes run_log array populated during pipeline execution
+- [x] **OBS-02**: DailyMetrics includes run_log array populated during pipeline execution
 - [ ] **OBS-03**: Schema version registry with current versions and change history
 - [ ] **OBS-04**: Diagnostics command reads metrics + alert-state + digest-history
 
@@ -132,7 +132,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DEDUP-02 | Phase 10 | Complete |
 | DEDUP-03 | Phase 10 | Complete |
 | OBS-01 | Phase 11 | Pending |
-| OBS-02 | Phase 11 | Pending |
+| OBS-02 | Phase 11 | Complete |
 | OBS-03 | Phase 11 | Pending |
 | OBS-04 | Phase 11 | Pending |
 | INTERACT-01 | Phase 12 | Pending |
