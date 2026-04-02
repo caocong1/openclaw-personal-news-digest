@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Quality & Robustness
 status: executing
-stopped_at: Completed 11-01-PLAN.md (failed source footer visibility)
-last_updated: "2026-04-02T15:27:06.992Z"
+stopped_at: Completed 11-03-PLAN.md (Schema Version Registry + Diagnostics)
+last_updated: "2026-04-02T16:31:04.228Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 13
-  completed_plans: 12
+  completed_plans: 13
   percent: 80
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 11 (observability-data-integrity) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-02
 
@@ -75,6 +75,7 @@ Progress: [████████░░] 80%
 | Phase 10 P03 | 2min | 2 tasks | 6 files |
 | Phase 11 P02 | 3min | 2 tasks | 4 files |
 | Phase 11 P01 | 2min | 2 tasks | 3 files |
+| Phase 11 P03 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -148,6 +149,8 @@ Recent decisions affecting current work:
 - [Phase 11]: run_log defaults to empty array for backward compatibility with pre-Phase-11 metrics
 - [Phase 11]: pipeline_end entry written via atomic update to already-persisted metrics file before lock release
 - [Phase 11]: Failed source names derived from existing per_source data -- no new collection logic
+- [Phase 11]: Diagnostics is on-demand inspection tool (operator triggered), health-check.sh is automated alerting (cron triggered)
+- [Phase 11]: Schema Version Registry maintained alongside New Fields Registry, both updated on schema changes
 
 ### Pending Todos
 
@@ -159,6 +162,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T15:27:06.985Z
-Stopped at: Completed 11-01-PLAN.md (failed source footer visibility)
+Last session: 2026-04-02T16:31:04.222Z
+Stopped at: Completed 11-03-PLAN.md (Schema Version Registry + Diagnostics)
 Resume file: None

@@ -26,7 +26,7 @@
 - [ ] **Phase 8: Output Quality Foundation & Infrastructure** — Chinese localization, data quality contracts, cache versioning, test fixtures [M]
 - [ ] **Phase 9: Noise Floor & Classification Quality** — Pre/post-classify noise filtering, classification prompt hardening [M]
 - [x] **Phase 10: Dedup Hardening & Alert Fatigue** — Alert daily cap, delta alerts, cross-digest repetition penalty, event memory [L] (completed 2026-04-02)
-- [ ] **Phase 11: Observability & Data Integrity** — Correct source_count, run_log, schema registry, diagnostics command [M]
+- [x] **Phase 11: Observability & Data Integrity** — Correct source_count, run_log, schema registry, diagnostics command [M] (completed 2026-04-02)
 - [ ] **Phase 12: Interaction Surface & Deployment UX** — Scheduling profiles, source status, recommendation explainability, rolling coverage [L]
 
 ## Phase Details
@@ -110,12 +110,12 @@ Plans:
   2. DailyMetrics run_log array is populated with timestamped entries during pipeline execution
   3. Schema version registry exists with current versions and change history for all data models
   4. Diagnostics command reads metrics + alert-state + digest-history and produces a consolidated report
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 11-01-PLAN.md — Source count accuracy and failed source footer in transparency output
 - [x] 11-02-PLAN.md — Run log schema, pipeline instrumentation, and fixture update
-- [ ] 11-03-PLAN.md — Schema version registry and diagnostics command
+- [x] 11-03-PLAN.md — Schema version registry and diagnostics command
 
 ### Phase 12: Interaction Surface & Deployment UX
 **Goal**: Users can configure scheduling, inspect source health, understand why items were recommended, and see collapsed timeline views for high-volume events
@@ -151,5 +151,5 @@ Plans:
 | 8. Output Quality Foundation & Infrastructure | v2.0 | 0/3 | Not started | - |
 | 9. Noise Floor & Classification Quality | v2.0 | 2/3 | In Progress|  |
 | 10. Dedup Hardening & Alert Fatigue | v2.0 | 3/3 | Complete    | 2026-04-02 |
-| 11. Observability & Data Integrity | v2.0 | 2/3 | In Progress|  |
+| 11. Observability & Data Integrity | v2.0 | 3/3 | Complete   | 2026-04-02 |
 | 12. Interaction Surface & Deployment UX | v2.0 | 0/? | Not started | - |
