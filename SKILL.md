@@ -94,7 +94,8 @@ When user sends a message (not a cron trigger):
 2. **Feedback**: If intent is feedback (more/less/like/dislike/trust/distrust/block/style), follow `{baseDir}/references/feedback-rules.md`.
 3. **Preference query**: If intent is asking about preferences or what the system has learned, follow `{baseDir}/references/feedback-rules.md` "Preference Visualization" section.
 4. **History query**: If intent is a data query (recent news, topic review, event tracking, hotspot scan, source analysis), classify query type per `{baseDir}/references/prompts/history-query.md`, then execute per `{baseDir}/references/processing-instructions.md` Section 8.
-5. **General**: Otherwise, respond helpfully.
+5. **Diagnostics**: If intent is checking system status, health, or diagnostics, run `bash {baseDir}/scripts/diagnostics.sh {baseDir}` and present the output. This is an on-demand operator inspection (not the automated health-check cron).
+6. **General**: Otherwise, respond helpfully.
 
 ## Operational Rules
 
