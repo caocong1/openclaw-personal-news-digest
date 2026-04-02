@@ -57,11 +57,12 @@ Plans:
   3. Test fixture directory contains deterministic fixture files covering all verification scenarios
   4. SKILL.md bootstrap verifies required directories exist on first run
   5. Pre-write quality contract validates UTF-8 and title correctness before any JSONL write
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
+- [ ] 08-01-PLAN.md — Localize all output templates to Chinese and add rendering contract
+- [ ] 08-02-PLAN.md — Cache versioning, data model registry, bootstrap verification, test fixtures
+- [ ] 08-03-PLAN.md — Pre-write quality contract for JSONL data validation
 
 ### Phase 9: Noise Floor & Classification Quality
 **Goal**: Low-value items are filtered before they consume LLM budget, and classification accuracy is improved through better prompts and negative examples
@@ -144,7 +145,7 @@ Plans:
 | 5. Daily Depth Control Wiring | v1.0 | 1/1 | Complete | 2026-04-01 |
 | 6. Per-Source Metrics Continuity | v1.0 | 1/1 | Complete | 2026-04-01 |
 | 7. README Documentation | v2.0 | 0/1 | Not started | - |
-| 8. Output Quality Foundation & Infrastructure | v2.0 | 0/? | Not started | - |
+| 8. Output Quality Foundation & Infrastructure | v2.0 | 0/3 | Not started | - |
 | 9. Noise Floor & Classification Quality | v2.0 | 0/? | Not started | - |
 | 10. Dedup Hardening & Alert Fatigue | v2.0 | 0/? | Not started | - |
 | 11. Observability & Data Integrity | v2.0 | 0/? | Not started | - |
