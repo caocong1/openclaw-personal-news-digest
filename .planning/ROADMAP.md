@@ -41,10 +41,10 @@
   2. README.md includes deployment instructions covering OpenClaw platform setup
   3. README.md documents all configuration files and their purposes
   4. README.md lists operational scripts with usage examples
-**Plans**: TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 07-01: TBD
+- [ ] 07-01-PLAN.md — Create README.md with architecture, deployment, config, ops docs and verify accuracy
 
 ### Phase 8: Output Quality Foundation & Infrastructure
 **Goal**: All user-facing output is fully localized to Chinese, data quality is validated before writes, cache versioning prevents stale results, and deterministic test fixtures exist for verification
@@ -143,7 +143,7 @@ Plans:
 | 4. Integration Wiring Fixes | v1.0 | 1/1 | Complete | 2026-04-01 |
 | 5. Daily Depth Control Wiring | v1.0 | 1/1 | Complete | 2026-04-01 |
 | 6. Per-Source Metrics Continuity | v1.0 | 1/1 | Complete | 2026-04-01 |
-| 7. README Documentation | v2.0 | 0/? | Not started | - |
+| 7. README Documentation | v2.0 | 0/1 | Not started | - |
 | 8. Output Quality Foundation & Infrastructure | v2.0 | 0/? | Not started | - |
 | 9. Noise Floor & Classification Quality | v2.0 | 0/? | Not started | - |
 | 10. Dedup Hardening & Alert Fatigue | v2.0 | 0/? | Not started | - |
