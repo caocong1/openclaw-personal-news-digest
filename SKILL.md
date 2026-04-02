@@ -89,13 +89,16 @@ Triggered by quick-check cron (every 2h):
 
 ## User Commands
 
-When user sends a message (not a cron trigger):
-1. **Source management**: If intent is add/delete/enable/disable/adjust source, follow `{baseDir}/references/collection-instructions.md` "Source Management Commands" section.
-2. **Feedback**: If intent is feedback (more/less/like/dislike/trust/distrust/block/style), follow `{baseDir}/references/feedback-rules.md`.
-3. **Preference query**: If intent is asking about preferences or what the system has learned, follow `{baseDir}/references/feedback-rules.md` "Preference Visualization" section.
-4. **History query**: If intent is a data query (recent news, topic review, event tracking, hotspot scan, source analysis), classify query type per `{baseDir}/references/prompts/history-query.md`, then execute per `{baseDir}/references/processing-instructions.md` Section 8.
-5. **Diagnostics**: If intent is checking system status, health, or diagnostics, run `bash {baseDir}/scripts/diagnostics.sh {baseDir}` and present the output. This is an on-demand operator inspection (not the automated health-check cron).
-6. **General**: Otherwise, respond helpfully.
+Use `{baseDir}/references/feedback-rules.md` "Intent Recognition Table" as the canonical routing layer for user messages.
+
+- **Schedule management**: Route to `{baseDir}/references/cron-configs.md` "Schedule Profiles" section.
+- **Source status**: Route broad health/status requests and source-specific health requests to the Phase 12 source-status command path. If a source is named, keep it on the source-status path rather than the generic history-query path.
+- **Source management**: Route to `{baseDir}/references/collection-instructions.md` "Source Management Commands" section.
+- **Feedback**: Route to `{baseDir}/references/feedback-rules.md` "Feedback Type Mapping" section.
+- **Preference query**: Route to `{baseDir}/references/feedback-rules.md` "Preference Visualization" section.
+- **History query**: Route to `{baseDir}/references/prompts/history-query.md`, then execute via `{baseDir}/references/processing-instructions.md` Section 8.
+- **Diagnostics**: Run `bash {baseDir}/scripts/diagnostics.sh {baseDir}` and present the output.
+- **General**: Respond helpfully.
 
 ## Operational Rules
 

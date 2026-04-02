@@ -2,9 +2,26 @@
 
 ## Overview
 
-This document specifies how user feedback is processed into preference updates. It is referenced by SKILL.md "User Commands" section when the agent detects feedback intent.
+This document specifies how user messages are routed and how feedback is processed into preference updates. It is referenced by SKILL.md as the canonical intent-routing and feedback-handling source.
 
 Feedback flows through a pipeline: user signal -> feedback log -> preference update -> scoring impact. The system supports 8 feedback types, each mapped to specific preference fields with bounded adjustments and safety mechanisms.
+
+---
+
+## Intent Recognition Table
+
+| Intent | Example phrases | Route |
+|--------|-----------------|-------|
+| `schedule_management` | `set digest to weekdays`, `move daily digest to 9:30`, `change quick check hours`, `activate custom-hours profile` | `references/cron-configs.md` Schedule Profiles section |
+| `source_status` | `source status`, `how is 36Kr doing`, `which sources are failing`, `show source health` | Phase 12 source-status command path |
+| `source_management` | `add source`, `disable Hacker News`, `increase 36Kr weight` | `references/collection-instructions.md` Source Management Commands |
+| `feedback` | `more AI news`, `less gaming`, `trust this source`, `like #3` | Feedback Type Mapping in this file |
+| `preference_query` | `what have you learned about me`, `show my preferences`, `my interests` | Preference Visualization in this file |
+| `history_query` | `latest news`, `AI news this week`, `what happened with X`, `what did I miss` | `references/prompts/history-query.md` plus `references/processing-instructions.md` Section 8 |
+| `diagnostics` | `system status`, `health check`, `diagnostics` | `bash scripts/diagnostics.sh {baseDir}` |
+| `general` | anything else | General helpful response |
+
+This table is the canonical routing source for SKILL.md. Do not duplicate trigger examples elsewhere.
 
 ---
 

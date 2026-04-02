@@ -5,6 +5,7 @@ Reference document for registering cron jobs on the OpenClaw platform. Each job 
 ## Schedule Profiles
 
 `config/schedule-profiles.json` is the source of truth for named deployment schedules. The `active_profile` value selects which repo-backed profile should be applied to the platform cron jobs.
+The `schedule_management` intent in `references/feedback-rules.md` is the canonical entry point for profile selection and schedule updates.
 
 | Profile | Purpose |
 |--------|---------|
