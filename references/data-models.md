@@ -394,7 +394,14 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
   },
   "alerts": [],
   "alerts_sent_today": 0,
-  "alerted_urls": []
+  "alerted_urls": [],
+  "run_log": [
+    {
+      "step": "string (pipeline milestone identifier)",
+      "timestamp": "ISO8601 (UTC)",
+      "details": {}
+    }
+  ]
 }
 ```
 
@@ -418,6 +425,19 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
   - `error` (string or null): Error message if fetch failed, `null` on success
 - Sources not attempted in this run (e.g., disabled sources) are omitted from `per_source`
 - Historical metrics files from before Phase 6 will lack `per_source`; consumers MUST use `.get('per_source', {})` for backward compatibility
+
+**Field notes (run_log):**
+- `run_log`: Array of timestamped pipeline milestone entries accumulated during the run. Written as part of DailyMetrics at Output Phase step 7.
+- Each entry has three fields:
+  - `step` (string): Milestone identifier. One of: `pipeline_start`, `collection_complete`, `noise_filter_complete`, `classification_complete`, `summarization_complete`, `dedup_complete`, `output_complete`, `pipeline_end`.
+  - `timestamp` (string): ISO8601 UTC timestamp when this milestone was reached.
+  - `details` (object): Step-specific counters. Contents vary by step (see processing-instructions.md Section 5C for per-step detail schemas).
+- Target 8 entries per run. Log phase transitions and aggregate counts, NOT individual item processing.
+- All timestamps MUST be ISO8601 UTC (e.g., `2026-04-02T08:00:00Z`). Do NOT use local time.
+- If pipeline aborts mid-run, `run_log` will contain entries up to the last completed step (no `pipeline_end` entry).
+
+**Defaults for missing fields (backward compatibility):**
+- `run_log`: `[]` (metrics files from before Phase 11 lack this field; consumers MUST use `.get('run_log', [])`)
 
 ---
 
@@ -565,6 +585,7 @@ All fields added across phases, with version, default, and migration behavior.
 | `last_alert_brief` | Event | Phase 10 | v3 | `null` | Summary of last alert content |
 | `repeat_suppressed` | DailyMetrics.items | Phase 10 | - | `0` | Count of items penalized AND excluded from digest due to cross-digest repetition |
 | `runs` | DigestHistory | Phase 10 | v1 | `[]` | Rolling 5-run digest history with event snapshots |
+| `run_log` | DailyMetrics | Phase 11 | - | `[]` | Timestamped pipeline milestone entries |
 
 ### Schema Change Procedure
 

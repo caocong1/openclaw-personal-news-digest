@@ -67,5 +67,47 @@
   },
   "alerts": [],
   "alerts_sent_today": 0,
-  "alerted_urls": []
+  "alerted_urls": [],
+  "run_log": [
+    {
+      "step": "pipeline_start",
+      "timestamp": "2026-01-01T00:00:00Z",
+      "details": { "run_id": "run-20260101-080000-fix1" }
+    },
+    {
+      "step": "collection_complete",
+      "timestamp": "2026-01-01T00:01:30Z",
+      "details": { "sources_attempted": 3, "items_fetched": 25, "failed_sources": [] }
+    },
+    {
+      "step": "noise_filter_complete",
+      "timestamp": "2026-01-01T00:01:45Z",
+      "details": { "pre_classify_filtered": 3, "batch_remaining": 17 }
+    },
+    {
+      "step": "classification_complete",
+      "timestamp": "2026-01-01T00:02:30Z",
+      "details": { "classified": 18, "partial": 0, "post_classify_filtered": 0 }
+    },
+    {
+      "step": "summarization_complete",
+      "timestamp": "2026-01-01T00:03:15Z",
+      "details": { "summarized": 18 }
+    },
+    {
+      "step": "dedup_complete",
+      "timestamp": "2026-01-01T00:03:30Z",
+      "details": { "title_deduped": 2, "events_merged": 0, "events_created": 0 }
+    },
+    {
+      "step": "output_complete",
+      "timestamp": "2026-01-01T00:04:00Z",
+      "details": { "selected": 15, "repeat_suppressed": 2 }
+    },
+    {
+      "step": "pipeline_end",
+      "timestamp": "2026-01-01T00:04:15Z",
+      "details": { "duration_seconds": 255 }
+    }
+  ]
 }
