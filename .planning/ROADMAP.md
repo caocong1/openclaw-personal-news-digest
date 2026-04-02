@@ -148,6 +148,6 @@ Plans:
 | 7. README Documentation | v2.0 | 0/1 | Not started | - |
 | 8. Output Quality Foundation & Infrastructure | v2.0 | 0/3 | Not started | - |
 | 9. Noise Floor & Classification Quality | v2.0 | 2/3 | In Progress|  |
-| 10. Dedup Hardening & Alert Fatigue | v2.0 | 3/3 | Complete   | 2026-04-02 |
+| 10. Dedup Hardening & Alert Fatigue | v2.0 | 3/3 | Complete    | 2026-04-02 |
 | 11. Observability & Data Integrity | v2.0 | 0/? | Not started | - |
 | 12. Interaction Surface & Deployment UX | v2.0 | 0/? | Not started | - |
