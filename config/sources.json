@@ -8,7 +8,10 @@
     "credibility": 0.8,
     "topics": ["tech-products", "business"],
     "enabled": true,
-    "fetch_config": {},
+    "fetch_config": {
+      "noise_patterns": [],
+      "title_discard_patterns": []
+    },
     "stats": {
       "total_fetched": 0,
       "last_fetch": null,
@@ -37,7 +40,9 @@
       "owner": "langchain-ai",
       "repo": "langchain",
       "endpoint": "releases",
-      "per_page": 10
+      "per_page": 10,
+      "noise_patterns": [],
+      "title_discard_patterns": []
     },
     "stats": {
       "total_fetched": 0,
@@ -65,7 +70,9 @@
     "enabled": false,
     "fetch_config": {
       "keywords": ["AI regulation news 2026", "artificial intelligence policy"],
-      "max_results": 10
+      "max_results": 10,
+      "noise_patterns": [],
+      "title_discard_patterns": []
     },
     "stats": {
       "total_fetched": 0,
@@ -92,7 +99,9 @@
     "topics": ["ai-models", "tech-products"],
     "enabled": false,
     "fetch_config": {
-      "prefer_browser": false
+      "prefer_browser": false,
+      "noise_patterns": [],
+      "title_discard_patterns": []
     },
     "stats": {
       "total_fetched": 0,
@@ -119,7 +128,9 @@
     "topics": ["dev-tools", "tech-products", "open-source"],
     "enabled": false,
     "fetch_config": {
-      "max_items": 15
+      "max_items": 15,
+      "noise_patterns": [],
+      "title_discard_patterns": []
     },
     "stats": {
       "total_fetched": 0,
@@ -147,7 +158,9 @@
     "enabled": false,
     "fetch_config": {
       "prefer_browser": false,
-      "max_items": 20
+      "max_items": 20,
+      "noise_patterns": [],
+      "title_discard_patterns": []
     },
     "stats": {
       "total_fetched": 0,

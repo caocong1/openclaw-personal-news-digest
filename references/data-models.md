@@ -35,16 +35,17 @@ Each news item collected from a source.
   "language": "zh|en",
   "dedup_status": "unique|url_dup|title_dup|event_merged",
   "content_hash": "string (SHA256(normalized_content)[:16])",
-  "processing_status": "raw|partial|complete",
+  "processing_status": "raw|partial|complete|noise_filtered",
   "duplicate_of": null,
-  "_schema_v": 3
+  "digest_eligible": true,
+  "_schema_v": 4
 }
 ```
 
 **Field notes:**
 - `id`: Deterministic from URL -- same URL always produces same ID
 - `normalized_url`: Strip `utm_*` params, force `https`, remove `www.` prefix, lowercase hostname, remove trailing `/`
-- `processing_status`: `raw` = just fetched, `partial` = classification or summary failed, `complete` = fully processed
+- `processing_status`: `raw` = just fetched, `partial` = classification or summary failed, `complete` = fully processed, `noise_filtered` = matched noise pattern, skipped LLM
 - `form_type`: Content format -- `news` (factual report), `analysis` (in-depth analysis), `opinion` (editorial/opinion piece), `announcement` (official release/announcement), `other` (uncategorized)
 - `categories.primary`: Must be one of the 12 IDs defined in `config/categories.json`
 - `language`: Detected during title dedup Stage A (see `references/processing-instructions.md` Section 1A). CJK character majority (>50%) -> `"zh"`, otherwise `"en"`.
@@ -58,6 +59,7 @@ Each news item collected from a source.
 - `event_id`: `null`
 - `dedup_status`: `"unique"` (for records created before title dedup was added)
 - `language`: `"zh"` (for records created before language detection was added)
+- `digest_eligible`: `true` (items from v3 and earlier are eligible since they passed the old pipeline)
 
 ---
 
@@ -158,6 +160,10 @@ Source definition as stored in `config/sources.json`.
 | `official` | `{ prefer_browser }` | `prefer_browser`: boolean (default false). If true, skip web_fetch and use browser directly. |
 | `community` | `{ max_items }` | `max_items`: max items to extract per page (default 15). |
 | `ranking` | `{ prefer_browser, max_items }` | `prefer_browser`: boolean (default false). `max_items`: max items to extract (default 20). |
+
+**Common fetch_config fields (all source types):**
+- `noise_patterns`: Array of regex strings. Items whose title matches any pattern (case-insensitive) are noise-filtered before LLM classification. Default: `[]` (no filtering).
+- `title_discard_patterns`: Array of regex strings. Items whose title exactly matches any pattern (case-insensitive full-match) are discarded. Default: `[]` (no filtering).
 
 ---
 
@@ -338,7 +344,8 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
     "title_deduped": 0,
     "classified": 0,
     "partial": 0,
-    "selected_for_output": 0
+    "selected_for_output": 0,
+    "noise_filter_suppressed": 0
   },
   "llm": {
     "calls": 0,
@@ -473,6 +480,10 @@ All fields added across phases, with version, default, and migration behavior.
 | `recovery_streak_start` | Source.stats | Phase 3 | - | `null` | Recovery countdown start |
 | `per_source` | DailyMetrics | Phase 6 | - | `{}` | Per-source pipeline counters |
 | `prompt_version` | CacheEntry | Phase 8 | v2 | `"legacy"` | Prompt version for cache invalidation |
+| `digest_eligible` | NewsItem | Phase 9 | v4 | `true` | Noise filter eligibility flag |
+| `noise_filter_suppressed` | DailyMetrics.items | Phase 9 | - | `0` | Count of items filtered by noise/importance |
+| `noise_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source noise regex patterns |
+| `title_discard_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source title discard patterns |
 
 ### Schema Change Procedure
 
