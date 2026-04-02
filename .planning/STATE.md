@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
+milestone: v2.0
+milestone_name: Quality & Robustness
 status: verifying
-stopped_at: Completed 09-02-PLAN.md (classification prompt hardening)
-last_updated: "2026-04-02T08:19:54.353Z"
+stopped_at: Completed 09-01-PLAN.md (noise filter infrastructure)
+last_updated: "2026-04-02T08:25:30.361Z"
 last_activity: 2026-04-02
 progress:
-  total_phases: 7
-  completed_phases: 5
-  total_plans: 16
-  completed_plans: 16
+  total_phases: 6
+  completed_phases: 2
+  total_plans: 7
+  completed_plans: 6
   percent: 100
 ---
 
@@ -69,6 +69,7 @@ Progress: [████████████████] 100%
 | Phase 03 P04 | 4min | 2 tasks | 3 files |
 | Phase 04 P01 | 2min | 2 tasks | 5 files |
 | Phase 09 P02 | 3min | 2 tasks | 3 files |
+| Phase 09 P01 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -123,6 +124,9 @@ Recent decisions affecting current work:
 - [Phase 09]: Prompt version bumped to classify-v2 to force cache invalidation of all v1 entries
 - [Phase 09]: Negative examples use description (-> correct_category) format for clear alternative routing
 - [Phase 09]: Disambiguation rules classify by PRIMARY ACTION not subject domain
+- [Phase 09]: Empty noise_patterns arrays for all sources as conservative default
+- [Phase 09]: noise_filtered items stay in JSONL for history queryability, not deleted
+- [Phase 09]: digest_eligible defaults to true for backward compatibility with v3 items
 
 ### Pending Todos
 
@@ -134,6 +138,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T08:19:54.346Z
-Stopped at: Completed 09-02-PLAN.md (classification prompt hardening)
+Last session: 2026-04-02T08:25:30.355Z
+Stopped at: Completed 09-01-PLAN.md (noise filter infrastructure)
 Resume file: None

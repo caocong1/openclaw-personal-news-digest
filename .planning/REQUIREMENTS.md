@@ -33,11 +33,11 @@ Requirements for quality & robustness release. Each maps to roadmap phases.
 
 ### Noise Filtering
 
-- [ ] **NOISE-01**: Pre-classify noise filter skips items matching source noise_patterns (zero LLM cost)
+- [x] **NOISE-01**: Pre-classify noise filter skips items matching source noise_patterns (zero LLM cost)
 - [ ] **NOISE-02**: Post-classify filter marks items with importance < 0.25 as digest_eligible: false
-- [ ] **NOISE-03**: Filtered items excluded from scoring pool but retained in JSONL for history queries
-- [ ] **NOISE-04**: Source schema supports noise_patterns and title_discard_patterns in fetch_config
-- [ ] **NOISE-05**: DailyMetrics tracks noise_filter_suppressed count
+- [x] **NOISE-03**: Filtered items excluded from scoring pool but retained in JSONL for history queries
+- [x] **NOISE-04**: Source schema supports noise_patterns and title_discard_patterns in fetch_config
+- [x] **NOISE-05**: DailyMetrics tracks noise_filter_suppressed count
 
 ### Classification
 
@@ -114,11 +114,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-02 | Phase 8 | Complete |
 | INFRA-03 | Phase 8 | Complete |
 | INFRA-04 | Phase 8 | Complete |
-| NOISE-01 | Phase 9 | Pending |
+| NOISE-01 | Phase 9 | Complete |
 | NOISE-02 | Phase 9 | Pending |
-| NOISE-03 | Phase 9 | Pending |
-| NOISE-04 | Phase 9 | Pending |
-| NOISE-05 | Phase 9 | Pending |
+| NOISE-03 | Phase 9 | Complete |
+| NOISE-04 | Phase 9 | Complete |
+| NOISE-05 | Phase 9 | Complete |
 | CLASS-01 | Phase 9 | Pending |
 | CLASS-02 | Phase 9 | Pending |
 | CLASS-03 | Phase 9 | Pending |

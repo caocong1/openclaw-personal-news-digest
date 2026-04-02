@@ -75,11 +75,11 @@ Plans:
   3. Filtered items remain queryable in JSONL history
   4. Classification prompt includes 0.0-0.2 tier examples, negative examples per category, and disambiguation rules
   5. DailyMetrics tracks noise_filter_suppressed count
-**Plans:** 3 plans
+**Plans:** 2/3 plans executed
 
 Plans:
-- [ ] 09-01-PLAN.md — Source schema + data models + pre-classify noise filter + SKILL.md pipeline wiring
-- [ ] 09-02-PLAN.md — Classification prompt hardening with low-end calibration, disambiguation, and negative examples
+- [x] 09-01-PLAN.md — Source schema + data models + pre-classify noise filter + SKILL.md pipeline wiring
+- [x] 09-02-PLAN.md — Classification prompt hardening with low-end calibration, disambiguation, and negative examples
 - [ ] 09-03-PLAN.md — Post-classify importance filter + noise filtering test fixtures
 
 ### Phase 10: Dedup Hardening & Alert Fatigue
@@ -147,7 +147,7 @@ Plans:
 | 6. Per-Source Metrics Continuity | v1.0 | 1/1 | Complete | 2026-04-01 |
 | 7. README Documentation | v2.0 | 0/1 | Not started | - |
 | 8. Output Quality Foundation & Infrastructure | v2.0 | 0/3 | Not started | - |
-| 9. Noise Floor & Classification Quality | v2.0 | 0/3 | Not started | - |
+| 9. Noise Floor & Classification Quality | v2.0 | 2/3 | In Progress|  |
 | 10. Dedup Hardening & Alert Fatigue | v2.0 | 0/? | Not started | - |
 | 11. Observability & Data Integrity | v2.0 | 0/? | Not started | - |
 | 12. Interaction Surface & Deployment UX | v2.0 | 0/? | Not started | - |
