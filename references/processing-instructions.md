@@ -874,6 +874,76 @@ DailyMetrics fields `alerts_sent_today` and `alerted_urls` become DERIVED from t
 
 ---
 
+## Section 5B: Delta Alert Flow (ALERT-04, ALERT-05)
+
+When the unified decision tree (Section 5A, step 6) routes to the DELTA ALERT path, execute this flow.
+
+### Trigger Condition
+
+Item has `event_id` that is not null, AND the linked event in `data/events/active.json` has `last_alerted_at` that is not null. This means the user has already been alerted about this event.
+
+### Delta Detection
+
+1. Read the event from `data/events/active.json` by `item.event_id`
+2. Find timeline entries with `timestamp > event.last_alerted_at`
+3. Filter those entries to relations: `update`, `correction`, `reversal`, `escalation` (exclude `initial` and `analysis`)
+   - These four relation types represent substantive developments per ALERT-04
+4. If NO qualifying new timeline entries exist:
+   -> Skip alert (no new developments worth alerting about)
+5. If qualifying new timeline entries exist:
+   -> Continue to delta alert generation
+
+### Delta Alert Generation
+
+1. Load prompt: Read `references/prompts/delta-alert.md`
+2. Fill placeholders:
+   - `{event_title}`: event.title
+   - `{last_alert_brief}`: event.last_alert_brief
+   - `{last_alerted_at}`: event.last_alerted_at (ISO8601)
+   - `{event_summary}`: event.summary
+   - New timeline entries: format each as `- [{timestamp}] {brief} (relation: {relation})`
+3. Process with LLM (fast model tier -- structured JSON output)
+4. Parse response JSON: `{ delta_summary, current_status }`
+5. If LLM call fails: fall back to standard alert format (ALERT-06 path from Section 5A step 7)
+
+### Rendering
+
+Use the Delta Alert template from `references/output-templates.md` "Delta Alert (Event Update)" section:
+- Fill `{delta_summary}` and `{current_status}` from LLM response
+- List new timeline entries since last_alerted_at
+- Show `{last_alert_brief}` and formatted `{last_alerted_at}` for context
+
+### Event Memory Update
+
+After successfully sending a delta alert:
+
+1. Update the event in `data/events/active.json`:
+   - Set `last_alerted_at` to current ISO8601 timestamp
+   - Set `last_alert_news_id` to the triggering item's id
+   - Set `last_alert_brief` to the `current_status` from LLM response (NOT the delta_summary -- brief should reflect the current state for future delta comparison)
+2. Atomic write `data/events/active.json` (tmp + rename)
+
+### Alert State Update
+
+Same as standard alert (Section 5A step 8):
+- Increment alerts_sent in alert-state file
+- Append URL to alerted_urls
+- Append to alert_log with `alert_type: "delta"`
+- Atomic write alert-state file
+
+### Standard Alert Memory Update
+
+When a STANDARD alert (Section 5A step 7) fires for an item WITH an event_id (but event has no last_alerted_at -- first alert for this event):
+1. Update the event in `data/events/active.json`:
+   - Set `last_alerted_at` to current ISO8601 timestamp
+   - Set `last_alert_news_id` to the item's id
+   - Set `last_alert_brief` to the item's content_summary (or title if summary is null)
+2. Atomic write `data/events/active.json`
+
+This ensures the first alert for an event seeds the memory for future delta alerts.
+
+---
+
 ## Section 6: Source Auto-Demotion and Recovery (SRC-09)
 
 Implements source auto-demotion and auto-recovery based on rolling quality_score thresholds.
