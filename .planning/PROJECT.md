@@ -1,134 +1,96 @@
-# OpenClaw 个性化新闻系统 (news-digest)
+# OpenClaw News Digest Skill
 
 ## What This Is
 
-一个基于 OpenClaw 平台的个性化新闻研究与推送 Skill。它运行在 OpenClaw Agent 内部，利用平台原生工具链（采集、调度、推送、存储）完成新闻编排任务。系统具备多来源采集（RSS、GitHub、搜索、官方公告、社区、榜单）、LLM 驱动的分类/摘要/去重、事件归并与时间线追踪、7 层偏好模型、防茧房配额机制、反馈学习闭环、成本控制与监控、以及自然语言历史查询能力。
+A personalized OpenClaw news research and delivery skill that continuously observes the world on the user's behalf. It combines multi-source collection, LLM-assisted classification and summarization, event tracking, preference learning, alerting, and explainable output rendering to produce Chinese-language digests, alerts, and weekly reports.
 
 ## Core Value
 
-能从"给用户推消息"升级为"替用户持续观察世界中他关心的部分"——在深度个性化的同时，通过防茧房机制保留对外部世界重要入口的感知。
+Replace "pushing messages to the user" with "continuously observing the world on the user's behalf" while preserving anti-echo-chamber exposure alongside deep personalization.
+
+## Current State
+
+- Shipped `v2.0 Quality & Robustness` on `2026-04-03`.
+- Archived milestones: `v1.0 MVP`, `v2.0 Quality & Robustness`.
+- Current codebase includes operator documentation, Chinese rendering contracts, prompt-versioned cache invalidation, pre-write data validation, noise filtering, alert fatigue controls, schema/version registries, diagnostics, schedule profiles, source-status inspection, and deterministic recommendation explainability.
 
 ## Requirements
 
 ### Validated
 
-- ✓ Skill 框架搭建（SKILL.md + references/ + scripts/ + config/）— v1.0
-- ✓ 多来源新闻采集（6 种类型）与自然语言管理 — v1.0
-- ✓ LLM 驱动的多标签主题分类（12 个顶层类目）— v1.0
-- ✓ LLM 摘要生成（中文输出，多语言处理）— v1.0
-- ✓ 三层去重策略（链接级、标题近似、事件级归并）— v1.0
-- ✓ 事件归并与时间线追踪（active → stable → archived 生命周期）— v1.0
-- ✓ 7 层用户偏好模型（含 depth_preference + judgment_angles）— v1.0
-- ✓ 7 维个性化评分公式 — v1.0
-- ✓ 防茧房配额机制（核心 50% / 邻近 20% / 热点 15% / 探索 15%）— v1.0
-- ✓ 日报、快讯、周报三种输出类型 — v1.0
-- ✓ 反馈学习系统（8 种反馈类型 → 偏好增量更新）— v1.0
-- ✓ LLM 成本预算与熔断机制 — v1.0
-- ✓ LLM 结果缓存层 — v1.0
-- ✓ 监控与可观测性（健康指标、告警、巡检、per_source metrics）— v1.0
-- ✓ 自然语言历史查询（5 种查询类型）— v1.0
-- ✓ 偏好衰减机制（向均值回归）— v1.0
-- ✓ 来源自动降级与恢复（端到端 per-source metrics 驱动）— v1.0
-- ✓ 日报深度偏好端对端贯通 — v1.0
-- ✓ 全输出中文化 + 渲染契约（用户字段 vs 内部字段分离）— v2.0 Phase 8
-- ✓ 缓存版本控制（prompt_version 驱动缓存失效）— v2.0 Phase 8
-- ✓ 写入前质量契约（UTF-8 清洗、标题/URL/ID 校验）— v2.0 Phase 8
-- ✓ 引导启动验证 + 确定性测试夹具（8 个场景文件）— v2.0 Phase 8
-- ✓ 噪声过滤（预分类模式匹配 + 分类后重要性阈值）— v2.0 Phase 9
-- ✓ 分类提示词强化（低端校准、消歧规则、反例）— v2.0 Phase 9
-- ✓ 快讯状态持久化与统一决策树（AlertState + 3-alert daily cap + URL dedup）— v2.0 Phase 10
-- ✓ 事件级快讯记忆与增量快讯（Event v3 alert memory + delta alerts）— v2.0 Phase 10
-- ✓ 跨日报重复惩罚（DigestHistory + 0.7x repetition penalty + suppression footer）— v2.0 Phase 10
-- ✓ 可观测性完整贯通（透明度底部准确来源计数 + 失败来源标注 + run_log 结构化日志 + Schema Version Registry + diagnostics.sh）— v2.0 Phase 11
-
-- ✓ Interaction surface & deployment UX (repo-backed schedule profiles, canonical intent routing, source-status command, deterministic recommendation evidence, dense-day rolling coverage) — v2.0 Phase 12
+- v1.0 delivered the end-to-end pipeline, multi-source collection, preference learning, anti-echo-chamber quotas, alerts, weekly reports, history queries, and per-source metrics continuity.
+- v2.0 delivered repo-root operator documentation and deployment guidance via `README.md`.
+- v2.0 localized all user-facing output to Chinese and formalized a rendering contract that separates user-facing vs internal fields.
+- v2.0 added prompt-versioned cache invalidation, bootstrap verification, deterministic fixtures, and pre-write quality validation.
+- v2.0 hardened noise filtering and classification quality with pre-classify filters, post-classify thresholds, negative examples, and `classify-v2`.
+- v2.0 reduced alert fatigue with `AlertState`, per-event alert memory, delta alerts, digest-history repetition control, and suppression transparency.
+- v2.0 completed observability with accurate source transparency, `run_log`, a Schema Version Registry, and `scripts/diagnostics.sh`.
+- v2.0 expanded operator and user interaction surfaces with repo-backed schedule profiles, canonical intent routing, `scripts/source-status.sh`, deterministic recommendation evidence, and dense-day timeline collapse rules.
 
 ### Active
 
-#### Current Milestone: v2.0 Quality & Robustness
-
-**Goal:** Address all 27+ improvement items (IMPROVEMENTS.md) through output localization, noise filtering, dedup hardening, observability, and interaction UX improvements.
-
-**Target features:**
-- Full output localization (all labels → Chinese)
-- Text cleanliness & cache versioning infrastructure
-- Noise floor filtering (pre-classify + post-classify)
-- Classification quality improvements
-- Alert state & event memory (daily cap + per-event dedup + delta alerts)
-- Cross-digest repetition control
-- Observability integrity (run_log, schema registry, diagnostics) ✓
-- Deployment UX (scheduling profiles, source visibility)
-- Interaction explainability & rolling coverage
+- [ ] `HARD-01`: Improve script operability in environments where here-doc patterns are brittle.
+- [ ] `HARD-02`: Add alert governance with source confidence tiers and multi-source corroboration.
+- [ ] `HARD-03`: Add pre-configured disabled source templates for safer future expansion.
+- [ ] `HARD-04`: Decouple render-layer contracts from content-model contracts.
+- [ ] `OPER-01`: Run live platform smoke tests for cron delivery, isolated session loading, exec permissions, timeout behavior, and empty-input quality gates.
 
 ### Out of Scope
 
-- Embedding 替代 Jaccard — 当前规模不需要额外依赖
-- 反馈撤销 + 全量重建 — 手动修改已够用
-- A/B 测试框架 — 单用户场景无对照组
-- 多用户支持 — 架构变动大，延后到 V2
-- 情感分析 — 优先级低
-- 热点预测 — 数据积累不足
-- 来源自动发现 — 需充分用户反馈数据
-- SQLite 迁移 — 30 天 JSONL 性能可接受，按需再考虑
-- 实时聊天/视频内容 — 复杂度高，非核心价值
-- 移动端应用 — Web/聊天渠道优先
+- Runtime code changes inside the OpenClaw platform. This repo remains a prompt, config, and reference-doc skill project.
+- New source integrations beyond the current pre-configured template set.
+- Standalone frontend or app UI work.
+- Multi-user support before the single-user operating model is proven.
+- Embedding-based dedup at the current scale.
 
 ## Context
 
-**Shipped v1.0** with ~45,400 lines across 100 files (Markdown skill documents).
-Tech stack: OpenClaw Skill (SKILL.md + references/ + scripts/ + config/), JSONL storage, LLM-driven processing.
-7 phases delivered: MVP Pipeline, Multi-Source + Preferences, Smart Processing, Closed Loop, Integration Wiring Fixes, Daily Depth Control Wiring, Per-Source Metrics Continuity.
+Shipped `v2.0` across `6` phases, `16` plans, and `31` tasks between `2026-04-02` and `2026-04-03`.
 
-**平台环境**：OpenClaw AI Agent 平台（https://openclaw.ai/），Skill 以 SKILL.md + 引用文档 + 辅助脚本的形式运行在 Agent 内部。
-
-**可用工具**：web_fetch, browser, web_search, read/write, cron, message + delivery, exec
-
-**设计规格来源**：gpt-plan-v3.md — 经过 6 个 AI 模型独立评审优化的完整设计文档。
-
-**Live platform verification pending:** cron delivery, isolated session, exec permission, timeout, dedup, and empty-input quality gate need real platform testing.
+- Git delta since `v1.0`: `82` commits, `86` files changed, `+11,428/-3,822` lines.
+- Tech stack: OpenClaw `SKILL.md`, Markdown reference docs, JSON/JSONL state, bash utilities, deterministic fixture files.
+- Quality themes validated in this milestone: localization, deterministic contracts, lower-noise processing, observability, explainability, and operator UX.
+- Remaining follow-up: live platform smoke testing is still pending, and Nyquist validation coverage is incomplete for milestone phases.
 
 ## Constraints
 
-- **平台约束**: 必须作为 OpenClaw Skill 运行，不能是独立后端服务
-- **上下文窗口**: SKILL.md < 3000 tokens，分步执行避免上下文压力
-- **成本控制**: 日均 LLM 调用预算 500 次 / 1M tokens，超 80% 告警，100% 熔断
-- **存储**: 工作空间文件系统，无数据库，JSONL + JSON 存储
-- **单用户**: MVP 阶段单用户设计，不考虑多租户
-- **数据合规**: 不存原文全文，尊重 robots.txt，摘要为 LLM 改写
+- Must run as an OpenClaw skill, not as a standalone backend service.
+- `SKILL.md` must stay compact enough to fit the platform context budget.
+- The system stores structured JSON/JSONL files in the workspace filesystem rather than a database.
+- Cost controls still assume a daily LLM budget guardrail and circuit-breaker behavior.
+- MVP and current shipped releases are designed for a single operator/user context.
+- The system stores rewritten summaries rather than full scraped article bodies.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| SKILL.md 模块化拆分 | 6/6 评审共识：避免巨型指令文件降低 agent 执行一致性 | ✓ Good |
-| 偏好模型 5→7 层 | MVP 收缩后在 Phase 3 扩展 depth_preference + judgment_angles | ✓ Good |
-| form_type 5 种（非 7 种） | Claude Opus 评审：过细枚举分类收益低于复杂度代价 | ✓ Good |
-| 时间线关系 5 种（非 9 种） | 4/6 评审建议，由 brief 字段承载细粒度描述 | ✓ Good |
-| 事件状态 3 态（非 4 态） | developing 与 active 语义重叠，简化为三态 | ✓ Good |
-| 输出类型 3 种（非 5 种） | 晚报/专题可用现有能力替代 | ✓ Good |
-| 简化锁机制为获取失败即跳过 | 4/6 评审：单用户低并发场景足够 | ✓ Good |
-| 取消反馈全量重建和撤销协议 | 5/6 评审：MVP 实现成本远大于收益 | ✓ Good |
-| Phase 0 合并为单阶段 | Qwen 评审：三子阶段紧耦合，拆分增加管理开销 | ✓ Good |
-| Milestone audit → gap phases (5+6) | Audit found 5 partial REQs; targeted phases closed all gaps | ✓ Good |
-| per_source DailyMetrics contract | Enables source health, monitoring, degrade/recover end-to-end | ✓ Good |
+| Keep `SKILL.md` thin and push detail into `references/` | Preserves context budget while keeping the operating model inspectable | Good |
+| Use prompt-versioned cache keys | Prompt changes must invalidate stale cached outputs deterministically | Good |
+| Separate user-facing rendering contracts from internal fields | Prevents raw JSON leakage in digest and alert output | Good |
+| Use regex-based pre-classify noise filters plus post-classify eligibility gates | Saves LLM budget and lowers low-value digest noise | Good |
+| Store alert tracking in `AlertState` instead of `DailyMetrics` | Keeps alert governance authoritative and reduces race-prone derived state | Good |
+| Compare repetition penalty only against the most recent digest | Avoids compounding penalties while still suppressing stale repeats | Good |
+| Maintain both Schema Version Registry and New Fields Registry | Keeps schema evolution explicit for future milestone work | Good |
+| Derive recommendation evidence deterministically, not from LLM-authored rationale | Explainability should be reproducible from scoring and quota state | Good |
+| Store schedule profiles in repo state with stable IDs | Makes deployment UX auditable and editable without hidden platform state | Good |
 
----
+## Next Milestone Goals
+
+- Turn the v2.0 hardening backlog into a scoped `v2.1` or `v3.0` milestone.
+- Prioritize runtime hardening and live platform verification before broadening feature scope.
+- Keep milestone-planning documents small by continuing to archive shipped roadmap and requirements content under `.planning/milestones/`.
+
 ## Evolution
 
-This document evolves at phase transitions and milestone boundaries.
+This document should evolve at phase transitions and milestone boundaries.
 
-**After each phase transition** (via `/gsd:transition`):
-1. Requirements invalidated? → Move to Out of Scope with reason
-2. Requirements validated? → Move to Validated with phase reference
-3. New requirements emerged? → Add to Active
-4. Decisions to log? → Add to Key Decisions
-5. "What This Is" still accurate? → Update if drifted
+After each milestone:
 
-**After each milestone** (via `/gsd:complete-milestone`):
-1. Full review of all sections
-2. Core Value check — still the right priority?
-3. Audit Out of Scope — reasons still valid?
-4. Update Context with current state
+1. Move shipped requirements into `Validated`.
+2. Refresh `Active` to describe the next real milestone candidate set.
+3. Update `Context` with current shipped scope, metrics, and unresolved follow-up work.
+4. Add or revise milestone-level decisions that future phases should treat as stable constraints.
 
 ---
-*Last updated: 2026-04-02 after Phase 11 (Observability & Data Integrity) — run_log, Schema Version Registry, diagnostics.sh, failed source footer, source_count accuracy*
+*Last updated: 2026-04-03 after completing the v2.0 Quality & Robustness milestone*
