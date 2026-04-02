@@ -1,0 +1,76 @@
+{
+  "sources": [
+    {
+      "id": "src-36kr",
+      "name": "36Kr",
+      "type": "rss",
+      "enabled": true,
+      "status": "active",
+      "stats": {
+        "total_fetched": 42,
+        "last_fetch": "2026-04-03T06:00:00Z",
+        "consecutive_failures": 0,
+        "last_error": null,
+        "quality_score": 0.81,
+        "dedup_rate": 0.19,
+        "selection_rate": 0.43,
+        "degraded_since": null
+      }
+    },
+    {
+      "id": "src-hackernews",
+      "name": "Hacker News",
+      "type": "community",
+      "enabled": true,
+      "status": "degraded",
+      "stats": {
+        "total_fetched": 18,
+        "last_fetch": "2026-04-03T06:05:00Z",
+        "consecutive_failures": 3,
+        "last_error": "HTTP 502 from upstream feed mirror",
+        "quality_score": 0.17,
+        "dedup_rate": 0.61,
+        "selection_rate": 0.06,
+        "degraded_since": "2026-03-20"
+      }
+    },
+    {
+      "id": "src-openai-blog",
+      "name": "OpenAI Blog",
+      "type": "official",
+      "enabled": false,
+      "status": "active",
+      "stats": {
+        "total_fetched": 7,
+        "last_fetch": "2026-04-01T09:10:00Z",
+        "consecutive_failures": 0,
+        "last_error": null,
+        "quality_score": 0.72,
+        "dedup_rate": 0.14,
+        "selection_rate": 0.29,
+        "degraded_since": null
+      }
+    }
+  ],
+  "recent_metrics": {
+    "date": "2026-04-03",
+    "per_source": {
+      "src-36kr": {
+        "fetched": 12,
+        "deduped": 2,
+        "title_deduped": 1,
+        "selected": 5,
+        "status": "success",
+        "error": null
+      },
+      "src-hackernews": {
+        "fetched": 6,
+        "deduped": 3,
+        "title_deduped": 1,
+        "selected": 0,
+        "status": "failed",
+        "error": "HTTP 502 from upstream feed mirror"
+      }
+    }
+  }
+}

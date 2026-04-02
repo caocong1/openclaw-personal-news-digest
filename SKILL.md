@@ -92,7 +92,8 @@ Triggered by quick-check cron (every 2h):
 Use `{baseDir}/references/feedback-rules.md` "Intent Recognition Table" as the canonical routing layer for user messages.
 
 - **Schedule management**: Route to `{baseDir}/references/cron-configs.md` "Schedule Profiles" section.
-- **Source status**: Route broad health/status requests and source-specific health requests to the Phase 12 source-status command path. If a source is named, keep it on the source-status path rather than the generic history-query path.
+- **Source status**: Run `bash {baseDir}/scripts/source-status.sh {baseDir}` for broad health/status queries.
+- **Source status (specific source)**: Run `bash {baseDir}/scripts/source-status.sh {baseDir} "{source_name_or_id}"` for source-specific health requests. Keep named-source requests on this path rather than the generic history-query path.
 - **Source management**: Route to `{baseDir}/references/collection-instructions.md` "Source Management Commands" section.
 - **Feedback**: Route to `{baseDir}/references/feedback-rules.md` "Feedback Type Mapping" section.
 - **Preference query**: Route to `{baseDir}/references/feedback-rules.md` "Preference Visualization" section.

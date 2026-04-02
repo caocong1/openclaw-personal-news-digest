@@ -1241,7 +1241,25 @@ High-importance news outside your usual interests:
 2. ...
 ```
 
-### HIST-05: Source Analysis Query
+### HIST-05: Source Status Query
+
+**Canonical command path:**
+- Broad status: `bash scripts/source-status.sh <base_dir>`
+- Specific source: `bash scripts/source-status.sh <base_dir> <source_name_or_id>`
+
+#### All-Source Summary Mode
+
+Use the all-source summary mode when the user asks for broad source health or status. Build the source list from `config/sources.json` first, then enrich it with the most recent `data/metrics/daily-YYYY-MM-DD.json` `per_source` values when available. Do not omit disabled sources that are absent from recent metrics.
+
+**Response format:**
+```
+=== Source Status ===
+Enabled: {enabled_count} | Disabled: {disabled_count} | Degraded: {degraded_count}
+
+- {source_name} | {source_id} | Enabled: {enabled} | Status: {status} | Quality score: {quality_score} | Dedup rate: {dedup_rate} | Selection rate: {selection_rate} | Consecutive failures: {consecutive_failures}
+```
+
+#### Single-Source Detail Mode
 
 **Trigger:** User asks about a specific source's performance (e.g., "36Kr 怎么样", "how is TechCrunch doing", "source health").
 
@@ -1266,6 +1284,10 @@ Type: {type} | Status: {status} | Enabled: {enabled}
 
 {If degraded: "Degraded since: {degraded_since}. Source will auto-recover when quality_score > 0.3 for 7 consecutive days."}
 ```
+
+**Additional detail fields:**
+- Include `Last error: {last_error}` when a recent or stored source error exists.
+- Include `Degraded since: {degraded_since}` when the source status is `degraded`.
 
 ### Query Performance Guidelines
 
