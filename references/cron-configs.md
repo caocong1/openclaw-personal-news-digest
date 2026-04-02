@@ -2,6 +2,34 @@
 
 Reference document for registering cron jobs on the OpenClaw platform. Each job is defined as a JSON object passed to the `cron` tool.
 
+## Schedule Profiles
+
+`config/schedule-profiles.json` is the source of truth for named deployment schedules. The `active_profile` value selects which repo-backed profile should be applied to the platform cron jobs.
+
+| Profile | Purpose |
+|--------|---------|
+| `daily-default` | Default all-days schedule |
+| `weekday-only` | Weekdays only with business-hours quick checks |
+| `custom-hours` | Editable example profile for user-defined hours |
+
+Each profile maps onto the same four OpenClaw cron jobs by `job_name`: `news-daily-digest`, `news-quick-check`, `weekly-health-inspection`, and `news-weekly-report`.
+
+**Apply flow**
+1. Read `config/schedule-profiles.json` and resolve the `active_profile`.
+2. For each job in that profile, run `cron get <job_name>` to inspect the current deployed state.
+3. If the job is enabled, use `cron create` with the job JSON below or the platform's update path to apply the profile's `expr`.
+4. If the job is disabled, run `cron disable <job_name>` instead of deleting the profile entry.
+
+**Management commands**
+
+| Intent | Operator command |
+|--------|------------------|
+| List profiles | `list schedule profiles` |
+| Show active profile | `show active schedule profile` |
+| Activate a profile | `activate weekday-only profile` |
+| Adjust digest time | `set custom-hours digest to 09:30` |
+| Adjust quick-check hours | `set custom-hours quick check to 09,13,17` |
+
 ## Daily Digest Job
 
 Runs the full pipeline once per day at 08:00 CST (Asia/Shanghai). Collects RSS, deduplicates, classifies/summarizes, scores, generates digest, pushes to chat channel.

@@ -1,0 +1,78 @@
+{
+  "_schema_v": 1,
+  "active_profile": "daily-default",
+  "profiles": {
+    "daily-default": {
+      "description": "Default all-days schedule",
+      "timezone": "Asia/Shanghai",
+      "daily_digest": {
+        "enabled": true,
+        "job_name": "news-daily-digest",
+        "expr": "0 8 * * *"
+      },
+      "quick_check": {
+        "enabled": true,
+        "job_name": "news-quick-check",
+        "expr": "0 */2 * * *"
+      },
+      "weekly_health": {
+        "enabled": true,
+        "job_name": "weekly-health-inspection",
+        "expr": "0 3 * * 1"
+      },
+      "weekly_report": {
+        "enabled": true,
+        "job_name": "news-weekly-report",
+        "expr": "0 20 * * 0"
+      }
+    },
+    "weekday-only": {
+      "description": "Weekdays only with business-hours quick checks",
+      "timezone": "Asia/Shanghai",
+      "daily_digest": {
+        "enabled": true,
+        "job_name": "news-daily-digest",
+        "expr": "0 8 * * 1-5"
+      },
+      "quick_check": {
+        "enabled": true,
+        "job_name": "news-quick-check",
+        "expr": "0 8-20/2 * * 1-5"
+      },
+      "weekly_health": {
+        "enabled": true,
+        "job_name": "weekly-health-inspection",
+        "expr": "0 3 * * 1"
+      },
+      "weekly_report": {
+        "enabled": true,
+        "job_name": "news-weekly-report",
+        "expr": "0 20 * * 0"
+      }
+    },
+    "custom-hours": {
+      "description": "Editable example profile for user-defined hours",
+      "timezone": "Asia/Shanghai",
+      "daily_digest": {
+        "enabled": true,
+        "job_name": "news-daily-digest",
+        "expr": "30 9 * * 1-5"
+      },
+      "quick_check": {
+        "enabled": true,
+        "job_name": "news-quick-check",
+        "expr": "0 9,13,17 * * 1-5"
+      },
+      "weekly_health": {
+        "enabled": true,
+        "job_name": "weekly-health-inspection",
+        "expr": "0 3 * * 1"
+      },
+      "weekly_report": {
+        "enabled": true,
+        "job_name": "news-weekly-report",
+        "expr": "0 20 * * 0"
+      }
+    }
+  }
+}

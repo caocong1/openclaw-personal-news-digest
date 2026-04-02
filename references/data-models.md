@@ -176,6 +176,42 @@ Source definition as stored in `config/sources.json`.
 
 ---
 
+## ScheduleProfileConfig
+
+Named scheduling profiles stored in `config/schedule-profiles.json`. This file is the repo-backed desired state for deployment timing.
+
+```json
+{
+  "_schema_v": 1,
+  "active_profile": "daily-default",
+  "profiles": {
+    "daily-default": {
+      "description": "Default all-days schedule",
+      "timezone": "Asia/Shanghai",
+      "daily_digest": { "enabled": true, "job_name": "news-daily-digest", "expr": "0 8 * * *" },
+      "quick_check": { "enabled": true, "job_name": "news-quick-check", "expr": "0 */2 * * *" },
+      "weekly_health": { "enabled": true, "job_name": "weekly-health-inspection", "expr": "0 3 * * 1" },
+      "weekly_report": { "enabled": true, "job_name": "news-weekly-report", "expr": "0 20 * * 0" }
+    }
+  }
+}
+```
+
+**Field notes:**
+- `_schema_v`: Schema version for the schedule profile file. Readers should reject unknown major shape changes or apply compatible defaults if later versions add fields.
+- `active_profile`: Stable profile ID currently selected for deployment. This value MUST match one of the keys under `profiles`.
+- `profiles.<name>`: Profile objects keyed by stable IDs such as `daily-default`, `weekday-only`, and `custom-hours`. These names are command targets used by SKILL routing and operator commands, so they must stay stable once published.
+- `profiles.<name>.timezone`: IANA time zone applied to every cron expression in that profile. Current profiles use `Asia/Shanghai`.
+- `profiles.<name>.<job>.enabled`: Boolean desired state for that cron job. If `false`, disable the platform job instead of deleting the profile entry.
+- `profiles.<name>.<job>.job_name`: Canonical OpenClaw cron job name. This links the profile entry to the deployed job definition in `references/cron-configs.md`.
+- `profiles.<name>.<job>.expr`: Cron expression to apply when the job is enabled. This is the concrete schedule source of truth, not a prose example.
+
+**Known job keys:** `daily_digest`, `quick_check`, `weekly_health`, `weekly_report`
+
+**Current profile IDs:** `daily-default`, `weekday-only`, `custom-hours`
+
+---
+
 ## DedupIndex
 
 Stored at `data/news/dedup-index.json`. Maps URL hashes to item references for fast dedup lookup.
@@ -564,6 +600,7 @@ Authoritative record of all data model versions, their current `_schema_v`, and 
 | Event | v3 | v1: initial fields (Phase 0). v2: +keywords, timeline (Phase 2). v3: +last_alerted_at, last_alert_news_id, last_alert_brief (Phase 10). |
 | CacheEntry | v2 | v1: initial fields (Phase 0). v2: +prompt_version (Phase 8). |
 | Preferences | v2 | v1: initial 5-layer model (Phase 0). v2: +depth_preference, judgment_angles (Phase 3). |
+| ScheduleProfileConfig | v1 | v1: initial named profile config with `active_profile` and job schedules (Phase 12). |
 | AlertState | v1 | v1: initial -- daily cap, URL dedup, alert_log (Phase 10). |
 | DigestHistory | v1 | v1: initial -- rolling 5-run window with event timeline snapshots (Phase 10). |
 | DailyMetrics | n/a | No `_schema_v` field (flat evolving schema). Field additions tracked in New Fields Registry below. |
