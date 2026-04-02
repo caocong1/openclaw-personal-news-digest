@@ -166,7 +166,12 @@ If the OpenClaw platform supports model selection via prompt parameters or syste
 For each batch:
 
 1. **Load prompt**: Read `references/prompts/classify.md`
-2. **Fill categories**: Read `config/categories.json`, format the 12 categories into `{categories_list}` placeholder
+2. **Fill categories**: Read `config/categories.json`, format the 12 categories into `{categories_list}` placeholder. For each category, include `id`, `name_zh`, `name_en`, `description`, and `negative_examples` (the list of items that should NOT be classified under that category). The formatted output for each category should look like:
+   ```
+   - {id} ({name_zh} / {name_en}): {description}
+     NOT this category: {negative_examples[0]}; {negative_examples[1]}; {negative_examples[2]}
+   ```
+   This ensures the LLM sees both what belongs in a category and what does not.
 3. **Fill batch data**: For each item in the batch, format into `{news_batch}`:
    ```
    ID: {item.id}

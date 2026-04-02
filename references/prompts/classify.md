@@ -1,3 +1,4 @@
+<!-- prompt_version: classify-v2 -->
 # Classification Prompt Template
 
 ## Instructions
@@ -9,6 +10,7 @@
 {categories_list}
 
 _(Note: The agent reads `config/categories.json` to fill this placeholder. Each category has an `id`, `name_zh`, `name_en`, and `description`.)_
+_(Each category also includes `negative_examples` -- items that should NOT be classified under that category. Use these to avoid common misclassifications.)_
 
 The 12 category IDs are:
 - `ai-models` -- AI Models: LLM, image generation, AI research, model releases, benchmarks
@@ -48,6 +50,7 @@ For each news item, return a JSON object in a JSON array:
 ## Classification Guidelines
 
 - `primary`: Choose the SINGLE most relevant category ID. If an item spans multiple categories, pick the dominant one.
+- When `negative_examples` are provided for a category, actively check whether the item matches a negative example before assigning that category. If it does, choose the alternative category suggested in the negative example.
 - `tags`: Generate 2-5 fine-grained tags in kebab-case (e.g., `large-language-model`, `series-b-funding`, `zero-day-exploit`). Tags should capture specific topics, technologies, companies, or concepts.
 - `form_type`: Classify the content format:
   - `news` -- factual report of an event or development
@@ -63,7 +66,43 @@ For each news item, return a JSON object in a JSON array:
 - **0.7-0.8**: Significant industry/community events (important product launches, major project updates)
 - **0.5-0.6**: Noteworthy developments (routine product updates, industry observations, valuable analysis)
 - **0.3-0.4**: General information (routine news, daily updates)
-- **0.0-0.2**: Low information density (repetitive coverage, clickbait, pure marketing)
+- **0.0-0.2**: Low information density. Assign this range to items that add little unique information value:
+  - Repetitive coverage of already-well-reported events with no new facts
+  - Clickbait titles without substantive content behind them
+  - Pure marketing or promotional content (product ads, sponsored posts)
+  - Routine minor version bumps with no notable changes (e.g., "v1.2.3 patch release")
+  - Aggregated round-up posts that compile links without original analysis (e.g., "每日精选", "Weekly Roundup")
+  - Social media reaction compilations without expert analysis
+  - Press releases restating previously announced information
+
+## Borderline Examples
+
+Items near score boundaries -- use these as calibration anchors:
+
+| Title Example | Score | Rationale |
+|---------------|-------|-----------|
+| "v2.1.3 bug fix release" | 0.1 | Routine patch, no notable changes |
+| "本周 AI 领域十大热门文章" | 0.1 | Aggregation roundup, no original content |
+| "某某公司获得 A 轮融资" (small unknown startup) | 0.3 | General business news, limited industry impact |
+| "某某公司获得 B 轮 5000 万美元融资" (known company) | 0.5 | Noteworthy funding with market signal |
+| "Google 发布新版 Gemini 模型" | 0.8 | Significant model release from major player |
+| "重大安全漏洞影响百万用户" | 0.9 | Critical security incident with broad impact |
+
+## Disambiguation Rules
+
+When an item could belong to multiple categories, use these rules to determine the primary category:
+
+- "AI startup raises funding" -> `business` (NOT `ai-models`), unless the funding is specifically tied to a new model release
+- "New IDE with AI features" -> `dev-tools` (NOT `ai-models`), unless the AI capability itself is the primary news
+- "Open source AI model released" -> `ai-models` (primary), `open-source` as tag. The model is the news, not the license.
+- "Security vulnerability in AI system" -> `security` (NOT `ai-models`), unless the vulnerability is inherent to the model architecture itself
+- "Government bans AI technology" -> `macro-policy` (NOT `ai-models`). Policy is the action; AI is the subject.
+- "Game engine adds AI generation" -> `gaming` or `dev-tools` depending on audience (game devs -> `dev-tools`, gamers -> `gaming`). NOT `ai-models`.
+- "Crypto exchange launches new product" -> `finance` (NOT `tech-products`). Financial product, not tech product.
+- "Open source project changes license" -> `open-source` (NOT `business`). License is the core community issue.
+- "Country restricts tech exports" -> `international` (NOT `macro-policy`), if cross-border. `macro-policy` if domestic-only.
+
+**General principle:** Classify by the PRIMARY ACTION or EVENT, not by the subject domain. "AI" as a subject does not automatically mean `ai-models` -- the action (funding, regulation, vulnerability, tool release) determines the category.
 
 ## Output Format
 
