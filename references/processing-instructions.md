@@ -896,6 +896,18 @@ During each pipeline run, accumulate per-source counters alongside aggregate met
 
 **Backward compatibility:** Metrics files from before this change lack `per_source`. All consumers (health-check.sh, source health computation) already use `.get('per_source', {})` which returns an empty dict gracefully. No backfill of historical metrics files is needed.
 
+### Failed Source Name Tracking
+
+During Output Phase step 8 (transparency footer rendering), derive the list of failed source display names:
+
+1. Read today's `data/metrics/daily-YYYY-MM-DD.json` field `per_source`
+2. For each entry where `status == "failed"`, collect the source_id
+3. For each failed source_id, look up `name` from `config/sources.json` (use source_id to find the matching source object)
+4. Pass the list of display names (`failed_source_names`) and count (`failed_count`) to the footer template
+5. If `failed_source_names` is empty, skip the failed source footer line
+
+This uses already-tracked data from `per_source` (Phase 6) -- no new collection logic needed.
+
 ### Section 5C: Run Log Accumulation (OBS-02)
 
 Accumulate `run_log` entries in memory during the pipeline run. Each entry is appended when its milestone is reached. Write the full array as part of DailyMetrics at Output Phase step 7.

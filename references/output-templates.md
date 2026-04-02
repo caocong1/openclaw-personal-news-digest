@@ -156,6 +156,16 @@ If `repeat_suppressed_count > 0`, append on a new line:
 
 Where `repeat_suppressed_count` is the count of items that received the 0.7x penalty AND were excluded from the digest (from Section 4A step 5).
 
+If any sources had `status: "failed"` in today's `per_source` metrics, append on a new line:
+```
+采集失败: {failed_source_name_1}, {failed_source_name_2} (共 {failed_count} 个)
+```
+
+Where:
+- `failed_source_names`: Read from DailyMetrics `per_source` entries where `status == "failed"`. Look up display name from `config/sources.json` `name` field (not `source_id`).
+- `failed_count`: Number of sources with `status: "failed"` in `per_source`.
+- If no sources failed, omit this line entirely (do not show "采集失败: (共 0 个)").
+
 Where:
 - `source_count`: Number of enabled sources in sources.json at time of run
 - `items_processed`: Number of items that reached processing_status "complete" today
