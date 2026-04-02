@@ -282,6 +282,48 @@ For each batch:
 5. **Parse response**: Expect a JSON array. Match each result to its item by `id`
 6. **Update items**: Set `categories.primary`, `categories.tags`, `importance_score`, `form_type` from the classification result
 
+### Post-Classify Importance Filter (NOISE-02)
+
+After classification assigns importance scores, filter items below the noise floor threshold. This prevents low-value items from consuming summarization LLM budget.
+
+#### When to Run
+
+Immediately after each classification batch completes (Section 1 "Classification Batch" step 6), before summarization begins.
+
+#### Filter Procedure
+
+For each item that received fresh classification results in this batch:
+
+1. If `importance_score < 0.25`:
+   - Set `digest_eligible: false`
+   - Keep `processing_status` at its current value (do NOT change to `"noise_filtered"` -- classification DID succeed, this is a threshold filter not a pattern filter)
+   - Skip this item from the summarization batch (do NOT send to summarize LLM call)
+   - Increment `noise_filter_suppressed` counter in run metrics
+   - Log: `"Low-importance filtered: {item.title} (score: {importance_score})"`
+2. If `importance_score >= 0.25`:
+   - Set `digest_eligible: true`
+   - Include item in the summarization batch as normal
+
+#### Processing Status Behavior
+
+Unlike the pre-classify noise filter (Section 0E) which sets `processing_status: "noise_filtered"`, the post-classify filter keeps `processing_status` as-is. After summarization completes for eligible items:
+- Items with `importance_score >= 0.25` proceed to `processing_status: "complete"` as normal
+- Items with `importance_score < 0.25` and `digest_eligible: false` get `processing_status: "complete"` (classification succeeded) but they skip summarization, so `content_summary` remains `null`
+
+This means `processing_status: "complete"` items may have `digest_eligible: false` -- the scoring pool must check BOTH `processing_status` and `digest_eligible`.
+
+#### Threshold Constant
+
+The importance threshold `0.25` is defined here. To adjust the noise floor sensitivity, change this single value. A lower threshold (e.g., 0.15) lets more items through; a higher threshold (e.g., 0.35) filters more aggressively.
+
+#### Interaction with noise_filter_suppressed
+
+The `noise_filter_suppressed` counter in DailyMetrics is the SUM of:
+- Pre-classify filtered items (Section 0E): items matching noise_patterns
+- Post-classify filtered items (this section): items with importance_score < 0.25
+
+Both stages increment the same counter. This gives a single metric for "total items removed from the digest pipeline."
+
 ### Summarization Batch
 
 For the same batch:

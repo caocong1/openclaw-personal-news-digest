@@ -30,6 +30,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 2. **Collect unprocessed**: Find items with `processing_status: "raw"` from today's JSONL.
 2.5. **Pre-classify noise filter**: For each raw item, check `config/sources.json` `fetch_config.noise_patterns` and `title_discard_patterns`. Items matching any pattern: set `processing_status: "noise_filtered"`, `digest_eligible: false`, remove from batch, increment `noise_filter_suppressed`. See `{baseDir}/references/processing-instructions.md` Section 0E.
 3. **Classify batch**: Group 5-10 items per LLM call. Assign `categories`, `importance_score`, `form_type`, `tags`.
+3.5. **Post-classify importance filter**: For each classified item with `importance_score < 0.25`: set `digest_eligible: false`, skip summarization, increment `noise_filter_suppressed`. See `{baseDir}/references/processing-instructions.md` Section 1 "Post-Classify Importance Filter".
 4. **Summarize batch**: Group 5-10 items per LLM call. Read `depth_preference` and `judgment_angles` from `config/preferences.json`, inject into `references/prompts/summarize.md`. Generate Chinese summary at configured depth.
 5. **Handle errors**: On LLM failure, retry once. If still fails, mark `processing_status: "partial"`. If classify fails but summarize succeeds, mark item for exploration slot.
 6. **Update budget**: Read `{baseDir}/config/budget.json`. If `current_date` differs from today, reset `calls_today` and `tokens_today` to 0. Increment counters.
