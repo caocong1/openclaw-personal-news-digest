@@ -69,10 +69,10 @@ Requirements for quality & robustness release. Each maps to roadmap phases.
 
 ### Interaction
 
-- [ ] **INTERACT-01**: Scheduling profiles configurable via SKILL.md commands
+- [x] **INTERACT-01**: Scheduling profiles configurable via SKILL.md commands
 - [ ] **INTERACT-02**: Source status command shows per-source health and enable/disable state
 - [ ] **INTERACT-03**: Recommendations include structured evidence for why items were selected
-- [ ] **INTERACT-04**: NL intent recognition table in feedback-rules.md (no duplication in SKILL.md)
+- [x] **INTERACT-04**: NL intent recognition table in feedback-rules.md (no duplication in SKILL.md)
 - [ ] **INTERACT-05**: Rolling coverage collapses events with >5 items/day into timeline view
 
 ## Future Requirements
@@ -135,10 +135,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OBS-02 | Phase 11 | Complete |
 | OBS-03 | Phase 11 | Pending |
 | OBS-04 | Phase 11 | Pending |
-| INTERACT-01 | Phase 12 | Pending |
+| INTERACT-01 | Phase 12 | Complete |
 | INTERACT-02 | Phase 12 | Pending |
 | INTERACT-03 | Phase 12 | Pending |
-| INTERACT-04 | Phase 12 | Pending |
+| INTERACT-04 | Phase 12 | Complete |
 | INTERACT-05 | Phase 12 | Pending |
 
 **Coverage:**

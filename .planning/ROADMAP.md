@@ -128,11 +128,12 @@ Plans:
   3. Recommendations include structured evidence explaining why each item was selected
   4. Events with >5 items in a single day are collapsed into a timeline view in rolling coverage
   5. NL intent recognition lives in feedback-rules.md without duplication in SKILL.md
-**Plans**: TBD
+**Plans**: 1/3 plans executed
 
 Plans:
-- [ ] 12-01: TBD
+- [x] 12-01: TBD
 - [ ] 12-02: TBD
+- [ ] 12-03: TBD
 
 ## Progress
 
@@ -152,4 +153,4 @@ Plans:
 | 9. Noise Floor & Classification Quality | v2.0 | 2/3 | In Progress|  |
 | 10. Dedup Hardening & Alert Fatigue | v2.0 | 3/3 | Complete    | 2026-04-02 |
 | 11. Observability & Data Integrity | v2.0 | 3/3 | Complete    | 2026-04-02 |
-| 12. Interaction Surface & Deployment UX | v2.0 | 0/? | Not started | - |
+| 12. Interaction Surface & Deployment UX | v2.0 | 1/3 | In Progress|  |

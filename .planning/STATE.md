@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Quality & Robustness
 status: executing
-stopped_at: Completed 11-03-PLAN.md (Schema Version Registry + Diagnostics)
-last_updated: "2026-04-02T16:34:28.476Z"
+stopped_at: Completed 12-01-PLAN.md
+last_updated: "2026-04-02T17:14:05.575Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 6
   completed_phases: 5
-  total_plans: 13
-  completed_plans: 13
-  percent: 80
+  total_plans: 16
+  completed_plans: 14
+  percent: 88
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Replace "pushing messages to user" with "continuously observing the world on behalf of the user" -- deep personalization with anti-echo-chamber awareness
-**Current focus:** Phase 11 — observability-data-integrity
+**Current focus:** Phase 12 — interaction-surface-deployment-ux
 
 ## Current Position
 
-Phase: 12
-Plan: Not started
+Phase: 12 (interaction-surface-deployment-ux) — EXECUTING
+Plan: 2 of 3
 Status: Ready to execute
 Last activity: 2026-04-02
 
-Progress: [████████░░] 80%
+Progress: [█████████░] 88%
 
 ## Performance Metrics
 
@@ -76,6 +76,7 @@ Progress: [████████░░] 80%
 | Phase 11 P02 | 3min | 2 tasks | 4 files |
 | Phase 11 P01 | 2min | 2 tasks | 3 files |
 | Phase 11 P03 | 3 | 2 tasks | 3 files |
+| Phase 12 P01 | 5min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -151,6 +152,8 @@ Recent decisions affecting current work:
 - [Phase 11]: Failed source names derived from existing per_source data -- no new collection logic
 - [Phase 11]: Diagnostics is on-demand inspection tool (operator triggered), health-check.sh is automated alerting (cron triggered)
 - [Phase 11]: Schema Version Registry maintained alongside New Fields Registry, both updated on schema changes
+- [Phase 12]: Scheduling presets live in config/schedule-profiles.json with stable profile IDs and active_profile selection.
+- [Phase 12]: Intent recognition examples are centralized in references/feedback-rules.md; SKILL.md only dispatches.
 
 ### Pending Todos
 
@@ -162,6 +165,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T16:31:04.222Z
-Stopped at: Completed 11-03-PLAN.md (Schema Version Registry + Diagnostics)
+Last session: 2026-04-02T17:14:05.569Z
+Stopped at: Completed 12-01-PLAN.md
 Resume file: None
