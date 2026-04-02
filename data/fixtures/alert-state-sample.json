@@ -1,0 +1,40 @@
+{
+  "_schema_v": 1,
+  "date": "2026-01-15",
+  "alerts_sent": 3,
+  "max_alerts": 3,
+  "alerted_urls": [
+    "https://example.com/breaking-ai-regulation",
+    "https://example.com/major-security-incident",
+    "https://example.com/landmark-product-launch"
+  ],
+  "alert_log": [
+    {
+      "news_id": "fix0alert00001",
+      "event_id": "evt-fix00001",
+      "url": "https://example.com/breaking-ai-regulation",
+      "title": "AI 安全法规正式实施",
+      "importance_score": 0.92,
+      "alert_type": "standard",
+      "sent_at": "2026-01-15T08:15:00Z"
+    },
+    {
+      "news_id": "fix0alert00002",
+      "event_id": null,
+      "url": "https://example.com/major-security-incident",
+      "title": "大规模安全漏洞被发现",
+      "importance_score": 0.88,
+      "alert_type": "standard",
+      "sent_at": "2026-01-15T10:30:00Z"
+    },
+    {
+      "news_id": "fix0alert00003",
+      "event_id": null,
+      "url": "https://example.com/landmark-product-launch",
+      "title": "重大产品发布震动市场",
+      "importance_score": 0.86,
+      "alert_type": "delta",
+      "sent_at": "2026-01-15T14:45:00Z"
+    }
+  ]
+}

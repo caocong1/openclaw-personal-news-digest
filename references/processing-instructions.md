@@ -822,6 +822,58 @@ During each pipeline run, accumulate per-source counters alongside aggregate met
 
 ---
 
+## Section 5A: Unified Alert Decision Tree (ALERT-01, ALERT-03, ALERT-06)
+
+Single decision tree for all alert eligibility checks during Quick-Check flow. This replaces scattered alert logic.
+
+### Decision Tree
+
+1. Item has `importance_score >= 0.85`?
+   NO  -> skip (not breaking news)
+   YES -> continue
+
+2. Item `form_type` is `"news"` or `"announcement"`?
+   NO  -> skip (only factual content triggers alerts)
+   YES -> continue
+
+3. Read `data/alerts/alert-state-{today YYYY-MM-DD}.json`
+   If file not found: initialize `{ _schema_v: 1, date: today, alerts_sent: 0, max_alerts: 3, alerted_urls: [], alert_log: [] }`
+
+4. `alerts_sent >= max_alerts` (3)?
+   YES -> skip (daily cap reached)
+   NO  -> continue
+
+5. Item URL already in `alerted_urls`?
+   YES -> skip (URL dedup)
+   NO  -> continue
+
+6. Item has `event_id` AND event has `last_alerted_at` (not null)?
+   YES -> DELTA ALERT path (see Section 5B in Plan 10-02)
+   NO  -> STANDARD ALERT path (step 7)
+
+STANDARD ALERT (ALERT-06 fallback):
+7. Generate alert using Breaking News Alert template from `references/output-templates.md`
+8. Update alert-state file:
+   - Increment `alerts_sent`
+   - Append URL to `alerted_urls`
+   - Append entry to `alert_log`: `{ news_id, event_id: item.event_id or null, url, title, importance_score, alert_type: "standard", sent_at: now ISO8601 }`
+9. Atomic write alert-state file (tmp + rename)
+
+### DailyMetrics Derivation
+
+DailyMetrics fields `alerts_sent_today` and `alerted_urls` become DERIVED from the alert-state file:
+- At metrics write time (Output Phase step 7), read alert-state file and copy values
+- Quick-Check flow reads/writes alert-state file directly, NOT DailyMetrics
+- This prevents race conditions between quick-check runs and daily pipeline runs
+
+### Backward Compatibility
+
+- Existing DailyMetrics `alerts_sent_today` and `alerted_urls` fields are preserved for backward compat
+- Old consumers reading DailyMetrics still get correct values (derived from alert-state)
+- If alert-state file does not exist (first run or pre-Phase-10 state), fall back to DailyMetrics values
+
+---
+
 ## Section 6: Source Auto-Demotion and Recovery (SRC-09)
 
 Implements source auto-demotion and auto-recovery based on rolling quality_score thresholds.

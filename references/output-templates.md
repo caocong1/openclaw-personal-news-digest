@@ -96,8 +96,9 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 
 **Additional safeguards:**
 - Only items classified with `form_type: "news"` or `form_type: "announcement"` qualify (no opinion/analysis alerts)
-- Maximum 3 alerts per day. If 3 alerts have already been sent today (tracked in daily metrics `alerts_sent_today`), skip further alerts.
-- Same-URL dedup: Do not alert for an item whose URL was already alerted (track in metrics `alerted_urls` array)
+- Maximum 3 alerts per day. Read `data/alerts/alert-state-{today}.json` to check `alerts_sent >= max_alerts`. Alert-state file is authoritative (not DailyMetrics).
+- Same-URL dedup: Do not alert for an item whose URL is in `alerted_urls` array of the alert-state file.
+- See `references/processing-instructions.md` Section 5A for the full unified alert decision tree.
 
 **Alert format:**
 ```

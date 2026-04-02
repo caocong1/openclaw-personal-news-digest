@@ -446,6 +446,39 @@ Structured alert output from `scripts/health-check.sh`. Can be collected into `D
 
 ---
 
+## AlertState
+
+Daily alert tracking state, stored at `data/alerts/alert-state-YYYY-MM-DD.json`. Separate from DailyMetrics -- this is the authoritative source for alert tracking across multiple quick-check runs per day.
+
+```json
+{
+  "_schema_v": 1,
+  "date": "YYYY-MM-DD",
+  "alerts_sent": 0,
+  "max_alerts": 3,
+  "alerted_urls": [],
+  "alert_log": [
+    {
+      "news_id": "string",
+      "event_id": "string or null",
+      "url": "string",
+      "title": "string",
+      "importance_score": 0.0,
+      "alert_type": "standard|delta",
+      "sent_at": "ISO8601"
+    }
+  ]
+}
+```
+
+**Field notes:**
+- `max_alerts`: Fixed at 3 (daily cap)
+- `alerted_urls`: Array of URLs already alerted today for same-URL dedup
+- `alert_log`: Audit trail of all alerts sent today
+- If file not found for today, initialize with `alerts_sent: 0, max_alerts: 3, alerted_urls: [], alert_log: []`
+
+---
+
 ## Preferences Auto-Update Fields (ANTI-05)
 
 The following fields in `config/preferences.json` are auto-managed by the quota algorithm (see `references/processing-instructions.md` Section 4, Step 7):
@@ -484,6 +517,7 @@ All fields added across phases, with version, default, and migration behavior.
 | `noise_filter_suppressed` | DailyMetrics.items | Phase 9 | - | `0` | Count of items filtered by noise/importance |
 | `noise_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source noise regex patterns |
 | `title_discard_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source title discard patterns |
+| `alert_log` | AlertState | Phase 10 | v1 | `[]` | Audit trail of alerts sent today |
 
 ### Schema Change Procedure
 
