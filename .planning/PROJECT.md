@@ -34,6 +34,8 @@
 - ✓ 缓存版本控制（prompt_version 驱动缓存失效）— v2.0 Phase 8
 - ✓ 写入前质量契约（UTF-8 清洗、标题/URL/ID 校验）— v2.0 Phase 8
 - ✓ 引导启动验证 + 确定性测试夹具（8 个场景文件）— v2.0 Phase 8
+- ✓ 噪声过滤（预分类模式匹配 + 分类后重要性阈值）— v2.0 Phase 9
+- ✓ 分类提示词强化（低端校准、消歧规则、反例）— v2.0 Phase 9
 
 ### Active
 
@@ -123,4 +125,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-02 after Phase 08 (Output Quality Foundation & Infrastructure) complete — Chinese localization, cache versioning, pre-write quality contract, bootstrap verification, test fixtures*
+*Last updated: 2026-04-02 after Phase 09 (Noise Floor & Classification Quality) complete — pre/post-classify noise filtering, classification prompt hardening with negative examples*
