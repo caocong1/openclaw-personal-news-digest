@@ -780,6 +780,82 @@ After output and metrics are written:
 
 ---
 
+## Section 4A: Cross-Digest Repetition Penalty (DEDUP-02)
+
+Applied during Output Phase, AFTER computing final_score (Section 4 scoring) and BEFORE quota allocation (Section 4 Step 1 through Step 3). This penalizes events that appear in consecutive digests without new developments.
+
+### When to Run
+
+After all items are scored (final_score computed), before quota group assignment.
+
+### Penalty Procedure
+
+1. Read `data/digest-history.json`
+   - If file not found or runs array is empty: skip penalty entirely (no history to compare against)
+2. Get `last_run = runs[runs.length - 1]` (most recent run)
+3. Get `last_snapshot = last_run.event_timeline_snapshot`
+
+4. For each scored item where `item.event_id` is not null:
+   a. Look up `item.event_id` in `last_snapshot`
+   b. If NOT found in snapshot: no penalty (first appearance in digest)
+   c. If found in snapshot:
+      - Read current event from `data/events/active.json`
+      - Compare `current_event.timeline.length` vs `snapshot[event_id].timeline_count`
+      - If `current_event.timeline.length == snapshot.timeline_count`:
+        -> No new progress. Apply penalty: `item.final_score *= 0.7`
+      - If `current_event.timeline.length > snapshot.timeline_count`:
+        -> New progress exists. No penalty.
+
+5. After quota allocation is complete (items selected for digest), count `repeat_suppressed_count`:
+   - For each item that received the 0.7x penalty in step 4c above:
+     - If the item's post-penalty final_score caused it to fall below the selection threshold (i.e., it was NOT selected for the digest):
+       -> Increment `repeat_suppressed_count`
+   - Items that received the penalty but were STILL selected for the digest do NOT count as "suppressed"
+   - This definition aligns with DEDUP-03: "suppressed" means actually excluded from the digest due to the penalty
+
+### Key Design Rules
+
+- The 0.7 multiplier is applied ONCE (not compounding). It only compares against the LAST digest run, not all previous runs.
+- Items with genuinely high importance (0.85+) still score competitively even with penalty: 0.85 * 0.25 weight = 0.2125 for importance dimension alone, plus other dimensions.
+- The penalty applies to `final_score` (the already-computed weighted sum), not to any individual dimension.
+- Items penalized may still be selected if their penalized score remains above the selection threshold.
+- `repeat_suppressed_count` tracks ONLY items that were both penalized AND excluded from the digest as a result. This is the count shown in the transparency footer.
+
+### Interaction with Other Steps
+
+- Runs AFTER: Section 4 scoring (final_score computed)
+- Runs BEFORE: Section 4 Step 1-3 quota allocation
+- Does NOT interact with noise filter (Section 0E) -- items already filtered by noise never reach scoring
+- Does NOT interact with stale event filter (ANTI-03 Step 5) -- that filter checks 3-day consecutive push, this checks timeline progress
+
+---
+
+## Section 4B: DigestHistory Write (DEDUP-01)
+
+At the END of Output Phase, after digest is written to output/latest-digest.md and before lock release.
+
+### Write Procedure
+
+1. Read `data/digest-history.json` (or initialize `{ _schema_v: 1, runs: [] }` if not found)
+2. Build `event_timeline_snapshot` from the current digest's selected items:
+   - For each selected item with a non-null `event_id`:
+     - Read the event from `data/events/active.json`
+     - Record: `event_id -> { timeline_count: event.timeline.length, last_news_id: event.timeline[last].news_id, last_timestamp: event.timeline[last].timestamp }`
+3. Build `selected_event_ids`: deduplicated list of event_ids from selected items
+4. Append new run entry:
+   ```json
+   {
+     "run_id": "{current run_id}",
+     "date": "{today YYYY-MM-DD}",
+     "event_timeline_snapshot": { ... },
+     "selected_event_ids": [ ... ]
+   }
+   ```
+5. If `runs.length > 5`: remove `runs[0]` (oldest)
+6. Atomic write `data/digest-history.json` (tmp + rename)
+
+---
+
 ## Section 5: Metrics Collection for Transparency
 
 During each pipeline run, track these counters for the transparency footer and breaking news alerting:

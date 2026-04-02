@@ -488,6 +488,38 @@ Daily alert tracking state, stored at `data/alerts/alert-state-YYYY-MM-DD.json`.
 
 ---
 
+## DigestHistory
+
+Tracks recent digest runs with event timeline snapshots to detect cross-digest repetition. Stored at `data/digest-history.json`.
+
+```json
+{
+  "_schema_v": 1,
+  "runs": [
+    {
+      "run_id": "run-20260402-080000-abcd",
+      "date": "2026-04-02",
+      "event_timeline_snapshot": {
+        "evt-12345678": {
+          "timeline_count": 5,
+          "last_news_id": "abc123",
+          "last_timestamp": "ISO8601"
+        }
+      },
+      "selected_event_ids": ["evt-12345678", "evt-87654321"]
+    }
+  ]
+}
+```
+
+**Field notes:**
+- Rolling window: keep only last 5 runs. On write, if `runs.length > 5`, remove oldest entry (index 0).
+- `event_timeline_snapshot`: Captures `timeline.length` and last entry per event at digest time. Used to detect whether an event has new progress since last digest.
+- `selected_event_ids`: Event IDs of items selected for this digest (for tracking which events appeared).
+- If file not found, initialize with `{ _schema_v: 1, runs: [] }`.
+
+---
+
 ## Preferences Auto-Update Fields (ANTI-05)
 
 The following fields in `config/preferences.json` are auto-managed by the quota algorithm (see `references/processing-instructions.md` Section 4, Step 7):
@@ -530,6 +562,7 @@ All fields added across phases, with version, default, and migration behavior.
 | `last_alerted_at` | Event | Phase 10 | v3 | `null` | Timestamp of last alert for this event |
 | `last_alert_news_id` | Event | Phase 10 | v3 | `null` | News ID that triggered last alert |
 | `last_alert_brief` | Event | Phase 10 | v3 | `null` | Summary of last alert content |
+| `runs` | DigestHistory | Phase 10 | v1 | `[]` | Rolling 5-run digest history with event snapshots |
 
 ### Schema Change Procedure
 

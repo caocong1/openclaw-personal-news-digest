@@ -1,0 +1,80 @@
+{
+  "_schema_v": 1,
+  "runs": [
+    {
+      "run_id": "run-20260410-080000-ab01",
+      "date": "2026-04-10",
+      "event_timeline_snapshot": {
+        "evt-fix00001": {
+          "timeline_count": 2,
+          "last_news_id": "fix01a2b3c4d5e6",
+          "last_timestamp": "2026-01-01T00:00:00Z"
+        }
+      },
+      "selected_event_ids": ["evt-fix00001"]
+    },
+    {
+      "run_id": "run-20260411-080000-cd02",
+      "date": "2026-04-11",
+      "event_timeline_snapshot": {
+        "evt-fix00001": {
+          "timeline_count": 2,
+          "last_news_id": "fix01a2b3c4d5e6",
+          "last_timestamp": "2026-01-01T00:00:00Z"
+        },
+        "evt-fix00002": {
+          "timeline_count": 1,
+          "last_news_id": "fix02newevt0001",
+          "last_timestamp": "2026-01-10T00:00:00Z"
+        }
+      },
+      "selected_event_ids": ["evt-fix00001", "evt-fix00002"]
+    },
+    {
+      "run_id": "run-20260412-080000-ef03",
+      "date": "2026-04-12",
+      "event_timeline_snapshot": {
+        "evt-fix00001": {
+          "timeline_count": 3,
+          "last_news_id": "fix01newupdate1",
+          "last_timestamp": "2026-04-12T06:00:00Z"
+        },
+        "evt-fix00002": {
+          "timeline_count": 1,
+          "last_news_id": "fix02newevt0001",
+          "last_timestamp": "2026-01-10T00:00:00Z"
+        }
+      },
+      "selected_event_ids": ["evt-fix00001", "evt-fix00002"]
+    },
+    {
+      "run_id": "run-20260413-080000-gh04",
+      "date": "2026-04-13",
+      "event_timeline_snapshot": {
+        "evt-fix00001": {
+          "timeline_count": 3,
+          "last_news_id": "fix01newupdate1",
+          "last_timestamp": "2026-04-12T06:00:00Z"
+        }
+      },
+      "selected_event_ids": ["evt-fix00001"]
+    },
+    {
+      "run_id": "run-20260414-080000-ij05",
+      "date": "2026-04-14",
+      "event_timeline_snapshot": {
+        "evt-fix00001": {
+          "timeline_count": 3,
+          "last_news_id": "fix01newupdate1",
+          "last_timestamp": "2026-04-12T06:00:00Z"
+        },
+        "evt-fix00003": {
+          "timeline_count": 2,
+          "last_news_id": "fix03brandnew01",
+          "last_timestamp": "2026-04-14T07:00:00Z"
+        }
+      },
+      "selected_event_ids": ["evt-fix00001", "evt-fix00003"]
+    }
+  ]
+}

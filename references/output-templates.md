@@ -149,6 +149,13 @@ Appended at the bottom of every daily digest output:
 统计: {source_count} 个来源已检查 | {items_processed} 条已处理 | {llm_calls} 次 LLM 调用 | {cache_hits} 次缓存命中
 ```
 
+If `repeat_suppressed_count > 0`, append on a new line:
+```
+已抑制重复: {repeat_suppressed_count} 条 (无新进展的事件)
+```
+
+Where `repeat_suppressed_count` is the count of items that received the 0.7x penalty AND were excluded from the digest (from Section 4A step 5).
+
 Where:
 - `source_count`: Number of enabled sources in sources.json at time of run
 - `items_processed`: Number of items that reached processing_status "complete" today
