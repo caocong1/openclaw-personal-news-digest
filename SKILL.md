@@ -51,13 +51,14 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 7. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics. Include `quota_distribution`, `category_proportions`, `source_proportions`, and `per_source` (per-source pipeline counters) in daily metrics.
 8. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Append to digest output.
 9. **Release lock**: Delete `{baseDir}/data/.lock`.
+10. **Deliver output**: Read `{baseDir}/output/latest-digest.md` and output its full content as your reply. Do not summarize or paraphrase — output the complete digest verbatim so it reaches the delivery channel.
 
 ## Quick-Check Flow (breaking news)
 
 Triggered by quick-check cron (every 2h):
 1. Run Collection + Processing phases (same as daily).
 2. **Breaking news scan**: Check today's items for `importance_score >= 0.85`, filtered by `form_type: "news"/"announcement"`, capped at 3 alerts/day, deduped by URL. See `{baseDir}/references/output-templates.md` "Breaking News Alert" and `{baseDir}/references/processing-instructions.md` "Metrics Collection" for thresholds and tracking fields (`alerts_sent_today`, `alerted_urls`).
-3. If qualifying items: generate alert, deliver, update metrics. If none: no output.
+3. If qualifying items: generate alert, write to `{baseDir}/output/latest-alert.md`, update metrics, and output the full alert text as your reply. If none: reply with nothing (empty response).
 4. Release lock.
 
 ## Standing Orders
