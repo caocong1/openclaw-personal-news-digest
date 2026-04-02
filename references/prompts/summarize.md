@@ -1,3 +1,4 @@
+<!-- prompt_version: summarize-v1 -->
 # Summarization Prompt Template
 
 ## Instructions

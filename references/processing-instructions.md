@@ -112,7 +112,8 @@ For each item in the batch:
 1. Compute `url_sha = SHA256(normalized_url)[:16]` (same hash as dedup-index)
 2. Look up `url_sha` in `data/cache/classify-cache.json` (or `data/cache/summary-cache.json` for the summarize step)
 3. **If found AND `(now - cached_at) < 7 days`:**
-   - Apply cached result to item (set `categories`, `importance_score`, `form_type`, `tags` for classify; set `content_summary` for summarize)
+   a. **Version check:** Compare `entry.prompt_version` (default `"legacy"` if field missing) against the current prompt version (read from the `<!-- prompt_version: ... -->` comment at top of the prompt file). If versions differ, treat as cache miss: delete the stale entry, keep item in batch.
+   b. If version matches: Apply cached result to item (set `categories`, `importance_score`, `form_type`, `tags` for classify; set `content_summary` for summarize)
    - Remove item from the LLM batch (skip the call)
    - Increment run metrics: `cache_hits += 1`
 4. **If found but `cached_at > 7 days`:**
@@ -124,7 +125,7 @@ For each item in the batch:
 ### Cache Write (after each LLM batch)
 
 1. For each item that received a fresh LLM result:
-   - Write to cache: `url_sha -> { result fields, cached_at: now ISO8601 }`
+   - Write to cache: `url_sha -> { result fields, cached_at: now ISO8601, prompt_version: current_prompt_version }`
 2. Atomic write the cache file (write to tmp, then rename)
 
 ---

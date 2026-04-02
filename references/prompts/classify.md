@@ -1,3 +1,4 @@
+<!-- prompt_version: classify-v1 -->
 # Classification Prompt Template
 
 ## Instructions
