@@ -154,6 +154,63 @@ If the OpenClaw platform supports model selection via prompt parameters or syste
 
 ---
 
+## Section 0D: Pre-Write Quality Contract (QUAL-01)
+
+Validation rules applied before ANY write to JSONL files. Referenced by SKILL.md Collection Phase step 7 and Processing Phase step 7.
+
+This contract applies at two points:
+- **Collection Phase step 7**: Before appending new items to `data/news/YYYY-MM-DD.jsonl`
+- **Processing Phase step 7**: Before writing updated items back to JSONL
+
+### Validation Rules
+
+For each item about to be written, apply ALL checks in order. If ANY check fails, skip the item entirely (do not write). Log a warning with the item URL and failure reason.
+
+#### Rule 1: UTF-8 Sanitization
+
+Strip the following characters from ALL string fields (title, content_summary, url, source_id):
+- Null bytes: U+0000
+- Control characters: U+0001 through U+001F, EXCEPT U+000A (newline) and U+0009 (tab)
+- Lone surrogates: U+D800 through U+DFFF
+
+Replace stripped characters with empty string (remove, do not substitute).
+
+After stripping, if the resulting string is unchanged, proceed. If characters were stripped, use the cleaned version and log: `"UTF-8 sanitized: removed {N} invalid characters from item {url}"`
+
+#### Rule 2: Title Validation
+
+- `title` must be non-empty after trimming whitespace
+- `title` must not exceed 500 characters
+- If title is empty after trimming: **skip item entirely** (do not write). Log: `"Skipped item: empty title after trim ({url})"`
+- If title exceeds 500 characters: **skip item entirely**. Log: `"Skipped item: title exceeds 500 chars ({length} chars) ({url})"`
+
+#### Rule 3: URL Validation
+
+- `normalized_url` must be non-empty
+- `normalized_url` must start with `https://`
+- If validation fails: **skip item entirely**. Log: `"Skipped item: invalid URL ({url})"`
+
+#### Rule 4: ID Consistency
+
+- Verify: `id == SHA256(normalized_url)[:16]`
+- If mismatch: **skip item entirely**. Log: `"Skipped item: ID mismatch (expected {expected}, got {actual}) ({url})"`
+
+### Failure Behavior
+
+- Failed items are NOT written to JSONL
+- Failed items do NOT count toward metrics (fetched, processed, etc.)
+- Warnings are logged but do NOT stop the pipeline
+- Other valid items in the same batch proceed normally
+
+### Interaction with Existing Steps
+
+- This contract runs AFTER URL normalization (Collection step 5) and AFTER dedup check (Collection step 6)
+- This contract runs BEFORE the atomic write operation
+- Items that fail quality checks in Collection Phase will never reach Processing Phase
+- Items that fail quality checks in Processing Phase after LLM processing represent wasted LLM budget; the pre-collection check should catch most issues, but post-processing validation guards against LLM-introduced corruption
+
+---
+
 ## Section 1: Batch LLM Processing
 
 ### Collecting Unprocessed Items
