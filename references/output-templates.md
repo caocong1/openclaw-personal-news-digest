@@ -11,26 +11,25 @@
 ### {title}
 {2-3 sentence Chinese summary}
 来源: {source_name} | {form_type display label} | 重要性: {importance_score}
-{If exploration/hotspot slot: "推荐理由: {reason}"}
+入选依据: {primary_driver_label} | 配额: {quota_group} | 证据: {signal_1}; {signal_2}; {signal_3}
 
 ## 邻近动态
 
 {Neighboring interest news, shorter format:}
 - **{title}** -- {1 sentence summary} ({source_name})
+  入选依据: {primary_driver_label} | 配额: {quota_group} | 证据: {signal_1}; {signal_2}; {signal_3}
 
 ## 今日热点
 
 {Public trending news, even if outside user's core interests:}
 - **{title}** -- {1 sentence summary} ({source_name})
-  推荐理由: {reason}
-  {Examples: "High-importance event (score: {importance_score})" / "Widely covered across {N} sources" / "Hotspot injection: importance >= 0.8"}
+  入选依据: {primary_driver_label} | 配额: {quota_group} | 证据: {signal_1}; {signal_2}; {signal_3}
 
 ## 探索发现
 
-{Exploration content with recommendation reasons:}
+{Exploration content with deterministic selection evidence:}
 - **{title}** -- {1 sentence summary}
-  推荐理由: {reason}
-  {Examples: "Low-exposure category -- broadening your perspective" / "Trending topic outside your usual interests" / "Cross-domain signal worth noting"}
+  入选依据: {primary_driver_label} | 配额: {quota_group} | 证据: {signal_1}; {signal_2}; {signal_3}
 
 ## 事件追踪
 
@@ -49,7 +48,7 @@ LLM 调用: {llm_calls} | 缓存命中: {cache_hits}
 Append Transparency Footer (see "Transparency Footer" section below) after all content sections.
 ```
 
-**OUT-04: Recommendation reasons are mandatory for exploration and hotspot items.** They explain WHY the item was included despite not matching the user's core interests. Core Focus and Adjacent Dynamics items do NOT include recommendation reasons (these match user preferences, reasons are self-evident).
+**OUT-04: Structured selection evidence is mandatory for every selected item.** Core Focus, Adjacent Dynamics, Today's Hotspot, and Exploration all render the same deterministic evidence line using `primary_driver_label`, `quota_group`, and concrete `signal_n` values.
 
 ---
 

@@ -747,15 +747,35 @@ After final selection:
 
 Each selected item gets a `quota_group` tag: `"core"` / `"adjacent"` / `"hotspot"` / `"explore"`. This tag is used by the output template to assign items to the correct digest section.
 
+### Selection Evidence Derivation
+
+Derive `recommendation_evidence` during output selection after quota assignment and before digest assembly.
+
+Rules:
+1. Every selected item gets `recommendation_evidence`.
+2. Derive it from actual values already available in scoring and quota allocation.
+3. Set `quota_group` from the item's assigned digest slot.
+4. Set `primary_driver` using the legal mapping in `references/scoring-formula.md` `## Selection Evidence Mapping`.
+5. Populate `signals` with concrete `key=value` strings only.
+6. Include at least these three signals for every selected item:
+   - `importance_score=<value>`
+   - `quota_group=<value>`
+   - `repeat_penalty=<true|false>`
+7. When available, also include:
+   - `topic_weight=<value>`
+   - `event_boost=<value>`
+   - `source_quality=<value>`
+8. do not use the LLM to generate recommendation evidence text.
+
 ### Digest Assembly
 
 1. Read `references/output-templates.md` for the Markdown format
 2. Fill sections with assigned items using the template structure
 3. For each item:
-   - **Core Focus**: Full format (title, 2-3 sentence summary, source, form_type, importance)
-   - **Adjacent Dynamics**: Compact format (title, 1-sentence summary, source)
-   - **Today's Hotspot**: Compact format (title, 1-sentence summary, source)
-   - **Exploration**: Compact format with recommendation reason
+   - **Core Focus**: Full format (title, 2-3 sentence summary, source, form_type, importance, structured evidence line)
+   - **Adjacent Dynamics**: Compact format (title, 1-sentence summary, source, structured evidence line)
+   - **Today's Hotspot**: Compact format (title, 1-sentence summary, source, structured evidence line)
+   - **Exploration**: Compact format with structured evidence line
 4. Omit sections with 0 items (do not render empty section headers)
 5. Omit **Event Tracking** section in MVP (no active events)
 6. Append footer with run statistics

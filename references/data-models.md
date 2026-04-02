@@ -38,7 +38,17 @@ Each news item collected from a source.
   "processing_status": "raw|partial|complete|noise_filtered",
   "duplicate_of": null,
   "digest_eligible": true,
-  "_schema_v": 4
+  "recommendation_evidence": {
+    "quota_group": "core|adjacent|hotspot|explore",
+    "primary_driver": "topic_match|high_importance|event_followup|diversity_balance|hotspot_injection|exploration_balance",
+    "signals": [
+      "importance_score=0.85",
+      "topic_weight=0.82",
+      "source_quality=0.74",
+      "repeat_penalty=false"
+    ]
+  },
+  "_schema_v": 5
 }
 ```
 
@@ -50,6 +60,9 @@ Each news item collected from a source.
 - `categories.primary`: Must be one of the 12 IDs defined in `config/categories.json`
 - `language`: Detected during title dedup Stage A (see `references/processing-instructions.md` Section 1A). CJK character majority (>50%) -> `"zh"`, otherwise `"en"`.
 - `duplicate_of`: If `dedup_status` is `url_dup` or `title_dup`, contains the `id` of the primary/original item
+- `recommendation_evidence`: Optional explainability object derived during output selection, not by the summarize prompt
+- `recommendation_evidence.signals`: Concrete `key=value` strings only
+- `recommendation_evidence.primary_driver`: One of `topic_match`, `high_importance`, `event_followup`, `diversity_balance`, `hotspot_injection`, or `exploration_balance`
 
 **Defaults for missing fields (older schema versions):**
 - `content_hash`: `null`
@@ -60,6 +73,7 @@ Each news item collected from a source.
 - `dedup_status`: `"unique"` (for records created before title dedup was added)
 - `language`: `"zh"` (for records created before language detection was added)
 - `digest_eligible`: `true` (items from v3 and earlier are eligible since they passed the old pipeline)
+- `recommendation_evidence`: `null` (older records default to no deterministic selection evidence)
 
 ---
 
@@ -596,7 +610,7 @@ Authoritative record of all data model versions, their current `_schema_v`, and 
 
 | Model | Current Version | History |
 |-------|----------------|---------|
-| NewsItem | v4 | v1: initial fields (Phase 0). v2: +content_hash, processing_status, duplicate_of (Phase 0). v3: +dedup_status, language (Phase 2). v4: +digest_eligible (Phase 9). |
+| NewsItem | v5 | v1: initial fields (Phase 0). v2: +content_hash, processing_status, duplicate_of (Phase 0). v3: +dedup_status, language (Phase 2). v4: +digest_eligible (Phase 9). v5: +recommendation_evidence (Phase 12). |
 | Event | v3 | v1: initial fields (Phase 0). v2: +keywords, timeline (Phase 2). v3: +last_alerted_at, last_alert_news_id, last_alert_brief (Phase 10). |
 | CacheEntry | v2 | v1: initial fields (Phase 0). v2: +prompt_version (Phase 8). |
 | Preferences | v2 | v1: initial 5-layer model (Phase 0). v2: +depth_preference, judgment_angles (Phase 3). |
@@ -635,6 +649,7 @@ All fields added across phases, with version, default, and migration behavior.
 | `per_source` | DailyMetrics | Phase 6 | - | `{}` | Per-source pipeline counters |
 | `prompt_version` | CacheEntry | Phase 8 | v2 | `"legacy"` | Prompt version for cache invalidation |
 | `digest_eligible` | NewsItem | Phase 9 | v4 | `true` | Noise filter eligibility flag |
+| `recommendation_evidence` | NewsItem | Phase 12 | v5 | `null` | Deterministic output-selection explainability object |
 | `noise_filter_suppressed` | DailyMetrics.items | Phase 9 | - | `0` | Count of items filtered by noise/importance |
 | `noise_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source noise regex patterns |
 | `title_discard_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source title discard patterns |

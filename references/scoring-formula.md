@@ -140,6 +140,24 @@ event_boost = 0    otherwise
 
 ---
 
+## Selection Evidence Mapping
+
+`recommendation_evidence` may only use deterministic scoring and quota signals already produced by the pipeline.
+
+**Legal `primary_driver` values:**
+- `topic_match`: Use for core or adjacent items selected because topic affinity was the dominant factor.
+- `high_importance`: Use when strong `importance_score` was the primary reason an item stayed in the selected set.
+- `event_followup`: Use when event continuity or `event_boost` materially contributed to selection.
+- `diversity_balance`: Use when reverse-diversity replacement changed the final selection set.
+- `hotspot_injection`: Use when Step 6 hotspot injection forced inclusion.
+- `exploration_balance`: Use for exploration quota selections.
+
+**Legal evidence signals:**
+- Always allowed: `importance_score`, `quota_group`, `repeat_penalty`
+- Include when available from scored/quota state: `topic_weight`, `event_boost`, `source_quality`
+
+---
+
 ## Phase Activation Status
 
 **Phase 0 (MVP):** feedback_boost and event_boost were both hardcoded to 0.

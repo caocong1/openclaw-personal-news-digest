@@ -1,0 +1,67 @@
+{
+  "items": [
+    {
+      "id": "itm-core-001",
+      "title": "Model context window support expands in core AI tooling",
+      "quota_group": "core",
+      "recommendation_evidence": {
+        "quota_group": "core",
+        "primary_driver": "topic_match",
+        "signals": [
+          "importance_score=0.78",
+          "quota_group=core",
+          "repeat_penalty=false",
+          "topic_weight=0.91",
+          "source_quality=0.84"
+        ]
+      }
+    },
+    {
+      "id": "itm-adjacent-001",
+      "title": "Cloud pricing update affects adjacent infrastructure coverage",
+      "quota_group": "adjacent",
+      "recommendation_evidence": {
+        "quota_group": "adjacent",
+        "primary_driver": "event_followup",
+        "signals": [
+          "importance_score=0.74",
+          "quota_group=adjacent",
+          "repeat_penalty=false",
+          "event_boost=0.50",
+          "source_quality=0.77"
+        ]
+      }
+    },
+    {
+      "id": "itm-hotspot-001",
+      "title": "Security breach disclosure becomes the day's forced hotspot",
+      "quota_group": "hotspot",
+      "recommendation_evidence": {
+        "quota_group": "hotspot",
+        "primary_driver": "hotspot_injection",
+        "signals": [
+          "importance_score=0.93",
+          "quota_group=hotspot",
+          "repeat_penalty=false",
+          "source_quality=0.72"
+        ]
+      }
+    },
+    {
+      "id": "itm-explore-001",
+      "title": "Adjacent robotics funding round enters exploration quota",
+      "quota_group": "explore",
+      "recommendation_evidence": {
+        "quota_group": "explore",
+        "primary_driver": "exploration_balance",
+        "signals": [
+          "importance_score=0.66",
+          "quota_group=explore",
+          "repeat_penalty=true",
+          "topic_weight=0.42",
+          "source_quality=0.70"
+        ]
+      }
+    }
+  ]
+}
