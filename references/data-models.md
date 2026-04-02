@@ -554,6 +554,28 @@ The following fields in `config/preferences.json` are auto-managed by the quota 
 
 ---
 
+## Schema Version Registry
+
+Authoritative record of all data model versions, their current `_schema_v`, and change history.
+
+| Model | Current Version | History |
+|-------|----------------|---------|
+| NewsItem | v4 | v1: initial fields (Phase 0). v2: +content_hash, processing_status, duplicate_of (Phase 0). v3: +dedup_status, language (Phase 2). v4: +digest_eligible (Phase 9). |
+| Event | v3 | v1: initial fields (Phase 0). v2: +keywords, timeline (Phase 2). v3: +last_alerted_at, last_alert_news_id, last_alert_brief (Phase 10). |
+| CacheEntry | v2 | v1: initial fields (Phase 0). v2: +prompt_version (Phase 8). |
+| Preferences | v2 | v1: initial 5-layer model (Phase 0). v2: +depth_preference, judgment_angles (Phase 3). |
+| AlertState | v1 | v1: initial -- daily cap, URL dedup, alert_log (Phase 10). |
+| DigestHistory | v1 | v1: initial -- rolling 5-run window with event timeline snapshots (Phase 10). |
+| DailyMetrics | n/a | No `_schema_v` field (flat evolving schema). Field additions tracked in New Fields Registry below. |
+| Source | n/a | No `_schema_v` field (config model). Field additions tracked in New Fields Registry below. |
+| AlertCondition | v1 | v1: initial -- structured health-check alert output (Phase 2). |
+| FeedbackEntry | v1 | v1: initial -- 8 feedback types with disambiguation (Phase 1). |
+| DedupIndex | n/a | No `_schema_v` field (index structure, rebuilt from JSONL). |
+
+**Maintenance:** When incrementing any model's `_schema_v`, update both this registry AND the New Fields Registry table below. Both must stay in sync.
+
+---
+
 ## Bootstrap & Migration
 
 ### New Fields Registry
