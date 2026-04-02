@@ -27,7 +27,7 @@
 - [ ] **Phase 9: Noise Floor & Classification Quality** — Pre/post-classify noise filtering, classification prompt hardening [M]
 - [x] **Phase 10: Dedup Hardening & Alert Fatigue** — Alert daily cap, delta alerts, cross-digest repetition penalty, event memory [L] (completed 2026-04-02)
 - [x] **Phase 11: Observability & Data Integrity** — Correct source_count, run_log, schema registry, diagnostics command [M] (completed 2026-04-02)
-- [ ] **Phase 12: Interaction Surface & Deployment UX** — Scheduling profiles, source status, recommendation explainability, rolling coverage [L]
+- [x] **Phase 12: Interaction Surface & Deployment UX** — Scheduling profiles, source status, recommendation explainability, rolling coverage [L] (completed 2026-04-02)
 
 ## Phase Details
 
@@ -133,7 +133,7 @@ Plans:
 Plans:
 - [x] 12-01: TBD
 - [x] 12-02: TBD
-- [ ] 12-03: TBD
+- [x] 12-03: TBD
 
 ## Progress
 
@@ -153,4 +153,4 @@ Plans:
 | 9. Noise Floor & Classification Quality | v2.0 | 2/3 | In Progress|  |
 | 10. Dedup Hardening & Alert Fatigue | v2.0 | 3/3 | Complete    | 2026-04-02 |
 | 11. Observability & Data Integrity | v2.0 | 3/3 | Complete    | 2026-04-02 |
-| 12. Interaction Surface & Deployment UX | v2.0 | 2/3 | In Progress|  |
+| 12. Interaction Surface & Deployment UX | v2.0 | 3/3 | Complete   | 2026-04-02 |

@@ -73,7 +73,7 @@ Requirements for quality & robustness release. Each maps to roadmap phases.
 - [x] **INTERACT-02**: Source status command shows per-source health and enable/disable state
 - [x] **INTERACT-03**: Recommendations include structured evidence for why items were selected
 - [x] **INTERACT-04**: NL intent recognition table in feedback-rules.md (no duplication in SKILL.md)
-- [ ] **INTERACT-05**: Rolling coverage collapses events with >5 items/day into timeline view
+- [x] **INTERACT-05**: Rolling coverage collapses events with >5 items/day into timeline view
 
 ## Future Requirements
 
@@ -139,7 +139,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INTERACT-02 | Phase 12 | Complete |
 | INTERACT-03 | Phase 12 | Complete |
 | INTERACT-04 | Phase 12 | Complete |
-| INTERACT-05 | Phase 12 | Pending |
+| INTERACT-05 | Phase 12 | Complete |
 
 **Coverage:**
 - v2.0 requirements: 38 total
