@@ -45,14 +45,16 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 ## Output Phase
 
 1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items (all 7 dimensions active, including event_boost from `data/events/active.json`), sort by `final_score` descending. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool. Exclude items with `digest_eligible: false` from the scoring pool.
+1b. **Cross-digest repetition penalty**: Read `{baseDir}/data/digest-history.json`. For events with no new timeline progress since last digest, apply 0.7x penalty to final_score. After quota allocation, count repeat_suppressed_count (penalized items that were excluded from the digest). See `{baseDir}/references/processing-instructions.md` Section 4A.
 2. **Quality gate**: If < 3 items, output shortened version. If 0 items, skip output entirely.
 3. **Quota allocation**: Assign items to sections (Core/Adjacent/Hotspot/Explore) per `{baseDir}/references/processing-instructions.md` Section 4 quota algorithm. Tag each item with `quota_group`.
 4. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.
 4b. **Weekly report** (if triggered by weekly cron): Read `{baseDir}/references/processing-instructions.md` Section 7. Aggregate 7 days of data, apply weekly quota (40/20/20/20), use strong model for synthesis, write to `{baseDir}/output/latest-weekly.md`.
 5. **Event Tracking section**: For events with new items merged today, build timeline view per `{baseDir}/references/output-templates.md` Event Tracking section.
 6. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
-7. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics. Include `quota_distribution`, `category_proportions`, `source_proportions`, and `per_source` (per-source pipeline counters) in daily metrics. Derive `alerts_sent_today` and `alerted_urls` from `{baseDir}/data/alerts/alert-state-{today}.json` (read file, copy `alerts_sent` and `alerted_urls` values). If alert-state file does not exist, use defaults (0 and []).
-8. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Append to digest output.
+6b. **Write digest history**: Snapshot event timelines for selected items, append to `{baseDir}/data/digest-history.json` (rolling 5-run window). See `{baseDir}/references/processing-instructions.md` Section 4B.
+7. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics. Include `quota_distribution`, `category_proportions`, `source_proportions`, and `per_source` (per-source pipeline counters) in daily metrics. Derive `alerts_sent_today` and `alerted_urls` from `{baseDir}/data/alerts/alert-state-{today}.json` (read file, copy `alerts_sent` and `alerted_urls` values). If alert-state file does not exist, use defaults (0 and []). Write `repeat_suppressed` to DailyMetrics `items` object (value: repeat_suppressed_count from step 1b -- only items penalized AND excluded from digest).
+8. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Include repeat_suppressed_count if > 0 (suppression footer line). Append to digest output.
 9. **Release lock**: Delete `{baseDir}/data/.lock`.
 10. **Deliver output**: Read `{baseDir}/output/latest-digest.md` and output its full content as your reply. Do not summarize or paraphrase — output the complete digest verbatim so it reaches the delivery channel.
 

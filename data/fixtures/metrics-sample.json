@@ -14,7 +14,8 @@
     "classified": 18,
     "partial": 0,
     "selected_for_output": 15,
-    "noise_filter_suppressed": 3
+    "noise_filter_suppressed": 3,
+    "repeat_suppressed": 2
   },
   "llm": {
     "calls": 12,
