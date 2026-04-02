@@ -48,10 +48,10 @@ Requirements for quality & robustness release. Each maps to roadmap phases.
 ### Alert System
 
 - [x] **ALERT-01**: Daily alert state file (alert-state-YYYY-MM-DD.json) with 3-alert daily cap and URL dedup
-- [ ] **ALERT-02**: Event objects store per-event alert memory (last_alerted_at, last_alert_news_id, last_alert_brief)
+- [x] **ALERT-02**: Event objects store per-event alert memory (last_alerted_at, last_alert_news_id, last_alert_brief)
 - [x] **ALERT-03**: Quick-Check uses unified decision tree for alert eligibility
-- [ ] **ALERT-04**: Delta alerts fire for event updates (update/correction/reversal/escalation relations)
-- [ ] **ALERT-05**: Delta alert prompt and template show what changed vs previous alert
+- [x] **ALERT-04**: Delta alerts fire for event updates (update/correction/reversal/escalation relations)
+- [x] **ALERT-05**: Delta alert prompt and template show what changed vs previous alert
 - [x] **ALERT-06**: Fallback to standard alert when event context unavailable
 
 ### Dedup
@@ -123,10 +123,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLASS-02 | Phase 9 | Pending |
 | CLASS-03 | Phase 9 | Pending |
 | ALERT-01 | Phase 10 | Complete |
-| ALERT-02 | Phase 10 | Pending |
+| ALERT-02 | Phase 10 | Complete |
 | ALERT-03 | Phase 10 | Complete |
-| ALERT-04 | Phase 10 | Pending |
-| ALERT-05 | Phase 10 | Pending |
+| ALERT-04 | Phase 10 | Complete |
+| ALERT-05 | Phase 10 | Complete |
 | ALERT-06 | Phase 10 | Complete |
 | DEDUP-01 | Phase 10 | Pending |
 | DEDUP-02 | Phase 10 | Pending |
