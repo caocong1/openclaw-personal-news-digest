@@ -14,30 +14,30 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 ## Collection Phase
 
 0. **Bootstrap**: Verify required directories exist. Create any missing: `{baseDir}/data/`, `{baseDir}/data/news/`, `{baseDir}/data/cache/`, `{baseDir}/data/events/`, `{baseDir}/data/events/archived/`, `{baseDir}/data/alerts/`, `{baseDir}/data/feedback/`, `{baseDir}/data/metrics/`, `{baseDir}/output/`, `{baseDir}/config/`. If `{baseDir}/config/sources.json` does not exist, log error and abort: "Missing sources.json -- run setup first."
-1. **Acquire lock**: Read `{baseDir}/data/.lock`. If absent or `started_at` > 15 min ago, write `{ "run_id": "run-YYYYMMDD-HHmmss-XXXX", "started_at": "ISO8601" }`. If locked < 15 min, skip this run.
+1. **Acquire lock**: Read `{baseDir}/data/.lock`. If absent or `started_at` > 15 min ago, write `{ "run_id": "run-YYYYMMDD-HHmmss-XXXX", "started_at": "ISO8601" }`. If locked < 15 min, skip this run. Emit run_log entry: step="pipeline_start", details={run_id}.
 2. **Generate run_id**: `run-YYYYMMDD-HHmmss-XXXX` (XXXX = random 4 chars).
 3. **Load sources**: Read `{baseDir}/config/sources.json`, filter `enabled: true`. If budget effective_usage >= 0.8, additionally skip `status: "degraded"` sources.
 4. **Fetch by type**: For each source, route by `source.type`. If type == `rss`: web_fetch XML, parse RSS/Atom. If type == `github`: web_fetch GitHub API JSON, parse releases. If type == `search`: web_search keywords + LLM filter. If type == `official`: web_fetch or browser + LLM extract. If type == `community`: browser + LLM extract. If type == `ranking`: web_fetch or browser + LLM extract. See `{baseDir}/references/collection-instructions.md` per-type sections for detailed steps. Track per-source counters (fetched, deduped, status, error) during collection for DailyMetrics `per_source` field.
 5. **Normalize URLs**: Strip `utm_*` params, force `https`, remove `www.` prefix, lowercase host, remove trailing `/`.
 6. **Dedup**: Compute `SHA256(normalized_url)[:16]`. Check `{baseDir}/data/news/dedup-index.json` -- skip if hash exists.
 7. **Write items**: Append new items to `{baseDir}/data/news/YYYY-MM-DD.jsonl` atomically (write `.tmp.{run_id}`, then rename). (Apply Pre-Write Quality Contract from `processing-instructions.md` Section 0D before writing.)
-8. **Update dedup index**: Add new hashes to `dedup-index.json` atomically.
+8. **Update dedup index**: Add new hashes to `dedup-index.json` atomically. Emit run_log entry: step="collection_complete", details={sources_attempted, items_fetched, failed_sources}.
 
 ## Processing Phase
 
 0. **Preference decay**: Check and apply preference decay per `{baseDir}/references/processing-instructions.md` Section 0. Runs once per 30-day period.
 1. **Load prompts**: Read `{baseDir}/references/prompts/classify.md` and `{baseDir}/references/prompts/summarize.md`.
 2. **Collect unprocessed**: Find items with `processing_status: "raw"` from today's JSONL.
-2.5. **Pre-classify noise filter**: For each raw item, check `config/sources.json` `fetch_config.noise_patterns` and `title_discard_patterns`. Items matching any pattern: set `processing_status: "noise_filtered"`, `digest_eligible: false`, remove from batch, increment `noise_filter_suppressed`. See `{baseDir}/references/processing-instructions.md` Section 0E.
+2.5. **Pre-classify noise filter**: For each raw item, check `config/sources.json` `fetch_config.noise_patterns` and `title_discard_patterns`. Items matching any pattern: set `processing_status: "noise_filtered"`, `digest_eligible: false`, remove from batch, increment `noise_filter_suppressed`. See `{baseDir}/references/processing-instructions.md` Section 0E. Emit run_log entry: step="noise_filter_complete".
 3. **Classify batch**: Group 5-10 items per LLM call. Assign `categories`, `importance_score`, `form_type`, `tags`.
-3.5. **Post-classify importance filter**: For each classified item with `importance_score < 0.25`: set `digest_eligible: false`, skip summarization, increment `noise_filter_suppressed`. See `{baseDir}/references/processing-instructions.md` Section 1 "Post-Classify Importance Filter".
-4. **Summarize batch**: Group 5-10 items per LLM call. Read `depth_preference` and `judgment_angles` from `config/preferences.json`, inject into `references/prompts/summarize.md`. Generate Chinese summary at configured depth.
+3.5. **Post-classify importance filter**: For each classified item with `importance_score < 0.25`: set `digest_eligible: false`, skip summarization, increment `noise_filter_suppressed`. See `{baseDir}/references/processing-instructions.md` Section 1 "Post-Classify Importance Filter". Emit run_log entry: step="classification_complete".
+4. **Summarize batch**: Group 5-10 items per LLM call. Read `depth_preference` and `judgment_angles` from `config/preferences.json`, inject into `references/prompts/summarize.md`. Generate Chinese summary at configured depth. Emit run_log entry: step="summarization_complete".
 5. **Handle errors**: On LLM failure, retry once. If still fails, mark `processing_status: "partial"`. If classify fails but summarize succeeds, mark item for exploration slot.
 6. **Update budget**: Read `{baseDir}/config/budget.json`. If `current_date` differs from today, reset `calls_today` and `tokens_today` to 0. Increment counters.
 7. **Write results**: Update items in JSONL atomically, set `processing_status: "complete"`. (Apply Pre-Write Quality Contract from `processing-instructions.md` Section 0D before writing.)
 8. **Title dedup**: Run 3-stage title dedup per `{baseDir}/references/processing-instructions.md` Section 1A. Same-language pairs only.
 9. **Event lifecycle**: Per `{baseDir}/references/processing-instructions.md` Section 1D. Active -> stable (3d), stable -> archived (7d).
-10. **Event merge**: For unique items, run event merge per `{baseDir}/references/processing-instructions.md` Section 1C.
+10. **Event merge**: For unique items, run event merge per `{baseDir}/references/processing-instructions.md` Section 1C. Emit run_log entry: step="dedup_complete".
 11. **Process pending feedback**: Read `data/feedback/log.jsonl` entries with timestamp > `preferences.last_updated`. Apply updates per `{baseDir}/references/feedback-rules.md`.
 12. **Compute source stats**: Update quality_score, dedup_rate, selection_rate per `{baseDir}/references/collection-instructions.md` "Source Health Metrics Computation".
 13. **Source status check**: Auto-demotion/recovery per `{baseDir}/references/processing-instructions.md` Section 6.
@@ -51,11 +51,11 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 4. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.
 4b. **Weekly report** (if triggered by weekly cron): Read `{baseDir}/references/processing-instructions.md` Section 7. Aggregate 7 days of data, apply weekly quota (40/20/20/20), use strong model for synthesis, write to `{baseDir}/output/latest-weekly.md`.
 5. **Event Tracking section**: For events with new items merged today, build timeline view per `{baseDir}/references/output-templates.md` Event Tracking section.
-6. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically.
+6. **Write output**: Write to `{baseDir}/output/latest-digest.md` atomically. Emit run_log entry: step="output_complete".
 6b. **Write digest history**: Snapshot event timelines for selected items, append to `{baseDir}/data/digest-history.json` (rolling 5-run window). See `{baseDir}/references/processing-instructions.md` Section 4B.
-7. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics. Include `quota_distribution`, `category_proportions`, `source_proportions`, and `per_source` (per-source pipeline counters) in daily metrics. Derive `alerts_sent_today` and `alerted_urls` from `{baseDir}/data/alerts/alert-state-{today}.json` (read file, copy `alerts_sent` and `alerted_urls` values). If alert-state file does not exist, use defaults (0 and []). Write `repeat_suppressed` to DailyMetrics `items` object (value: repeat_suppressed_count from step 1b -- only items penalized AND excluded from digest).
+7. **Write metrics**: Write `{baseDir}/data/metrics/daily-YYYY-MM-DD.json` with run statistics. Include `quota_distribution`, `category_proportions`, `source_proportions`, and `per_source` (per-source pipeline counters) in daily metrics. Derive `alerts_sent_today` and `alerted_urls` from `{baseDir}/data/alerts/alert-state-{today}.json` (read file, copy `alerts_sent` and `alerted_urls` values). If alert-state file does not exist, use defaults (0 and []). Write `repeat_suppressed` to DailyMetrics `items` object (value: repeat_suppressed_count from step 1b -- only items penalized AND excluded from digest). Include accumulated `run_log` array in daily metrics.
 8. **Append transparency footer**: Read stats from `data/metrics/daily-YYYY-MM-DD.json`, format per `{baseDir}/references/output-templates.md` "Transparency Footer" section. Include repeat_suppressed_count if > 0 (suppression footer line). Append to digest output.
-9. **Release lock**: Delete `{baseDir}/data/.lock`.
+9. **Release lock**: Emit run_log entry: step="pipeline_end", details={duration_seconds}. (This entry is written to the already-persisted metrics file via atomic update before lock release. See `{baseDir}/references/processing-instructions.md` Section 5C.) Delete `{baseDir}/data/.lock`.
 10. **Deliver output**: Read `{baseDir}/output/latest-digest.md` and output its full content as your reply. Do not summarize or paraphrase — output the complete digest verbatim so it reaches the delivery channel.
 
 ## Quick-Check Flow (breaking news)

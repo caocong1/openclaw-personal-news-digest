@@ -896,6 +896,30 @@ During each pipeline run, accumulate per-source counters alongside aggregate met
 
 **Backward compatibility:** Metrics files from before this change lack `per_source`. All consumers (health-check.sh, source health computation) already use `.get('per_source', {})` which returns an empty dict gracefully. No backfill of historical metrics files is needed.
 
+### Section 5C: Run Log Accumulation (OBS-02)
+
+Accumulate `run_log` entries in memory during the pipeline run. Each entry is appended when its milestone is reached. Write the full array as part of DailyMetrics at Output Phase step 7.
+
+**Emit points and detail schemas:**
+
+| Step | Emit After | Details Schema |
+|------|-----------|----------------|
+| `pipeline_start` | Lock acquired (Collection Phase step 1) | `{ "run_id": "{run_id}" }` |
+| `collection_complete` | All sources fetched and deduped (Collection Phase step 8) | `{ "sources_attempted": int, "items_fetched": int, "failed_sources": [string] }` |
+| `noise_filter_complete` | Pre-classify noise filter done (Processing Phase step 2.5) | `{ "pre_classify_filtered": int, "batch_remaining": int }` |
+| `classification_complete` | All items classified (Processing Phase step 3.5) | `{ "classified": int, "partial": int, "post_classify_filtered": int }` |
+| `summarization_complete` | All items summarized (Processing Phase step 4) | `{ "summarized": int }` |
+| `dedup_complete` | Title dedup + event merge done (Processing Phase step 10) | `{ "title_deduped": int, "events_merged": int, "events_created": int }` |
+| `output_complete` | Digest written (Output Phase step 6) | `{ "selected": int, "repeat_suppressed": int }` |
+| `pipeline_end` | Metrics written, before lock release (Output Phase step 9) | `{ "duration_seconds": int }` |
+
+**Rules:**
+- All timestamps MUST be ISO8601 UTC.
+- `duration_seconds` is computed as difference between `pipeline_end` and `pipeline_start` timestamps in seconds.
+- `failed_sources` in `collection_complete` is the array of source_ids where `per_source[id].status == "failed"`.
+- If pipeline aborts (e.g., lock contention, zero items), write partial `run_log` with whatever entries have been accumulated so far. The absence of `pipeline_end` indicates an incomplete run.
+- Do NOT log individual item processing -- only phase-level transitions with aggregate counts.
+
 ---
 
 ## Section 5A: Unified Alert Decision Tree (ALERT-01, ALERT-03, ALERT-06)
