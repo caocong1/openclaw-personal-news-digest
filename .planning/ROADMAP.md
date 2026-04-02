@@ -80,7 +80,7 @@ Plans:
 Plans:
 - [x] 09-01-PLAN.md — Source schema + data models + pre-classify noise filter + SKILL.md pipeline wiring
 - [x] 09-02-PLAN.md — Classification prompt hardening with low-end calibration, disambiguation, and negative examples
-- [ ] 09-03-PLAN.md — Post-classify importance filter + noise filtering test fixtures
+- [x] 09-03-PLAN.md — Post-classify importance filter + noise filtering test fixtures
 
 ### Phase 10: Dedup Hardening & Alert Fatigue
 **Goal**: Users receive at most 3 alerts per day, see delta information for event updates, and never see stale repeat content across consecutive digests

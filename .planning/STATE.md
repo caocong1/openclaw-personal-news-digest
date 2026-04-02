@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Quality & Robustness
 status: verifying
-stopped_at: Completed 09-01-PLAN.md (noise filter infrastructure)
-last_updated: "2026-04-02T08:25:30.361Z"
+stopped_at: Completed 09-03-PLAN.md (post-classify importance filter)
+last_updated: "2026-04-02T08:29:53.837Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
   percent: 100
 ---
 
@@ -70,6 +70,7 @@ Progress: [████████████████] 100%
 | Phase 04 P01 | 2min | 2 tasks | 5 files |
 | Phase 09 P02 | 3min | 2 tasks | 3 files |
 | Phase 09 P01 | 3min | 2 tasks | 4 files |
+| Phase 09 P03 | 2min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -127,6 +128,9 @@ Recent decisions affecting current work:
 - [Phase 09]: Empty noise_patterns arrays for all sources as conservative default
 - [Phase 09]: noise_filtered items stay in JSONL for history queryability, not deleted
 - [Phase 09]: digest_eligible defaults to true for backward compatibility with v3 items
+- [Phase 09]: Post-classify filter keeps processing_status as-is (not noise_filtered) since classification DID succeed
+- [Phase 09]: noise_filter_suppressed is single counter summing pre-classify and post-classify filtered items
+- [Phase 09]: Importance threshold 0.25 defined as single-point constant for easy tuning
 
 ### Pending Todos
 
@@ -138,6 +142,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T08:25:30.355Z
-Stopped at: Completed 09-01-PLAN.md (noise filter infrastructure)
+Last session: 2026-04-02T08:29:53.831Z
+Stopped at: Completed 09-03-PLAN.md (post-classify importance filter)
 Resume file: None
