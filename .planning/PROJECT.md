@@ -39,6 +39,7 @@
 - ✓ 快讯状态持久化与统一决策树（AlertState + 3-alert daily cap + URL dedup）— v2.0 Phase 10
 - ✓ 事件级快讯记忆与增量快讯（Event v3 alert memory + delta alerts）— v2.0 Phase 10
 - ✓ 跨日报重复惩罚（DigestHistory + 0.7x repetition penalty + suppression footer）— v2.0 Phase 10
+- ✓ 可观测性完整贯通（透明度底部准确来源计数 + 失败来源标注 + run_log 结构化日志 + Schema Version Registry + diagnostics.sh）— v2.0 Phase 11
 
 ### Active
 
@@ -53,7 +54,7 @@
 - Classification quality improvements
 - Alert state & event memory (daily cap + per-event dedup + delta alerts)
 - Cross-digest repetition control
-- Observability integrity (run_log, schema registry, diagnostics)
+- Observability integrity (run_log, schema registry, diagnostics) ✓
 - Deployment UX (scheduling profiles, source visibility)
 - Interaction explainability & rolling coverage
 
@@ -128,4 +129,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-02 after Phase 10 (Dedup Hardening & Alert Fatigue) complete — AlertState with 3-alert daily cap, Event v3 delta alerts, DigestHistory cross-digest repetition penalty*
+*Last updated: 2026-04-02 after Phase 11 (Observability & Data Integrity) — run_log, Schema Version Registry, diagnostics.sh, failed source footer, source_count accuracy*
