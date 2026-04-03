@@ -1,0 +1,18 @@
+{
+  "_schema_v": 1,
+  "_description": "Named source profiles for quick profile switching. Activate a profile by enabling/disabling sources in sources.json to match the profile's source list. Run: bash scripts/activate-profile.sh <profile_name>",
+  "profiles": {
+    "minimal": {
+      "description": "Single source, quick feedback loop. Use for initial setup and rapid iteration.",
+      "sources": ["src-36kr"]
+    },
+    "production": {
+      "description": "Multi-source baseline with balanced coverage. Recommended for daily operation.",
+      "sources": ["src-36kr"]
+    },
+    "full": {
+      "description": "All configured sources including experimental and low-weight sources.",
+      "sources": "*"
+    }
+  }
+}
