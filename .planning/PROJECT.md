@@ -11,9 +11,10 @@ Replace "pushing messages to the user" with "continuously observing the world on
 ## Current State
 
 - Shipped `v2.0 Quality & Robustness` on `2026-04-03`.
+- Completed `Phase 13 Provenance Core` on `2026-04-03`, adding dedicated T1/T2 provenance libraries, deterministic citation extraction contracts, fixed disagreement resolution, and file-backed provenance fixtures/stores under `data/provenance/`.
 - Archived milestones: `v1.0 MVP`, `v2.0 Quality & Robustness`.
 - The current system already supports Chinese rendering contracts, prompt-version cache invalidation, pre-write validation, lower-noise classification, alert-fatigue controls, observability, schedule profiles, source-status inspection, and deterministic recommendation evidence.
-- The next milestone is based on the provenance and source-discovery design spec supplied on `2026-04-03`.
+- The next phase is `Phase 14 Source Discovery Automation`, building on the provenance contracts shipped in Phase 13.
 
 ## Current Milestone: v3.0 Provenance & Source Discovery
 
@@ -37,10 +38,10 @@ Replace "pushing messages to the user" with "continuously observing the world on
 - v2.0 reduced alert fatigue with `AlertState`, per-event alert memory, delta alerts, digest-history repetition control, and suppression transparency.
 - v2.0 completed observability with accurate source transparency, `run_log`, a Schema Version Registry, and `scripts/diagnostics.sh`.
 - v2.0 expanded operator and user interaction surfaces with repo-backed schedule profiles, canonical intent routing, `scripts/source-status.sh`, deterministic recommendation evidence, and dense-day timeline collapse rules.
+- v3.0 Phase 13 delivered dedicated T1/T2 provenance rule libraries, a first-class provenance stage, deterministic citation extraction rules, a structured provenance prompt, fixed disagreement resolution, and persistent provenance fixtures/contracts under `data/provenance/`.
 
 ### Active
 
-- [ ] `PROV-*`: Add provenance tier classification, citation extraction, cross-validation, and persistent provenance stores for every collected item.
 - [ ] `DISC-*`: Add passive T1/T2 source discovery with rolling quality metrics, auto-enable/disable rules, and generated source configs.
 - [ ] `PIPE-*`: Make scoring, alerts, representative selection, and output rendering provenance-aware.
 - [ ] `HARD-*`: Replace brittle inline exec paths with auditable scripts and add collection atomization.
@@ -84,9 +85,9 @@ Replace "pushing messages to the user" with "continuously observing the world on
 | Maintain both Schema Version Registry and New Fields Registry | Keeps schema evolution explicit for future milestone work | Good |
 | Derive recommendation evidence deterministically, not from LLM-authored rationale | Explainability should be reproducible from scoring and quota state | Good |
 | Store schedule profiles in repo state with stable IDs | Makes deployment UX auditable and editable without hidden platform state | Good |
-| Add explicit T0-T4 provenance tiers plus persistent stores under `data/provenance/` | The ranking and discovery loop needs a first-class record of where stories came from | Pending |
+| Add explicit T0-T4 provenance tiers plus persistent stores under `data/provenance/` | The ranking and discovery loop needs a first-class record of where stories came from | Good |
 | Auto-enable newly discovered T1/T2 sources when quality gates pass | The core milestone value is replacing T4-heavy coverage without manual curation bottlenecks | Pending |
-| Resolve T1 disagreements in favor of URL rules and T2/T3/T4 disagreements in favor of LLM classification | Official domains are precision-friendly, while deeper propagation tiers need content understanding | Pending |
+| Resolve T1 disagreements in favor of URL rules and T2/T3/T4 disagreements in favor of LLM classification | Official domains are precision-friendly, while deeper propagation tiers need content understanding | Good |
 
 ## Evolution
 
@@ -106,4 +107,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-03 after starting the v3.0 Provenance & Source Discovery milestone*
+*Last updated: 2026-04-03 after completing Phase 13 Provenance Core*
