@@ -714,6 +714,7 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
       "error": null
     }
   },
+  "pipeline_state": "success",
   "alerts": [],
   "alerts_sent_today": 0,
   "alerted_urls": [],
@@ -737,6 +738,14 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
 - `alerts_sent_today`: Integer count of breaking news alerts sent during quick-check runs today. Default 0. Read by quick-check flow to enforce 3-alert daily cap.
 - `alerted_urls`: Array of URL strings already alerted today. Default []. Read by quick-check flow for same-URL dedup.
 
+**Field notes (pipeline_state):**
+- `pipeline_state`: Pipeline outcome classification written during Output Phase step 7 before metrics flush. Enables operators to distinguish silent-failure modes from genuine success-empty runs. Four states:
+  - `"success"`: Normal run with qualifying items selected for output.
+  - `"success-empty"`: Collection ran (items fetched > 0) but no items qualified after scoring/filtering.
+  - `"failed-no-scan"`: Sources were attempted but all failed; no collection occurred.
+  - `"partial-degraded"`: Some sources succeeded and some failed, or the circuit breaker triggered.
+- Historical metrics files from before Phase 16 will lack `pipeline_state`; consumers MUST use `.get('pipeline_state', 'success')` for backward compatibility.
+
 **Field notes (per_source):**
 - `per_source`: Per-source-id breakdown of pipeline counters for this run. Keyed by `source_id` string. Each value is an object with:
   - `fetched` (integer): Items fetched from this source in this run
@@ -759,6 +768,7 @@ Stored at `data/metrics/daily-YYYY-MM-DD.json`. One file per day.
 - If pipeline aborts mid-run, `run_log` will contain entries up to the last completed step (no `pipeline_end` entry).
 
 **Defaults for missing fields (backward compatibility):**
+- `pipeline_state`: `"success"` (metrics files from before Phase 16 lack this field; consumers MUST use `.get('pipeline_state', 'success')`)
 - `run_log`: `[]` (metrics files from before Phase 11 lack this field; consumers MUST use `.get('run_log', [])`)
 
 ---
@@ -935,6 +945,7 @@ All fields added across phases, with version, default, and migration behavior.
 | `representative_item_id` | Event | Phase 15 | v4 | `null` | NewsItem.id of digest representative |
 | `repeat_suppressed` | DailyMetrics.items | Phase 10 | - | `0` | Count of items penalized AND excluded from digest due to cross-digest repetition |
 | `runs` | DigestHistory | Phase 10 | v1 | `[]` | Rolling 5-run digest history with event snapshots |
+| `pipeline_state` | DailyMetrics | Phase 16 | - | `"success"` | Pipeline outcome enum: success/success-empty/failed-no-scan/partial-degraded |
 | `run_log` | DailyMetrics | Phase 11 | - | `[]` | Timestamped pipeline milestone entries |
 
 ### Schema Change Procedure
