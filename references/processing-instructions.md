@@ -435,6 +435,65 @@ Discovery auto-disable is distinct from the existing source-health demotion mode
 
 These two mechanisms operate independently. A source can be `enabled: false` (discovery-disabled) while retaining `status: "active"` (no operational issues), or `enabled: true` while `status: "degraded"` (operational problems but still meeting discovery thresholds).
 
+### Source Config Generation
+
+When the auto-enable evaluator promotes a discovered source, it generates a new `Source` entry for `config/sources.json`. The generated entry reuses the existing `Source` schema (see `references/data-models.md`) with deterministic defaults and discovery metadata.
+
+#### ID Generation
+
+Generated source IDs follow the pattern `src-auto-{hash(domain)}` where `hash(domain)` is a human-readable slug derived from the normalized discovery domain. For example:
+
+- `openai.com` -> `src-auto-openai-blog` (when representative URL indicates a blog)
+- `anthropic.com` -> `src-auto-anthropic`
+- `github.com` (with release URLs) -> `src-auto-github-{repo-name}`
+
+The ID must be deterministic: the same discovery domain always produces the same source ID, preventing duplicate entries on repeated evaluation runs.
+
+#### Type Inference Rules
+
+The source `type` is inferred from the representative URLs and domain patterns in the discovery state:
+
+| Pattern | Inferred Type | Fetch Config |
+|---------|--------------|--------------|
+| URLs matching `github.com/*/releases` | `"github"` | `{ owner, repo, endpoint: "releases", per_page: 10 }` |
+| URLs ending in `/feed`, `/rss`, `/atom.xml`, or containing `/rss/` | `"rss"` | `{}` |
+| Domains matching known official or policy patterns (e.g., government, standards bodies, major tech company blogs) | `"official"` | `{ prefer_browser: false }` |
+| All other domains | `"official"` | `{ prefer_browser: true }` |
+
+The fallback type is `"official"` with `prefer_browser: true` because unknown direct sources are most likely web pages that may require JavaScript rendering.
+
+#### Generated Entry Defaults
+
+Every generated source entry includes:
+
+| Field | Value | Source |
+|-------|-------|--------|
+| `id` | `src-auto-{hash(domain)}` | Deterministic from discovery domain |
+| `name` | Inferred from domain and representative titles | Discovery state |
+| `type` | Inferred by type inference rules above | Representative URLs |
+| `url` | Best representative URL from discovery state | `representative_urls[0]` or domain root |
+| `weight` | `1.0` | Default neutral weight |
+| `credibility` | `0.9` | High but not maximum |
+| `topics` | Inferred from `category_candidate` and representative content | Discovery state |
+| `enabled` | `true` | Source is being promoted |
+| `fetch_config` | Per type inference rules, plus `noise_patterns: []`, `title_discard_patterns: []` | Type-specific defaults |
+| `stats` | `{ total_fetched: 0, last_fetch: null, last_hit_count: 0, avg_daily_items: 0, consecutive_failures: 0, last_error: null, quality_score: 0.5, dedup_rate: 0.0, selection_rate: 0.0, degraded_since: null, recovery_streak_start: null }` | Standard Source defaults |
+| `status` | `"active"` | No operational issues at creation |
+| `auto_discovered` | `true` | Discovery origin marker |
+| `auto_discovered_at` | Current ISO8601 timestamp | Time of promotion |
+| `discovery_domain` | Normalized domain from discovery state | Links back to discovery record |
+| `discovery_tier` | `"T1"` or `"T2"` from discovery state | Tier at time of promotion |
+| `discovery_decision` | `"enabled"` | Current discovery decision |
+| `discovery_decided_at` | Current ISO8601 timestamp | Time of decision |
+
+#### Write-Back to Source Inventory
+
+After generating the entry:
+1. Read `config/sources.json`
+2. Verify no existing entry has the same `id` (idempotency check)
+3. Append the new source entry
+4. Write `config/sources.json` atomically (write to `.tmp`, then rename)
+
 ---
 
 ## Section 1: Batch LLM Processing

@@ -1,0 +1,35 @@
+{
+  "id": "src-auto-openai-blog",
+  "name": "OpenAI Blog",
+  "type": "official",
+  "url": "https://openai.com/blog",
+  "weight": 1.0,
+  "credibility": 0.9,
+  "topics": ["ai-models", "tech-products"],
+  "enabled": true,
+  "fetch_config": {
+    "prefer_browser": false,
+    "noise_patterns": [],
+    "title_discard_patterns": []
+  },
+  "stats": {
+    "total_fetched": 0,
+    "last_fetch": null,
+    "last_hit_count": 0,
+    "avg_daily_items": 0,
+    "consecutive_failures": 0,
+    "last_error": null,
+    "quality_score": 0.5,
+    "dedup_rate": 0.0,
+    "selection_rate": 0.0,
+    "degraded_since": null,
+    "recovery_streak_start": null
+  },
+  "status": "active",
+  "auto_discovered": true,
+  "auto_discovered_at": "2026-04-03T09:00:00Z",
+  "discovery_domain": "openai.com",
+  "discovery_tier": "T1",
+  "discovery_decision": "enabled",
+  "discovery_decided_at": "2026-04-03T09:00:00Z"
+}

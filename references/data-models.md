@@ -405,7 +405,41 @@ Source definition as stored in `config/sources.json`.
 - `stats.degraded_since`: ISO8601 date or null. Set when quality_score first drops below 0.2 while status is "active". Reset to null when quality recovers (>= 0.2) or when source transitions to degraded. Used for the 14-day demotion countdown.
 - `stats.recovery_streak_start`: ISO8601 date or null. Set when quality_score first rises above 0.3 while status is "degraded". Reset to null when quality dips (<= 0.3) or when source recovers to active. Used for the 7-day recovery countdown.
 
+**Discovery metadata fields (optional, additive):**
+
+These fields record why a source exists and what discovery decisions have been made about it. They are additive -- they do not replace `enabled` or `status`. Operator tools can use them to explain source origin and lifecycle.
+
+- `auto_discovered`: boolean. `true` if this source was created by the discovery auto-enable evaluator. `false` or absent for manually configured sources.
+- `auto_discovered_at`: ISO8601 or null. Timestamp when the source was first auto-enabled from discovery state.
+- `discovery_domain`: string or null. The normalized registrable/root domain that was the discovery identity (e.g., `"openai.com"`). Links back to the `domain` key in `data/provenance/discovered-sources.json`.
+- `discovery_tier`: `"T1"` | `"T2"` | null. The provenance tier at the time of auto-enable.
+- `discovery_decision`: `"enabled"` | `"deferred"` | `"disabled"` | `"rejected"` | null. The most recent discovery evaluation outcome. Updated when the source is disabled or re-enabled through discovery evaluation.
+- `discovery_decided_at`: ISO8601 or null. Timestamp of the most recent discovery decision.
+
+**Generated-source defaults for auto-enabled direct sources:**
+
+When the auto-enable evaluator promotes a discovered source, the generated entry uses these defaults:
+
+| Field | Default | Rationale |
+|-------|---------|-----------|
+| `id` | `src-auto-{hash(domain)}` | Deterministic, collision-resistant ID derived from the discovery domain |
+| `weight` | `1.0` | Neutral weight -- same as manually added sources |
+| `credibility` | `0.9` | High but not maximum -- source has passed quality gates |
+| `enabled` | `true` | Source is being promoted to active collection |
+| `status` | `"active"` | No operational issues at creation time |
+| `stats` | Same default block as existing sources | Matches the `stats` schema already in `config/sources.json` |
+
+The `name`, `type`, `url`, and `topics` fields are inferred by the source config generation rules (see `references/processing-instructions.md` `### Source Config Generation`).
+
 **Defaults for missing fields (older schema):** `degraded_since`: null, `recovery_streak_start`: null.
+
+**Defaults for missing discovery fields (older source records):**
+- `auto_discovered`: `false`
+- `auto_discovered_at`: `null`
+- `discovery_domain`: `null`
+- `discovery_tier`: `null`
+- `discovery_decision`: `null`
+- `discovery_decided_at`: `null`
 
 **`fetch_config` variants by type:**
 
