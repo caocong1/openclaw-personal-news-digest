@@ -53,7 +53,7 @@ Plans:
 **Goal:** Use provenance to influence ranking, alerting, event representative selection, and user-facing output.
 **Depends on:** Phase 14
 **Requirements:** `PIPE-01`..`PIPE-05`
-**Plans:** 3/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] `15-01-PLAN.md` - Add provenance scoring, aggregator decay, and event representative selection
@@ -113,5 +113,5 @@ Plans:
 |-------|----------------|--------|-----------|
 | 13. Provenance Core | 3/3 | Complete    | 2026-04-03 |
 | 14. Source Discovery Automation | 3/3 | Complete    | 2026-04-03 |
-| 15. Provenance-Aware Ranking & Delivery | 3/3 | In Progress|  |
+| 15. Provenance-Aware Ranking & Delivery | 3/3 | Complete    | 2026-04-03 |
 | 16. Operational Hardening & Verification | 0/4 | Not started | - |
