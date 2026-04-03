@@ -1,4 +1,5 @@
 {
+  "_schema_v": 2,
   "topic_weights": {
     "ai-models": 0.5,
     "dev-tools": 0.5,
@@ -42,5 +43,5 @@
   "last_decay_at": null,
   "total_feedback_count": 0,
   "feedback_processing_enabled": true,
-  "_schema_v": 2
+  "OPER_BACKLOG_PATH": null
 }
