@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-04-03T14:10:55.662Z"
+last_updated: "2026-04-03T14:11:43.965Z"
 progress:
   total_phases: 12
-  completed_phases: 9
+  completed_phases: 10
   total_plans: 29
-  completed_plans: 28
+  completed_plans: 29
 ---
 
 # Project State
@@ -24,9 +24,9 @@ See: .planning/PROJECT.md (updated 2026-04-03)
 
 Milestone: `v3.0 Provenance & Source Discovery`
 Phase: 16 (operational-hardening-&-verification)
-Plan: 03 complete (of 4)
-Status: Ready for next plan
-Last activity: 2026-04-03 -- Completed Phase 16 Plan 03: run journal, external backlog sync, and source profiles (OPER-01/03/04)
+Plan: 04 complete (of 4)
+Status: All plans complete
+Last activity: 2026-04-03 -- Completed Phase 16 Plan 04: version drift detection, cross-channel recovery matrix, automated smoke tests (OPER-02/05/06)
 
 Progress: [██████████] 100%
 
@@ -64,12 +64,20 @@ Progress: [██████████] 100%
 - Key decision: data-archive.sh consolidates all Python cleanup into a single heredoc call to avoid double-execution.
 - Key decision: pipeline_state backward-compat default is "success" matching the most common case.
 - Key decision: scripts/source-status.sh remains the reference model and is not modified.
+- Phase 16 Plan 04 complete: version drift detection via SKILL.md metadata + health-check.sh, cross-channel recovery matrix documentation, automated OPER-06 smoke tests via smoke-test.sh.
+- Key decision: OPER-02 uses both `_skill_version` and `minimum_openclaw_version` in SKILL.md frontmatter.
+- Key decision: OPER-05 recovery matrix uses lowercase "version drift" as the failure type string.
+- Key decision: OPER-06 smoke-test.sh uses heredoc Python pattern consistent with existing project scripts.
+- Key decision: heredoc Python uses `python3 - ARG <<'PY'` pattern (pass JSON as argv) rather than `echo | python3 - <<'PY'` which fails because pipe consumes stdin.
+- Key decision: data-archive.sh consolidates all Python cleanup into a single heredoc call to avoid double-execution.
+- Key decision: pipeline_state backward-compat default is "success" matching the most common case.
+- Key decision: scripts/source-status.sh remains the reference model and is not modified.
 - Phase 16 Plan 02 complete: NewsItem schema v6 with is_roundup/roundup_children, roundup-patterns.json with 11 patterns, Roundup Classification directive in classify.md, Collection Phase step 7b atomization wiring, Output Phase PIPE-03 confirmation.
 - Key decision: is_roundup uses three-state semantics -- null (unevaluated, backward compat), false (confirmed not-a-roundup), true (atomize and exclude)
 - Key decision: fast-path pattern match is default, LLM classify is the fallback for roundup detection
 - Key decision: parent roundup stays in JSONL for audit, child items carry parent_roundup_id for traceability
 - Phase 16 Plan 03 complete: run journal, OPER_BACKLOG_PATH, and named source profiles (OPER-01/03/04)
-- Next step: Phase 16 Plan 04 (OPER-05 CLI parity, OPER-06 smoke tests)
+- Next step: Phase 16 all plans complete -- v3.0 milestone ready for review
 
 ## Audit Notes
 
@@ -104,6 +112,9 @@ Progress: [██████████] 100%
 - [Phase 16]: Run journal uses atomic .tmp rename pattern for crash-safe appends
 - [Phase 16]: OPER_BACKLOG_PATH defaults to null (repo-managed) with optional external path
 - [Phase 16]: production profile is the documented baseline for daily operation; minimal enables 1 source; full enables all 6 sources
+- [Phase 16]: OPER-02: SKILL.md declares both _skill_version (16.0.0) and minimum_openclaw_version (1.4.0) in frontmatter for version drift detection
+- [Phase 16]: OPER-05: Recovery matrix uses lowercase version drift as the failure type string for consistent programmatic matching
+- [Phase 16]: OPER-06: smoke-test.sh uses heredoc Python pattern consistent with existing project scripts
 
 ## Blockers
 
@@ -117,11 +128,13 @@ None
 | Phase 15 P02 | 7min | 2 tasks | 4 files |
 | Phase 15 P03 | 4min | 2 tasks | 3 files |
 | Phase 16 P01 | 9min | 5 tasks | 11 files |
+| Phase 16 P04 | 6min | 3 tasks | 5 files |
 | Phase 16 P02 | 3min | 3 tasks | 4 files |
 | Phase 16 P03 | 5 | 4 tasks | 11 files |
+| Phase 16 P04 | 6 | 3 tasks | 5 files |
 
 ## Session
 
-Last Date: 2026-04-03T14:09:52Z
-Stopped At: Completed Phase 16 Plan 03
+Last Date: 2026-04-03T14:11:43Z
+Stopped At: Completed Phase 16 Plan 04 (all Phase 16 plans complete)
 Resume File: None
