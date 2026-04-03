@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Quality & Robustness
-status: complete
-stopped_at: Ready for next milestone planning
-last_updated: "2026-04-02T18:25:06.8686793Z"
+milestone: v3.0
+milestone_name: Provenance & Source Discovery
+status: defining_requirements
+stopped_at: Requirements being defined
+last_updated: "2026-04-03T01:24:11.2681001Z"
 last_activity: 2026-04-03
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 16
-  completed_plans: 16
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -21,32 +21,32 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-03)
 
 **Core value:** Replace "pushing messages to the user" with "continuously observing the world on the user's behalf" while preserving anti-echo-chamber exposure
-**Current focus:** Planning the next milestone
+**Current focus:** Defining requirements for milestone v3.0
 
 ## Current Position
 
-Milestone: `v2.0 Quality & Robustness`
-Status: Shipped and archived
-Last activity: 2026-04-03
+Milestone: `v3.0 Provenance & Source Discovery`
+Phase: Not started (defining requirements)
+Plan: `-`
+Status: Defining requirements
+Last activity: 2026-04-03 - Milestone v3.0 initialized
 
-Progress: [#####] 100%
+Progress: [-----] 0%
 
 ## Milestone Summary
 
-- Archived roadmap, requirements, and audit records under `.planning/milestones/`
-- Shipped documentation, localization, robustness, observability, and interaction-surface improvements
-- Updated `PROJECT.md`, `ROADMAP.md`, `MILESTONES.md`, and `RETROSPECTIVE.md` for post-milestone state
-- Next step: `$gsd-new-milestone`
+- Planning docs now target provenance tracking, source discovery, provenance-aware ranking/output, and the remaining P0/P1 hardening backlog.
+- Optional ecosystem research was skipped because the supplied design spec already scoped the milestone in detail.
+- Next step: finalize `REQUIREMENTS.md`, then create the v3.0 roadmap.
 
 ## Audit Notes
 
-- Requirements coverage: `38/38` satisfied for the shipped milestone
-- Phase verification coverage: `6/6` phases verified
-- Nyquist coverage remains incomplete:
-  - Missing validation docs: phases 7, 8, 11
-  - Draft/non-compliant validation docs: phases 9, 10, 12
+- The latest shipped milestone remains `v2.0 Quality & Robustness`.
+- Live platform smoke testing from the prior backlog is still outstanding and is now folded into the v3.0 operations scope.
+- Nyquist validation coverage for some archived v2.0 phases is still incomplete and remains retrospective quality debt.
 
 ## Continuity
 
 - Last shipped milestone: `v2.0 Quality & Robustness`
-- Next planning action: define fresh milestone requirements before adding more roadmap phases
+- Next roadmap should continue phase numbering after Phase 12
+- Planning source of truth: provenance/source-discovery design spec dated `2026-04-03`

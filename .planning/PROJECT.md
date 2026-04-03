@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A personalized OpenClaw news research and delivery skill that continuously observes the world on the user's behalf. It combines multi-source collection, LLM-assisted classification and summarization, event tracking, preference learning, alerting, and explainable output rendering to produce Chinese-language digests, alerts, and weekly reports.
+A personalized OpenClaw news research and delivery skill that continuously observes the world on the user's behalf. It combines multi-source collection, LLM-assisted classification and summarization, event tracking, preference learning, alerting, and explainable output rendering, and the next milestone extends that pipeline with provenance-aware ranking and automated direct-source discovery.
 
 ## Core Value
 
@@ -12,7 +12,18 @@ Replace "pushing messages to the user" with "continuously observing the world on
 
 - Shipped `v2.0 Quality & Robustness` on `2026-04-03`.
 - Archived milestones: `v1.0 MVP`, `v2.0 Quality & Robustness`.
-- Current codebase includes operator documentation, Chinese rendering contracts, prompt-versioned cache invalidation, pre-write data validation, noise filtering, alert fatigue controls, schema/version registries, diagnostics, schedule profiles, source-status inspection, and deterministic recommendation explainability.
+- The current system already supports Chinese rendering contracts, prompt-version cache invalidation, pre-write validation, lower-noise classification, alert-fatigue controls, observability, schedule profiles, source-status inspection, and deterministic recommendation evidence.
+- The next milestone is based on the provenance and source-discovery design spec supplied on `2026-04-03`.
+
+## Current Milestone: v3.0 Provenance & Source Discovery
+
+**Goal:** Reduce dependence on T4 aggregation by tracing provenance for every item, discovering direct T1/T2 sources automatically, and hardening the pipeline's operational edges.
+
+**Target features:**
+- Track item provenance with T0-T4 source tiers, citation chains, propagation hops, and discrepancy logging
+- Discover, evaluate, auto-enable, and auto-disable T1/T2 sources directly from observed provenance paths
+- Use provenance in scoring, event selection, alerts, digest rendering, and weekly discovery reporting
+- Close the remaining hardening backlog with auditable scripts, collection atomization, clearer failure states, and operator safeguards
 
 ## Requirements
 
@@ -29,37 +40,36 @@ Replace "pushing messages to the user" with "continuously observing the world on
 
 ### Active
 
-- [ ] `HARD-01`: Improve script operability in environments where here-doc patterns are brittle.
-- [ ] `HARD-02`: Add alert governance with source confidence tiers and multi-source corroboration.
-- [ ] `HARD-03`: Add pre-configured disabled source templates for safer future expansion.
-- [ ] `HARD-04`: Decouple render-layer contracts from content-model contracts.
-- [ ] `OPER-01`: Run live platform smoke tests for cron delivery, isolated session loading, exec permissions, timeout behavior, and empty-input quality gates.
+- [ ] `PROV-*`: Add provenance tier classification, citation extraction, cross-validation, and persistent provenance stores for every collected item.
+- [ ] `DISC-*`: Add passive T1/T2 source discovery with rolling quality metrics, auto-enable/disable rules, and generated source configs.
+- [ ] `PIPE-*`: Make scoring, alerts, representative selection, and output rendering provenance-aware.
+- [ ] `HARD-*`: Replace brittle inline exec paths with auditable scripts and add collection atomization.
+- [ ] `OPER-*`: Add run journaling, clearer failure states, baseline source profiles, CLI/docs parity checks, version safeguards, and live platform smoke coverage.
 
 ### Out of Scope
 
-- Runtime code changes inside the OpenClaw platform. This repo remains a prompt, config, and reference-doc skill project.
-- New source integrations beyond the current pre-configured template set.
+- Runtime code changes inside the OpenClaw platform. This repo remains a prompt, config, reference-doc, and helper-script skill project.
+- Manual source approval or review workflows. v3.0 is intentionally fully automated once discovery rules are trusted.
+- Cross-platform source discovery beyond the OpenClaw VM/workspace environment used by this skill.
+- Historical backfill of provenance metadata for pre-v3 news items. The milestone only guarantees provenance for items processed after rollout.
 - Standalone frontend or app UI work.
 - Multi-user support before the single-user operating model is proven.
-- Embedding-based dedup at the current scale.
 
 ## Context
 
-Shipped `v2.0` across `6` phases, `16` plans, and `31` tasks between `2026-04-02` and `2026-04-03`.
-
-- Git delta since `v1.0`: `82` commits, `86` files changed, `+11,428/-3,822` lines.
-- Tech stack: OpenClaw `SKILL.md`, Markdown reference docs, JSON/JSONL state, bash utilities, deterministic fixture files.
-- Quality themes validated in this milestone: localization, deterministic contracts, lower-noise processing, observability, explainability, and operator UX.
-- Remaining follow-up: live platform smoke testing is still pending, and Nyquist validation coverage is incomplete for milestone phases.
+- `v2.0` proved the skill can localize, rank, alert, explain, and diagnose results, but it still leans on T4 aggregation-heavy feeds for part of its coverage.
+- The `2026-04-03` provenance/source-discovery spec expands the roadmap from passive source monitoring to active provenance tracking and automated direct-source acquisition.
+- Existing source-status inspection, schedule profiles, deterministic recommendation evidence, and schema registries provide the operational base for this milestone.
+- The same spec also folds in the outstanding P0/P1 backlog around inline exec safety, failure journaling, collection atomization, docs parity, and version consistency.
 
 ## Constraints
 
 - Must run as an OpenClaw skill, not as a standalone backend service.
 - `SKILL.md` must stay compact enough to fit the platform context budget.
 - The system stores structured JSON/JSONL files in the workspace filesystem rather than a database.
-- Cost controls still assume a daily LLM budget guardrail and circuit-breaker behavior.
-- MVP and current shipped releases are designed for a single operator/user context.
-- The system stores rewritten summaries rather than full scraped article bodies.
+- The provenance and source-discovery rollout is fully automated; user approval is not part of the steady-state source enable/disable loop.
+- Runtime code changes inside the hosted OpenClaw platform are out of scope for this repo.
+- The project still targets a single operator/user context while the automated discovery loop is being proven.
 
 ## Key Decisions
 
@@ -74,23 +84,26 @@ Shipped `v2.0` across `6` phases, `16` plans, and `31` tasks between `2026-04-02
 | Maintain both Schema Version Registry and New Fields Registry | Keeps schema evolution explicit for future milestone work | Good |
 | Derive recommendation evidence deterministically, not from LLM-authored rationale | Explainability should be reproducible from scoring and quota state | Good |
 | Store schedule profiles in repo state with stable IDs | Makes deployment UX auditable and editable without hidden platform state | Good |
-
-## Next Milestone Goals
-
-- Turn the v2.0 hardening backlog into a scoped `v2.1` or `v3.0` milestone.
-- Prioritize runtime hardening and live platform verification before broadening feature scope.
-- Keep milestone-planning documents small by continuing to archive shipped roadmap and requirements content under `.planning/milestones/`.
+| Add explicit T0-T4 provenance tiers plus persistent stores under `data/provenance/` | The ranking and discovery loop needs a first-class record of where stories came from | Pending |
+| Auto-enable newly discovered T1/T2 sources when quality gates pass | The core milestone value is replacing T4-heavy coverage without manual curation bottlenecks | Pending |
+| Resolve T1 disagreements in favor of URL rules and T2/T3/T4 disagreements in favor of LLM classification | Official domains are precision-friendly, while deeper propagation tiers need content understanding | Pending |
 
 ## Evolution
 
-This document should evolve at phase transitions and milestone boundaries.
+This document evolves at phase transitions and milestone boundaries.
 
-After each milestone:
+**After each phase transition** (via `$gsd-transition`):
+1. Requirements invalidated? -> Move to Out of Scope with reason
+2. Requirements validated? -> Move to Validated with phase reference
+3. New requirements emerged? -> Add to Active
+4. Decisions to log? -> Add to Key Decisions
+5. "What This Is" still accurate? -> Update if drifted
 
-1. Move shipped requirements into `Validated`.
-2. Refresh `Active` to describe the next real milestone candidate set.
-3. Update `Context` with current shipped scope, metrics, and unresolved follow-up work.
-4. Add or revise milestone-level decisions that future phases should treat as stable constraints.
+**After each milestone** (via `$gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check -> still the right priority?
+3. Audit Out of Scope -> reasons still valid?
+4. Update Context with current state
 
 ---
-*Last updated: 2026-04-03 after completing the v2.0 Quality & Robustness milestone*
+*Last updated: 2026-04-03 after starting the v3.0 Provenance & Source Discovery milestone*
