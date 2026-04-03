@@ -85,6 +85,27 @@ Plans:
 3. Run journal, backlog sync, baseline source profile, and recovery docs give operators an explicit audit and recovery trail
 4. Health checks and smoke tests detect CLI/docs drift, version mismatches, and live-run regressions before they silently rot operations
 
+### Phase 17: Initialize Provenance Data Store
+
+**Goal:** Create `data/provenance/` directory and all 5 artifact files so provenance pipelines can read/write persistent state.
+**Depends on:** Phase 16
+**Requirements:** `PROV-06`, `PIPE-01`, `PIPE-04`, `DISC-01`, `PIPE-05`
+**Gap Closure:** Closes DATA-PROV-001 — uninitialized provenance artifact store that blocks PROV-06, PIPE-01, PIPE-04, DISC-01, PIPE-05 at runtime; restores broken E2E flow Collection → Provenance → Source Discovery → Ranking → Output
+
+### Phase 18: Wire Backlog Failure Follow-up
+
+**Goal:** Connect `backlog_tools.append_failure_followup` into SKILL.md so every error journal entry creates a backlog follow-up entry.
+**Depends on:** Phase 16
+**Requirements:** `OPER-03`
+**Gap Closure:** Closes SKILL-WIRE-001 — append_failure_followup implemented but never called from SKILL.md
+
+### Phase 19: Add Missing E2E Fixture
+
+**Goal:** Create `data/fixtures/provenance-ranking-e2e-sample.json` so PIPE-02 smoke test can run and behavioral assertions are re-executable.
+**Depends on:** Phase 15
+**Requirements:** `PIPE-02`
+**Gap Closure:** Closes tech debt item — E2E fixture file missing, blocking PIPE-02 smoke test
+
 ## Milestone Summary
 
 **Key Decisions:**
@@ -115,3 +136,6 @@ Plans:
 | 14. Source Discovery Automation | 3/3 | Complete    | 2026-04-03 |
 | 15. Provenance-Aware Ranking & Delivery | 3/3 | Complete    | 2026-04-03 |
 | 16. Operational Hardening & Verification | 4/4 | Complete    | 2026-04-03 |
+| 17. Initialize Provenance Data Store | —/1 | Planned     | — |
+| 18. Wire Backlog Failure Follow-up | —/1 | Planned     | — |
+| 19. Add Missing E2E Fixture | —/1 | Planned     | — |
