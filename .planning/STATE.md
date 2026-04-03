@@ -1,14 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: unknown
-last_updated: "2026-04-03T04:40:54.016Z"
+milestone: v3.0
+milestone_name: Provenance & Source Discovery
+status: executing
+stopped_at: Completed 15-01-PLAN.md
+last_updated: "2026-04-03T06:54:43.331Z"
+last_activity: 2026-04-03 -- Completed 15-01 provenance-aware ranking and representative selection docs
 progress:
-  total_phases: 10
-  completed_phases: 8
-  total_plans: 22
-  completed_plans: 22
+  total_phases: 4
+  completed_phases: 2
+  total_plans: 9
+  completed_plans: 7
+  percent: 78
 ---
 
 # Project State
@@ -18,17 +21,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-03)
 
 **Core value:** Replace "pushing messages to the user" with "continuously observing the world on the user's behalf" while preserving anti-echo-chamber exposure
-**Current focus:** Phase 14 - source-discovery-automation
+**Current focus:** Phase 15 — provenance-aware-ranking-delivery
 
 ## Current Position
 
 Milestone: `v3.0 Provenance & Source Discovery`
-Phase: 14 (source-discovery-automation)
-Plan: 14-03 complete, Phase 14 complete
-Status: Phase 14 complete, ready for next phase
-Last activity: 2026-04-03 - Completed 14-03 discovery audit artifacts, pattern-library expansion, and verification checklist
+Phase: 15 (provenance-aware-ranking-delivery) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-04-03 -- Completed 15-01 provenance-aware ranking and representative selection docs
 
-Progress: [████▌░░░░░] 46%
+Progress: [████████░░] 78%
 
 ## Milestone Summary
 
@@ -45,9 +48,13 @@ Progress: [████▌░░░░░] 46%
 - Key decision: pattern-library expansion requires enabled decision and preserves path-scoped evidence from representative URLs.
 - Key decision: source-status.sh discovery metadata is additive -- only printed when auto_discovered is true, preserving Phase 12 contract.
 - Phase 14 (source-discovery-automation) is fully complete with all 3 plans executed.
+- Phase 15 Plan 01 complete: provenance scoring modifiers, event representative selection contract, Event schema v4, and proving fixture are now documented.
+- Key decision: provenance ranking remains a post-formula multiplier on `final_score`, not an eighth weighted dimension.
+- Key decision: event representatives are chosen by tier rank, then source credibility, then `adjusted_score`.
+- Key decision: non-representative exclusions stay runtime-only while `representative_item_id` persists on the Event record.
 - Planning docs now target source discovery, provenance-aware ranking/output, and the remaining P0/P1 hardening backlog.
 - Roadmap continues phase numbering after the shipped v2.0 milestone, starting at Phase 13.
-- Next step: begin Phase 15 planning or operations hardening
+- Next step: execute Phase 15 Plan 02 for alert gating and provenance-aware rendering rules
 
 ## Audit Notes
 
@@ -61,3 +68,25 @@ Progress: [████▌░░░░░] 46%
 - Active roadmap phase range: `13-16`
 - Phase numbering continues from the previous milestone
 - Planning source of truth: provenance/source-discovery design spec dated `2026-04-03`
+
+## Decisions
+
+- [Phase 15]: Provenance ranking stays a post-formula multiplier on final_score rather than becoming an eighth weighted dimension
+- [Phase 15]: Event representatives are selected by tier rank first, then source credibility, then adjusted_score
+- [Phase 15]: Non-representative exclusion is runtime-only while representative_item_id persists on the Event record
+
+## Blockers
+
+None
+
+## Performance Metrics
+
+| Phase | Duration | Tasks | Files |
+|-------|----------|-------|-------|
+| Phase 15 P01 | 8min | 2 tasks | 5 files |
+
+## Session
+
+Last Date: 2026-04-03T06:54:43.328Z
+Stopped At: Completed 15-01-PLAN.md
+Resume File: None

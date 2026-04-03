@@ -24,9 +24,9 @@
 
 ### Pipeline Integration
 
-- [ ] **PIPE-01**: Final ranking adds provenance boost/penalty so T1/T2 items outrank redundant T4 aggregation when the underlying event is the same.
+- [x] **PIPE-01**: Final ranking adds provenance boost/penalty so T1/T2 items outrank redundant T4 aggregation when the underlying event is the same.
 - [ ] **PIPE-02**: T4 items use a stricter breaking-alert threshold, and event-level alert suppression runs before the importance gate.
-- [ ] **PIPE-03**: Each merged event keeps exactly one representative item chosen by highest tier first, then credibility and score tie-breakers.
+- [x] **PIPE-03**: Each merged event keeps exactly one representative item chosen by highest tier first, then credibility and score tie-breakers.
 - [ ] **PIPE-04**: Digest and alert rendering show source tier, provenance chain, and normalized English-title display without leaking internal fields.
 - [ ] **PIPE-05**: A weekly source-discovery report summarizes newly discovered sources, auto-enable/disable actions, tier mix, and watchlist changes.
 
@@ -82,9 +82,9 @@
 | DISC-02 | Phase 14 | Complete |
 | DISC-03 | Phase 14 | Complete |
 | DISC-04 | Phase 14 | Complete |
-| PIPE-01 | Phase 15 | Pending |
+| PIPE-01 | Phase 15 | Complete |
 | PIPE-02 | Phase 15 | Pending |
-| PIPE-03 | Phase 15 | Pending |
+| PIPE-03 | Phase 15 | Complete |
 | PIPE-04 | Phase 15 | Pending |
 | PIPE-05 | Phase 15 | Pending |
 | HARD-01 | Phase 16 | Pending |
@@ -104,4 +104,4 @@
 
 ---
 *Requirements defined: 2026-04-03*
-*Last updated: 2026-04-03 after milestone v3.0 roadmap creation*
+*Last updated: 2026-04-03 after completing Phase 15 Plan 01*
