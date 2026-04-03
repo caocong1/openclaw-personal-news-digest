@@ -32,9 +32,9 @@
 
 ### Hardening
 
-- [ ] **HARD-01**: Inline Python or brittle here-doc execution paths are replaced with auditable scripts under `scripts/`.
+- [x] **HARD-01**: Inline Python or brittle here-doc execution paths are replaced with auditable scripts under `scripts/`.
 - [ ] **HARD-02**: Collection-style roundup items can be atomized into child items, and the parent roundup is excluded from scoring and output.
-- [ ] **HARD-03**: Pipeline output distinguishes success-empty, failed-no-scan, and partial-degraded states so silence is not confused with failure.
+- [x] **HARD-03**: Pipeline output distinguishes success-empty, failed-no-scan, and partial-degraded states so silence is not confused with failure.
 
 ### Operations
 
@@ -87,9 +87,9 @@
 | PIPE-03 | Phase 15 | Complete |
 | PIPE-04 | Phase 15 | Complete |
 | PIPE-05 | Phase 15 | Complete |
-| HARD-01 | Phase 16 | Pending |
+| HARD-01 | Phase 16-01 | Complete |
 | HARD-02 | Phase 16 | Pending |
-| HARD-03 | Phase 16 | Pending |
+| HARD-03 | Phase 16-01 | Complete |
 | OPER-01 | Phase 16 | Pending |
 | OPER-02 | Phase 16 | Pending |
 | OPER-03 | Phase 16 | Pending |

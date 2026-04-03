@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Provenance & Source Discovery
 status: ready
-stopped_at: Completed Phase 15
-last_updated: "2026-04-03T07:38:18.125Z"
-last_activity: 2026-04-03 -- Verified and completed Phase 15 provenance-aware ranking and delivery
+stopped_at: Completed 16-01 plan
+last_updated: "2026-04-03T22:01:13Z"
+last_activity: 2026-04-03 -- Completed Phase 16 Plan 01: inline Python extraction and pipeline_state enum
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 10
+  completed_plans: 10
   percent: 100
 ---
 
@@ -27,9 +27,9 @@ See: .planning/PROJECT.md (updated 2026-04-03)
 
 Milestone: `v3.0 Provenance & Source Discovery`
 Phase: 16 (operational-hardening-&-verification)
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-04-03 -- Verified and completed Phase 15 provenance-aware ranking and delivery
+Plan: 01 complete (of 4)
+Status: Ready for next plan
+Last activity: 2026-04-03 -- Completed Phase 16 Plan 01: inline Python extraction and pipeline_state enum
 
 Progress: [██████████] 100%
 
@@ -62,7 +62,12 @@ Progress: [██████████] 100%
 - Key decision: the Phase 15 E2E fixture is organized by PIPE requirement ID so verification can check each requirement independently.
 - Planning docs now target source discovery, provenance-aware ranking/output, and the remaining P0/P1 hardening backlog.
 - Roadmap continues phase numbering after the shipped v2.0 milestone, starting at Phase 13.
-- Next step: begin Phase 16 operational hardening and verification work
+- Phase 16 Plan 01 complete: 5 auditable Python modules in scripts/lib/, all 4 operational scripts refactored to heredoc pattern, pipeline_state enum added to DailyMetrics.
+- Key decision: heredoc Python uses `python3 - ARG <<'PY'` pattern (pass JSON as argv) rather than `echo | python3 - <<'PY'` which fails because pipe consumes stdin.
+- Key decision: data-archive.sh consolidates all Python cleanup into a single heredoc call to avoid double-execution.
+- Key decision: pipeline_state backward-compat default is "success" matching the most common case.
+- Key decision: scripts/source-status.sh remains the reference model and is not modified.
+- Next step: Phase 16 Plan 02 (HARD-02 roundup atomization)
 
 ## Audit Notes
 
@@ -88,6 +93,9 @@ Progress: [██████████] 100%
 - [Phase 15]: Weekly discovery reporting reads the current tier-stats days map and normalizes legacy daily readers when needed
 - [Phase 15]: Weekly discovery output renders placeholders instead of empty enabled, disabled, or watchlist sections
 - [Phase 15]: The Phase 15 E2E fixture is organized by PIPE requirement ID within one coherent scenario
+- [Phase 16-01]: Dedup index rebuild uses in-memory collection then single atomic write
+- [Phase 16-01]: JSON parsing from heredoc uses python3 - ARG <<'PY' not echo | python3 - <<'PY'
+- [Phase 16-01]: pipeline_state backward-compat default is "success"
 
 ## Blockers
 
@@ -100,9 +108,10 @@ None
 | Phase 15 P01 | 8min | 2 tasks | 5 files |
 | Phase 15 P02 | 7min | 2 tasks | 4 files |
 | Phase 15 P03 | 4min | 2 tasks | 3 files |
+| Phase 16 P01 | 9min | 5 tasks | 11 files |
 
 ## Session
 
-Last Date: 2026-04-03T07:38:18.125Z
-Stopped At: Completed Phase 15
+Last Date: 2026-04-03T22:01:13Z
+Stopped At: Completed Phase 16 Plan 01
 Resume File: None

@@ -70,11 +70,11 @@ Plans:
 
 **Goal:** Close the remaining P0/P1 backlog so the skill is auditable, script-driven, and operator-safe in live runs.
 **Depends on:** Phase 15
-**Requirements:** `HARD-01`..`HARD-03`, `OPER-01`..`OPER-06`
-**Plans:** 4 plans
+**Requirements:** `HARD-01` (done), `HARD-02`, `HARD-03` (done), `OPER-01`..`OPER-06`
+**Plans:** 4 plans (1/4 complete)
 
 Plans:
-- [ ] `16-01-PLAN.md` - Extract brittle exec paths into scripts and add explicit success/failure state differentiation
+- [x] `16-01-PLAN.md` - Extract brittle exec paths into scripts and add explicit success/failure state differentiation
 - [ ] `16-02-PLAN.md` - Add collection atomization and enforce single representative selection for merged events
 - [ ] `16-03-PLAN.md` - Add run journaling, external backlog sync, and a production multi-source profile
 - [ ] `16-04-PLAN.md` - Add channel recovery docs, CLI/docs parity checks, version checks, and live platform smoke verification
@@ -114,4 +114,4 @@ Plans:
 | 13. Provenance Core | 3/3 | Complete    | 2026-04-03 |
 | 14. Source Discovery Automation | 3/3 | Complete    | 2026-04-03 |
 | 15. Provenance-Aware Ranking & Delivery | 3/3 | Complete    | 2026-04-03 |
-| 16. Operational Hardening & Verification | 0/4 | Not started | - |
+| 16. Operational Hardening & Verification | 1/4 | In progress | 2026-04-03 |
