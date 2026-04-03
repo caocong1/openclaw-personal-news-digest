@@ -7,12 +7,12 @@
 
 ### Provenance
 
-- [ ] **PROV-01**: Every collected news item can be classified into T0/T1/T2/T3/T4 with a confidence score and classification source.
-- [ ] **PROV-02**: URL-rule preclassification identifies known T1/T2 domains from dedicated pattern libraries without an LLM call.
+- [x] **PROV-01**: Every collected news item can be classified into T0/T1/T2/T3/T4 with a confidence score and classification source.
+- [x] **PROV-02**: URL-rule preclassification identifies known T1/T2 domains from dedicated pattern libraries without an LLM call.
 - [ ] **PROV-03**: Citation extraction captures cited URLs or named upstream sources from article content before provenance classification.
 - [ ] **PROV-04**: Batched provenance classification can infer original source URL/name, cited sources, and propagation hops for items not conclusively resolved by rules.
 - [ ] **PROV-05**: Cross-validation resolves rule-vs-LLM disagreements, logs discrepancies, and preserves why the final tier won.
-- [ ] **PROV-06**: Provenance results persist to `data/provenance/` stores that can reconstruct the delivered item's provenance chain later.
+- [x] **PROV-06**: Provenance results persist to `data/provenance/` stores that can reconstruct the delivered item's provenance chain later.
 
 ### Source Discovery
 
@@ -20,7 +20,7 @@
 - [ ] **DISC-02**: A discovered source auto-enables only after frequency, quality, uniqueness, age, and not-already-enabled checks all pass.
 - [ ] **DISC-03**: Auto-discovered sources auto-disable when quality or sustained activity drops below documented thresholds.
 - [ ] **DISC-04**: Auto-enabled sources are written into `config/sources.json` with inferred type, defaults, and audit metadata.
-- [ ] **DISC-05**: T1/T2 source libraries in dedicated config files can grow as new direct sources are discovered.
+- [x] **DISC-05**: T1/T2 source libraries in dedicated config files can grow as new direct sources are discovered.
 
 ### Pipeline Integration
 
@@ -71,13 +71,13 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PROV-01 | Phase 13 | Pending |
-| PROV-02 | Phase 13 | Pending |
+| PROV-01 | Phase 13 | Complete |
+| PROV-02 | Phase 13 | Complete |
 | PROV-03 | Phase 13 | Pending |
 | PROV-04 | Phase 13 | Pending |
 | PROV-05 | Phase 13 | Pending |
-| PROV-06 | Phase 13 | Pending |
-| DISC-05 | Phase 13 | Pending |
+| PROV-06 | Phase 13 | Complete |
+| DISC-05 | Phase 13 | Complete |
 | DISC-01 | Phase 14 | Pending |
 | DISC-02 | Phase 14 | Pending |
 | DISC-03 | Phase 14 | Pending |
