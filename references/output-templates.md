@@ -229,6 +229,40 @@ If budget warning was triggered, append: ` | 预算: 已使用 {percentage}%`
 周统计: {total_items_processed} 条来自 {source_count} 个来源 | {event_count} 个事件追踪中 | {llm_calls} 次 LLM 调用
 ```
 
+## Weekly Source-Discovery Report Section
+
+```markdown
+## 来源发现动态
+
+### 本周新增来源
+{For each source with "enabled" decision in last 7 days:}
+- **{domain}** ({tier_display}) -- {representative_titles[0]}
+  启用原因: {reason} | 发现时间: {first_seen} | 7日命中: {hit_count_7d}
+
+{If none: "本周无新启用来源"}
+
+### 本周停用来源
+{For each source with "disabled" decision in last 7 days:}
+- **{domain}** -- 停用原因: {reason_display}
+
+{If none: "本周无停用来源"}
+
+### 信源层级分布
+| 层级 | 本周 | 上周 | 变化 |
+|------|------|------|------|
+| T1 | {count} | {prev_count} | {delta with +/- prefix} |
+| T2 | {count} | {prev_count} | {delta} |
+| T3 | {count} | {prev_count} | {delta} |
+| T4 | {count} | {prev_count} | {delta} |
+
+### 观察名单
+{For sources approaching enable thresholds:}
+- **{domain}** ({tier_display}) -- 当前: {hit_count_7d}次/7天, {t1_ratio}% T1率
+  距启用: {threshold_gap_description}
+
+{If none: "当前无接近启用阈值的候选来源"}
+```
+
 ### Quality Rules for Weekly Report
 
 - Must cover >= 5 different categories (ANTI-05 weekly requirement)

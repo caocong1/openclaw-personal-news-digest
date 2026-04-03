@@ -1533,9 +1533,90 @@ Ensure >= 5 different categories are represented. If fewer than 5 categories hav
 
 ### Assembly
 
-1. Fill weekly report template from `references/output-templates.md`
+1. Fill weekly report template from `references/output-templates.md`. Append source-discovery section per Section 7A if discovery data exists.
 2. Write to `output/latest-weekly.md` atomically
 3. Write weekly metrics to `data/metrics/weekly-{start_date}.json` (separate from daily metrics)
+
+---
+
+## Section 7A: Weekly Source-Discovery Report (PIPE-05)
+
+Extends the weekly report (Section 7) with a source-discovery section. Runs as part of weekly report assembly, after the main weekly content is generated.
+
+### Data Collection
+
+1. Read `data/provenance/discovered-sources.json` for all discovered domains
+2. Read `data/provenance/tier-stats.json` for daily tier distribution (last 14 days for week-over-week comparison)
+   - Use the repo's current `days` map as the authoritative per-day counter store. If a legacy reader still exposes the same data under `daily`, normalize it to the `days` shape before aggregation.
+3. Read `config/sources.json` for current enabled source inventory
+
+### Newly Enabled Sources (last 7 days)
+
+Filter `discovered-sources.json` entries where `decision_history` contains an entry with `decision == "enabled"` and `ts` within the last 7 days.
+
+For each match, extract:
+- `domain` (the discovery key)
+- `tier` (most recent tier from provenance data, typically T1 or T2)
+- `representative_titles[0]` (first title for human-readable context)
+- The enable decision's `reason` field
+- `first_seen` date
+- `hit_count_7d` at the time of enable decision
+  - If the enable decision record does not snapshot the rolling count, fall back to the current `hit_count_7d` value from the discovered-source record and treat it as the closest available 7-day evidence.
+
+If zero sources were enabled this week: render `本周无新启用来源` instead of an empty list.
+
+### Newly Disabled Sources (last 7 days)
+
+Filter `discovered-sources.json` entries where `decision_history` contains an entry with `decision == "disabled"` and `ts` within the last 7 days.
+
+For each match, extract:
+- `domain`
+- The disable decision's `reason` field
+- `reason_display` mapped to human-readable Chinese:
+  - `tier_ratio_below_disable_threshold` or legacy `quality_degraded` -> `质量下降`
+  - `sustained_inactivity_14d` or legacy `inactivity` -> `持续不活跃`
+  - `low_activity_7d` -> `活跃度过低`
+  - legacy `error_rate` -> `错误率过高`
+  - Any other reason -> use the raw reason string
+
+If zero sources were disabled this week: render `本周无停用来源` instead of an empty list.
+
+### Tier Distribution Comparison
+
+Read `data/provenance/tier-stats.json` daily counters:
+- **This week:** Sum T1, T2, T3, T4 counts across the last 7 days from `days[YYYY-MM-DD].tiers`
+- **Last week:** Sum T1, T2, T3, T4 counts across days 8-14 ago from the same `days` store
+- **Delta:** This week count minus last week count for each tier
+
+Ignore T0 in this table. The discovery report focuses on the comparative mix of direct reporting, analysis, and aggregation in the weekly digest pipeline.
+
+If `tier-stats.json` has fewer than 8 populated day entries (first week after deployment): show this week's distribution only, with `上周: N/A` and `变化: --` for each tier.
+
+### Watchlist (Approaching Enable Thresholds)
+
+Filter `discovered-sources.json` entries where:
+- No `"enabled"` decision exists in `decision_history` (source is still in observed/deferred state)
+- `hit_count_7d >= 3` (approaching the frequency threshold of 5)
+- OR `last_seen` is within the last 3 days AND `hit_count_7d >= 2` (recently active)
+
+For each match, extract:
+- `domain`
+- `tier` derived from `t1_ratio`: use `T1` when `t1_ratio >= 0.5`, otherwise `T2`
+- `hit_count_7d`
+- `t1_ratio` formatted as a percentage
+- A brief description of what threshold gap remains:
+  - If `hit_count_7d < 5`: `需 5次/7天命中, 当前 {hit_count_7d}次`
+  - Else if the source is younger than 3 days: `需满足3天观察期, 当前 {age_days}天`
+  - Else if `t1_ratio < 0.3`: `需 T1占比 >= 30%, 当前 {t1_ratio_percent}`
+  - Else: `等待下一轮自动评估`
+
+This section always renders even if no sources meet watchlist criteria: `当前无接近启用阈值的候选来源`.
+
+### Empty-State Handling
+
+If `data/provenance/discovered-sources.json` does not exist or `sources` is empty:
+- Render a single line: `来源发现尚未启动。来源发现功能将在足够的溯源数据积累后自动开始工作。`
+- Skip all subsections (enabled, disabled, tier distribution, watchlist)
 
 ---
 
