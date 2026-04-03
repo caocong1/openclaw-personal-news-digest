@@ -1,0 +1,53 @@
+{
+  "_schema_v": 1,
+  "days": {
+    "2026-04-03": {
+      "total_items": 3,
+      "tiers": {
+        "T0": 0,
+        "T1": 1,
+        "T2": 1,
+        "T3": 0,
+        "T4": 1
+      },
+      "resolved_by": {
+        "url_rule": 1,
+        "llm": 1,
+        "resolved_disagreement": 1
+      }
+    }
+  },
+  "sources": {
+    "src-official-openai-blog": {
+      "total_items": 1,
+      "tiers": {
+        "T0": 0,
+        "T1": 1,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0
+      }
+    },
+    "src-techcrunch": {
+      "total_items": 1,
+      "tiers": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 0,
+        "T4": 0
+      }
+    },
+    "src-36kr": {
+      "total_items": 1,
+      "tiers": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 1
+      }
+    }
+  },
+  "last_updated": "2026-04-03T08:20:00Z"
+}

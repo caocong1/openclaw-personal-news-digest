@@ -1,0 +1,118 @@
+{
+  "0f1e2d3c4b5a6978": {
+    "id": "0f1e2d3c4b5a6978",
+    "tier": "T1",
+    "tier_confidence": 0.95,
+    "tier_source": "url_rule",
+    "rule_result": {
+      "tier": "T1",
+      "category": "ai_models"
+    },
+    "llm_result": null,
+    "original_source_name": "OpenAI Blog",
+    "original_source_url": "https://openai.com/blog/gpt-5-release",
+    "current_source_name": "OpenAI Blog",
+    "current_source_url": "https://openai.com/blog/gpt-5-release",
+    "cited_sources": [],
+    "propagation_hops": 0,
+    "provenance_chain": [
+      {
+        "name": "OpenAI Blog",
+        "url": "https://openai.com/blog/gpt-5-release",
+        "tier": "T1"
+      }
+    ],
+    "classified_at": "2026-04-03T08:05:00Z",
+    "_schema_v": 1
+  },
+  "1234abcd5678ef90": {
+    "id": "1234abcd5678ef90",
+    "tier": "T2",
+    "tier_confidence": 0.91,
+    "tier_source": "llm",
+    "rule_result": {
+      "tier": "T2",
+      "category": "general_tech"
+    },
+    "llm_result": {
+      "tier": "T2",
+      "confidence": 0.91
+    },
+    "original_source_name": "OpenAI Blog",
+    "original_source_url": "https://openai.com/blog/gpt-5-release",
+    "current_source_name": "TechCrunch",
+    "current_source_url": "https://techcrunch.com/2026/04/02/openai-gpt-5-report",
+    "cited_sources": [
+      {
+        "name": "OpenAI Blog",
+        "url": "https://openai.com/blog/gpt-5-release",
+        "tier": "T1"
+      }
+    ],
+    "propagation_hops": 1,
+    "provenance_chain": [
+      {
+        "name": "OpenAI Blog",
+        "url": "https://openai.com/blog/gpt-5-release",
+        "tier": "T1"
+      },
+      {
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/2026/04/02/openai-gpt-5-report",
+        "tier": "T2"
+      }
+    ],
+    "classified_at": "2026-04-03T08:09:00Z",
+    "_schema_v": 1
+  },
+  "fedcba9876543210": {
+    "id": "fedcba9876543210",
+    "tier": "T4",
+    "tier_confidence": 0.89,
+    "tier_source": "resolved_disagreement",
+    "rule_result": {
+      "tier": "T1",
+      "category": "ai_models"
+    },
+    "llm_result": {
+      "tier": "T4",
+      "confidence": 0.89
+    },
+    "original_source_name": "OpenAI Blog",
+    "original_source_url": "https://openai.com/blog/gpt-5-release",
+    "current_source_name": "36Kr",
+    "current_source_url": "https://36kr.com/p/1234567890",
+    "cited_sources": [
+      {
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/2026/04/02/openai-gpt-5-report",
+        "tier": "T2"
+      },
+      {
+        "name": "OpenAI Blog",
+        "url": "https://openai.com/blog/gpt-5-release",
+        "tier": "T1"
+      }
+    ],
+    "propagation_hops": 2,
+    "provenance_chain": [
+      {
+        "name": "OpenAI Blog",
+        "url": "https://openai.com/blog/gpt-5-release",
+        "tier": "T1"
+      },
+      {
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/2026/04/02/openai-gpt-5-report",
+        "tier": "T2"
+      },
+      {
+        "name": "36Kr",
+        "url": "https://36kr.com/p/1234567890",
+        "tier": "T4"
+      }
+    ],
+    "classified_at": "2026-04-03T08:15:00Z",
+    "_schema_v": 1
+  }
+}
