@@ -523,6 +523,34 @@ The machine-readable discovery state at `data/provenance/discovered-sources.json
 
 Each domain's `decision_history` array must preserve every lifecycle transition in chronological order. A domain that was observed, then enabled, then later disabled must retain all three entries. This allows operators to reconstruct the full lifecycle: `observed -> enabled -> disabled`.
 
+### Pattern-Library Expansion
+
+When a discovered source is promoted to the live source inventory, it may also qualify for inclusion in the T1/T2 provenance rule libraries (`config/t1-sources.json` and `config/t2-sources.json`). This subsection defines the exact promotion rules and constraints.
+
+#### Promotion Rules
+
+1. **Enabled-decision prerequisite:** Add a new pattern to `config/t1-sources.json` or `config/t2-sources.json` only after the source has a discovery decision of `enabled`. Never add patterns for sources that are merely `observed` or `deferred`.
+2. **Path-scoped evidence preservation:** Use `representative_urls` to preserve path-specific evidence when the source is path-scoped (for example `/blog`, `/ai`, or `/releases`). The pattern added to the rule library must reflect the specific path where provenance-relevant content was observed.
+3. **Tier-based target selection:**
+   - Append to `config/t1-sources.json` when `discovery_tier` is `T1`
+   - Append to `config/t2-sources.json` when `discovery_tier` is `T2`
+4. **Promotion audit trail:** Record the rule-library promotion inside the discovery `decision_history` entry's `details.rule_library_target` field, specifying which file and which pattern was added (e.g., `"rule_library_target": "config/t1-sources.json -> openai.com/blog"`).
+
+#### Forbidden Behaviors
+
+- **Do not** add every observed root domain immediately to the rule libraries. Only sources with an `enabled` discovery decision qualify.
+- **Do not** collapse path-scoped evidence into an over-broad bare-domain pattern when the representative URL contains a required path segment. For example, if `representative_urls` only contain `https://openai.com/blog/*` paths, the rule must target `openai.com/blog`, not the bare domain `openai.com`.
+- **Do not** delete the discovery-history entry after promotion. The full decision history including the promotion event must remain in `data/provenance/discovered-sources.json` for audit purposes.
+
+### Phase 14 Verification Checklist
+
+The following proof points must all be satisfied before Phase 14 is considered complete:
+
+- [ ] **Threshold documentation:** All DISC thresholds are present in docs -- frequency (`>= 5`), quality (`t1_ratio >= 0.3`), uniqueness (event coverage join), age (`>= 3 days`), disable triggers (`t1_ratio < 0.1`, 14-day inactivity, `hit_count < 2` for 7 days)
+- [ ] **Discovery metadata in generated sources:** Generated source entries in `config/sources.json` include discovery metadata fields (`auto_discovered`, `auto_discovered_at`, `discovery_domain`, `discovery_tier`, `discovery_decision`, `discovery_decided_at`)
+- [ ] **Audit artifact lifecycle coverage:** Audit artifacts preserve observed, enabled, deferred, rejected, and disabled outcomes with complete decision history and concrete reasons
+- [ ] **Pattern-library promotions preserve path evidence:** Rule-library expansion entries use path-scoped patterns from `representative_urls` rather than collapsing to bare root domains
+
 ---
 
 ## Section 1: Batch LLM Processing

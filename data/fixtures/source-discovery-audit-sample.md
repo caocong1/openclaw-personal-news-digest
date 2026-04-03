@@ -60,3 +60,14 @@ The lifecycle phrase `observed -> enabled -> disabled` captures this three-state
 |-----------|----------|--------|---------|
 | 2026-03-31T09:00:00Z | observed | first_observation | Domain first seen via provenance T2 classification |
 | 2026-04-02T09:00:00Z | deferred | below_frequency_threshold | hit_count_7d: 3 (requires >= 5), t1_ratio: 0.0 (requires >= 0.3) |
+
+---
+
+## Rule-library promotion evidence
+
+When a discovered source reaches the `enabled` decision and its representative URLs show path-scoped content, the rule-library promotion must preserve that path evidence:
+
+- T1 promotion target: config/t1-sources.json -> openai.com/blog
+- T2 promotion target: config/t2-sources.json -> venturebeat.com/ai
+
+These entries demonstrate that the pattern added to the rule library reflects the specific path where provenance-relevant content was observed, not the bare root domain. For `openai.com`, the representative URLs pointed to `/blog/*` paths, so the rule targets `openai.com/blog`. For `venturebeat.com`, the representative URLs pointed to `/ai/*` paths, so the rule targets `venturebeat.com/ai`.
