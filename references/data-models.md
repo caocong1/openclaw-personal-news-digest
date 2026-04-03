@@ -131,6 +131,7 @@ Authoritative provenance record keyed by `NewsItem.id` and stored in `data/prove
 - `current_source_*`: The fetched article/source currently stored in the repo.
 - `original_source_*`: The highest-confidence upstream origin identified for the item.
 - `provenance_chain`: Ordered provenance hops from upstream origin to the current item URL.
+- Rendering contract note: `tier`, `original_source_name`, and `provenance_chain` are user-facing provenance fields. `tier_source`, `tier_confidence`, `rule_result`, `llm_result`, and `original_source_url` remain internal-only per `references/output-templates.md` "Rendering Contract".
 
 ---
 

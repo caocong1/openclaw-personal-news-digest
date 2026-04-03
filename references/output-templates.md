@@ -9,26 +9,32 @@
 
 {For each item (scored highest, matching user's core interests):}
 ### {title}
+{原标题（源自 {original_source_name}）: {english_original_title} -- only render if item language == "zh" and upstream metadata already exposes an English original title; use original_source_name as attribution, not a separate LLM translation call}
 {2-3 sentence Chinese summary}
-来源: {source_name} | {form_type display label} | 重要性: {importance_score}
+来源: {source_name} | 信源层级: {tier_display} | {form_type display label} | 重要性: {importance_score}
+{原始来源: {original_source_name} -- only render this line if original_source_name != source_name}
+{溯源链: {chain_display} -- only render this line if provenance_chain.length > 1}
 入选依据: {primary_driver_label} | 配额: {quota_group} | 证据: {signal_1}; {signal_2}; {signal_3}
 
 ## 邻近动态
 
 {Neighboring interest news, shorter format:}
-- **{title}** -- {1 sentence summary} ({source_name})
+- **{title}** -- {1 sentence summary} ({source_name} | {tier_display})
+  {原始来源: {original_source_name} -- only if different from source_name}
   入选依据: {primary_driver_label} | 配额: {quota_group} | 证据: {signal_1}; {signal_2}; {signal_3}
 
 ## 今日热点
 
 {Public trending news, even if outside user's core interests:}
-- **{title}** -- {1 sentence summary} ({source_name})
+- **{title}** -- {1 sentence summary} ({source_name} | {tier_display})
+  {原始来源: {original_source_name} -- only if different from source_name}
   入选依据: {primary_driver_label} | 配额: {quota_group} | 证据: {signal_1}; {signal_2}; {signal_3}
 
 ## 探索发现
 
 {Exploration content with deterministic selection evidence:}
-- **{title}** -- {1 sentence summary}
+- **{title}** -- {1 sentence summary} ({source_name} | {tier_display})
+  {原始来源: {original_source_name} -- only if different from source_name}
   入选依据: {primary_driver_label} | 配额: {quota_group} | 证据: {signal_1}; {signal_2}; {signal_3}
 
 ## 事件追踪
@@ -106,10 +112,13 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 **Alert format:**
 ```
 【快讯】{title}
+{原标题（源自 {original_source_name}）: {english_original_title} -- only render if item language == "zh" and upstream metadata already exposes an English original title}
 
 {1-sentence summary}
 
-来源: {source_name} | 重要性: {importance_score}
+来源: {source_name} | 信源层级: {tier_display} | 重要性: {importance_score}
+{原始来源: {original_source_name} -- only render this line if original_source_name != source_name}
+{溯源链: {chain_display} -- only render this line if provenance_chain.length > 1}
 时间: {published_at or fetch time}
 ```
 
@@ -132,7 +141,9 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 - [{timestamp}] {brief} ({relation display label})
 
 上次快讯: {last_alert_brief} ({last_alerted_at formatted})
-来源: {source_name} | 重要性: {importance_score}
+来源: {source_name} | 信源层级: {tier_display} | 重要性: {importance_score}
+{原始来源: {original_source_name} -- only render this line if original_source_name != source_name}
+{溯源链: {chain_display} -- only render this line if provenance_chain.length > 1}
 ```
 
 **Rendering rules:**
@@ -260,6 +271,27 @@ These tables define how internal English enum values are rendered as Chinese lab
 | `reversal` | 反转 |
 | `escalation` | 升级 |
 
+### tier Display Mapping
+
+| Internal Value | Chinese Display |
+|----------------|-----------------|
+| `T0` | 一手来源 |
+| `T1` | 直接来源 |
+| `T2` | 原创报道 |
+| `T3` | 评论分析 |
+| `T4` | 聚合转载 |
+
+### Provenance Chain Rendering
+
+Format: `溯源链: {name_1} ({tier_display_1}) -> {name_2} ({tier_display_2}) -> ...`
+
+Example: `溯源链: OpenAI Blog (直接来源) -> TechCrunch (原创报道) -> 36Kr (聚合转载)`
+
+**Render conditions:**
+- Only render the provenance chain line when `provenance_chain.length > 1`
+- A single-hop chain (item is the original source) does not need chain display -- the tier label already conveys this
+- Use the tier Display Mapping for each node's tier in the chain
+
 ---
 
 ## Rendering Contract
@@ -275,6 +307,9 @@ These fields are rendered in output with their corresponding Chinese labels:
 | `title` | (rendered as-is) | Item or event title |
 | `content_summary` | (rendered as-is) | LLM-generated Chinese summary |
 | `source_name` | 来源 | Source display name |
+| `ProvenanceRecord.tier` | 信源层级 | Always rendered for every item using tier Display Mapping |
+| `ProvenanceRecord.original_source_name` | 原始来源 | Only when different from current `source_name` |
+| `ProvenanceRecord.provenance_chain` | 溯源链 | Only when chain length > 1 |
 | `importance_score` | 重要性 | Rendered as number (e.g., 0.85) |
 | `form_type` | (use Display Mapping) | Rendered as Chinese label (新闻, 分析, etc.) |
 | `categories.primary` | (use category display name) | Display name from categories.json |
@@ -305,3 +340,8 @@ These fields must NEVER appear in any user-visible output:
 | `categories.tags` | Processing tags |
 | `cached_at` | Cache timestamp |
 | `prompt_version` | Cache version key |
+| `ProvenanceRecord.tier_source` | Internal: how tier was determined (rule vs llm) |
+| `ProvenanceRecord.tier_confidence` | Internal: classification confidence score |
+| `ProvenanceRecord.rule_result` | Internal: URL-rule preclassification result |
+| `ProvenanceRecord.llm_result` | Internal: LLM classification result |
+| `ProvenanceRecord.original_source_url` | Internal: raw original source URL |
