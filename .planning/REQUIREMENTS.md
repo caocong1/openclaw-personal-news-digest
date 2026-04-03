@@ -71,12 +71,37 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
+| PROV-01 | Phase 13 | Pending |
+| PROV-02 | Phase 13 | Pending |
+| PROV-03 | Phase 13 | Pending |
+| PROV-04 | Phase 13 | Pending |
+| PROV-05 | Phase 13 | Pending |
+| PROV-06 | Phase 13 | Pending |
+| DISC-05 | Phase 13 | Pending |
+| DISC-01 | Phase 14 | Pending |
+| DISC-02 | Phase 14 | Pending |
+| DISC-03 | Phase 14 | Pending |
+| DISC-04 | Phase 14 | Pending |
+| PIPE-01 | Phase 15 | Pending |
+| PIPE-02 | Phase 15 | Pending |
+| PIPE-03 | Phase 15 | Pending |
+| PIPE-04 | Phase 15 | Pending |
+| PIPE-05 | Phase 15 | Pending |
+| HARD-01 | Phase 16 | Pending |
+| HARD-02 | Phase 16 | Pending |
+| HARD-03 | Phase 16 | Pending |
+| OPER-01 | Phase 16 | Pending |
+| OPER-02 | Phase 16 | Pending |
+| OPER-03 | Phase 16 | Pending |
+| OPER-04 | Phase 16 | Pending |
+| OPER-05 | Phase 16 | Pending |
+| OPER-06 | Phase 16 | Pending |
 
 **Coverage:**
 - v3.0 requirements: 25 total
-- Mapped to phases: 0
-- Unmapped: 25
+- Mapped to phases: 25
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-03*
-*Last updated: 2026-04-03 after initial milestone requirement definition*
+*Last updated: 2026-04-03 after milestone v3.0 roadmap creation*
