@@ -48,7 +48,9 @@ Each news item collected from a source.
       "repeat_penalty=false"
     ]
   },
-  "_schema_v": 5
+  "is_roundup": null,
+  "roundup_children": [],
+  "_schema_v": 6
 }
 ```
 
@@ -63,6 +65,8 @@ Each news item collected from a source.
 - `recommendation_evidence`: Optional explainability object derived during output selection, not by the summarize prompt
 - `recommendation_evidence.signals`: Concrete `key=value` strings only
 - `recommendation_evidence.primary_driver`: One of `topic_match`, `high_importance`, `event_followup`, `diversity_balance`, `hotspot_injection`, or `exploration_balance`
+- `is_roundup`: Indicates whether this item is a collection/roundup that should be atomized into child items. `true` = roundup (must be excluded from scoring, `roundup_children` contains child IDs); `false` = evaluated and confirmed not a roundup; `null` = field not evaluated (pre-Phase 16 items). When `is_roundup` is `true`, the item is excluded from scoring and `digest_eligible` is set to `false` by the atomization step.
+- `roundup_children`: Array of `NewsItem.id` strings for child items created by atomizing this roundup. Empty when `is_roundup` is not `true`. The parent roundup item itself remains in the JSONL for audit purposes but is excluded from scoring.
 
 **Defaults for missing fields (older schema versions):**
 - `content_hash`: `null`
@@ -74,6 +78,8 @@ Each news item collected from a source.
 - `language`: `"zh"` (for records created before language detection was added)
 - `digest_eligible`: `true` (items from v3 and earlier are eligible since they passed the old pipeline)
 - `recommendation_evidence`: `null` (older records default to no deterministic selection evidence)
+- `is_roundup`: `null` (older records default to unevaluated)
+- `roundup_children`: `[]` (older records default to no children)
 
 ---
 
@@ -892,7 +898,7 @@ Authoritative record of all data model versions, their current `_schema_v`, and 
 
 | Model | Current Version | History |
 |-------|----------------|---------|
-| NewsItem | v5 | v1: initial fields (Phase 0). v2: +content_hash, processing_status, duplicate_of (Phase 0). v3: +dedup_status, language (Phase 2). v4: +digest_eligible (Phase 9). v5: +recommendation_evidence (Phase 12). |
+| NewsItem | v6 | v1: initial fields (Phase 0). v2: +content_hash, processing_status, duplicate_of (Phase 0). v3: +dedup_status, language (Phase 2). v4: +digest_eligible (Phase 9). v5: +recommendation_evidence (Phase 12). v6: +is_roundup, roundup_children (Phase 16). |
 | Event | v4 | v1: initial fields (Phase 0). v2: +keywords, timeline (Phase 2). v3: +last_alerted_at, last_alert_news_id, last_alert_brief (Phase 10). v4: +representative_item_id (Phase 15). |
 | CacheEntry | v2 | v1: initial fields (Phase 0). v2: +prompt_version (Phase 8). |
 | Preferences | v2 | v1: initial 5-layer model (Phase 0). v2: +depth_preference, judgment_angles (Phase 3). |
@@ -935,6 +941,8 @@ All fields added across phases, with version, default, and migration behavior.
 | `prompt_version` | CacheEntry | Phase 8 | v2 | `"legacy"` | Prompt version for cache invalidation |
 | `digest_eligible` | NewsItem | Phase 9 | v4 | `true` | Noise filter eligibility flag |
 | `recommendation_evidence` | NewsItem | Phase 12 | v5 | `null` | Deterministic output-selection explainability object |
+| `is_roundup` | NewsItem | Phase 16 | v6 | `null` | Round-up/collection detection flag: true/false/null (null=unevaluated) |
+| `roundup_children` | NewsItem | Phase 16 | v6 | `[]` | NewsItem.id array of child items created by atomizing this roundup |
 | `noise_filter_suppressed` | DailyMetrics.items | Phase 9 | - | `0` | Count of items filtered by noise/importance |
 | `noise_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source noise regex patterns |
 | `title_discard_patterns` | Source.fetch_config | Phase 9 | - | `[]` | Per-source title discard patterns |
