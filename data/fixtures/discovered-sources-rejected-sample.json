@@ -1,0 +1,97 @@
+{
+  "_schema_v": 1,
+  "sources": [
+    {
+      "domain": "venturebeat.com",
+      "canonical_domain": "venturebeat.com",
+      "representative_urls": [
+        "https://venturebeat.com/ai/new-llm-benchmark-results",
+        "https://venturebeat.com/ai/enterprise-ai-adoption-2026"
+      ],
+      "tier": "T2",
+      "category_candidate": "ai-models",
+      "first_seen": "2026-03-28T12:00:00Z",
+      "last_seen": "2026-04-02T08:30:00Z",
+      "hit_count_7d": 3,
+      "t1_count_7d": 0,
+      "t2_count_7d": 3,
+      "t1_ratio": 0.0,
+      "representative_titles": [
+        "Enterprise AI Adoption Surges in Q1 2026",
+        "New LLM Benchmark Results Show Diminishing Returns",
+        "VentureBeat Analysis: Cloud AI Spending Trends"
+      ],
+      "sample_item_ids": [
+        "a1b2c3d4e5f60001",
+        "a1b2c3d4e5f60002",
+        "a1b2c3d4e5f60003"
+      ],
+      "decision_history": [
+        {
+          "ts": "2026-03-31T09:00:00Z",
+          "decision": "observed",
+          "reason": "first_observation",
+          "details": "Domain first seen via provenance T2 classification"
+        },
+        {
+          "ts": "2026-04-02T09:00:00Z",
+          "decision": "deferred",
+          "reason": "below_frequency_threshold",
+          "details": "hit_count_7d: 3 (requires >= 5), t1_ratio: 0.0 (requires >= 0.3)"
+        }
+      ],
+      "_schema_v": 1
+    },
+    {
+      "domain": "example-direct-source.com",
+      "canonical_domain": "example-direct-source.com",
+      "representative_urls": [
+        "https://example-direct-source.com/releases/v3.0",
+        "https://example-direct-source.com/blog/product-update"
+      ],
+      "tier": "T1",
+      "category_candidate": "tech-products",
+      "first_seen": "2026-03-15T10:00:00Z",
+      "last_seen": "2026-04-02T14:00:00Z",
+      "hit_count_7d": 1,
+      "t1_count_7d": 0,
+      "t2_count_7d": 1,
+      "t1_ratio": 0.0,
+      "representative_titles": [
+        "Example Direct Source v3.0 Released",
+        "Product Update: New API Endpoints",
+        "Breaking: Platform Migration Complete"
+      ],
+      "sample_item_ids": [
+        "b2c3d4e5f6a70001",
+        "b2c3d4e5f6a70002",
+        "b2c3d4e5f6a70003",
+        "b2c3d4e5f6a70004",
+        "b2c3d4e5f6a70005"
+      ],
+      "decision_history": [
+        {
+          "ts": "2026-03-18T09:00:00Z",
+          "decision": "observed",
+          "reason": "first_observation",
+          "details": "Domain first seen via provenance T1 classification"
+        },
+        {
+          "ts": "2026-03-20T09:00:00Z",
+          "decision": "enabled",
+          "reason": "all_gates_passed",
+          "details": "hit_count_7d: 7, t1_ratio: 0.57, unique_events: 3, age_days: 5"
+        },
+        {
+          "ts": "2026-04-02T09:00:00Z",
+          "decision": "disabled",
+          "reason": "tier_ratio_below_disable_threshold",
+          "details": "hit_count_7d: 1, t1_ratio: 0.0, days_without_t1_t2: 14"
+        }
+      ],
+      "_schema_v": 1
+    }
+  ],
+  "last_evaluated": "2026-04-02T09:00:00Z",
+  "last_updated": "2026-04-02T09:00:00Z"
+}

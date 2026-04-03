@@ -361,6 +361,80 @@ After accumulation completes:
 2. Set `last_updated` to current ISO8601 timestamp
 3. Set `last_evaluated` to current ISO8601 timestamp (or to the evaluation timestamp if enable/disable evaluation runs separately)
 
+### Auto-Enable Evaluation
+
+After accumulation completes and discovery state is persisted, evaluate each discovered source for automatic promotion to the live source inventory in `config/sources.json`.
+
+#### Gate Requirements
+
+ALL five gates must pass for a discovered source to be auto-enabled. If any gate fails, the source remains in discovery state with a `deferred` decision.
+
+| Gate | Condition | Rationale |
+|------|-----------|-----------|
+| **Frequency** | `hit_count_7d >= 5` | Source must produce enough T1/T2 content to justify collection overhead |
+| **Quality** | `t1_ratio >= 0.3` | At least 30% of the source's rolling output must be T1 (direct/original) |
+| **Uniqueness** | At least 1 `event_id` not covered by any currently enabled source | Source must contribute coverage the existing inventory does not provide |
+| **Not Already Enabled** | The normalized domain is not already present on any enabled source entry in `config/sources.json` | Prevent duplicate source entries |
+| **Age** | `first_seen` is at least 3 days old | Avoid enabling sources based on a single spike day |
+
+#### Uniqueness Join Path
+
+The uniqueness gate requires joining provenance and event data to determine whether the candidate source covers at least one event not already served by enabled sources:
+
+1. Collect all `NewsItem.id` values attributed to the candidate discovered domain (from `sample_item_ids` and the broader provenance store)
+2. Join each `NewsItem.id` to its `ProvenanceRecord` in `data/provenance/provenance-db.json`
+3. Read `NewsItem.event_id` for each matched item
+4. Build the set of `event_id` values already covered by items from currently enabled sources in `config/sources.json`
+5. **Pass uniqueness** only if the candidate discovered source contributes at least one `event_id` outside that enabled-source coverage set
+
+If all enabled sources already cover every event the candidate domain has contributed to, the uniqueness gate fails and the source is deferred with reason `no_unique_event_coverage`.
+
+#### Enable Outcome
+
+When all five gates pass:
+1. Generate a new source entry in `config/sources.json` (see `### Source Config Generation` below)
+2. Append a `decision_history` entry in the discovery state record: `{ decision: "enabled", reason: "all_gates_passed", ts: <ISO8601> }`
+3. Set `last_evaluated` on the discovery state root
+
+When any gate fails:
+1. Append a `decision_history` entry: `{ decision: "deferred", reason: "<failing_gate>", details: "<threshold vs actual>" }`
+2. The source remains in discovery state for re-evaluation on the next pipeline run
+
+### Auto-Disable Evaluation
+
+After auto-enable evaluation completes, evaluate all currently enabled auto-discovered sources for automatic disablement. This check runs against sources in `config/sources.json` that have `auto_discovered: true` and `enabled: true`.
+
+#### Disable Triggers
+
+A source is auto-disabled if ANY of the following conditions is met:
+
+| Trigger | Condition | Rationale |
+|---------|-----------|-----------|
+| **Tier ratio collapse** | `t1_ratio < 0.1` across the rolling 7-day window | Source no longer produces meaningful T1 content |
+| **Sustained inactivity** | 14 consecutive days with 0 T1/T2 items | Source has gone silent for provenance-relevant content |
+| **Low activity** | `hit_count_7d < 2` for 7 consecutive days | Source is producing near-zero provenance-relevant output |
+
+#### Disable Contract
+
+When any disable trigger fires:
+
+1. Set `enabled: false` on the source entry in `config/sources.json`
+2. Write a discovery `decision_history` entry in `data/provenance/discovered-sources.json` with:
+   - `decision: "disabled"`
+   - `reason`: one of `tier_ratio_below_disable_threshold`, `sustained_inactivity_14d`, `low_activity_7d`
+   - `details`: concrete metric values at the time of disable (e.g., `"t1_ratio: 0.0, hit_count_7d: 1, days_without_t1_t2: 14"`)
+3. Preserve operational `status` semantics: do NOT change the source's `status` field (it remains `active`, `degraded`, or `paused` per the existing source-health model in `references/collection-instructions.md`)
+4. Keep the source visible in discovery audit artifacts after disable -- do not delete the record from `data/provenance/discovered-sources.json`
+
+#### Interaction with Existing Source Health
+
+Discovery auto-disable is distinct from the existing source-health demotion model:
+
+- **Source health** (`status: active|degraded|paused`) tracks operational reliability -- fetch failures, quality score decay over 14 days, recovery streaks. It is documented in `references/collection-instructions.md`.
+- **Discovery disable** (`enabled: false` via discovery evaluation) tracks whether an auto-discovered source still meets the provenance quality bar that justified its original promotion.
+
+These two mechanisms operate independently. A source can be `enabled: false` (discovery-disabled) while retaining `status: "active"` (no operational issues), or `enabled: true` while `status: "degraded"` (operational problems but still meeting discovery thresholds).
+
 ---
 
 ## Section 1: Batch LLM Processing
