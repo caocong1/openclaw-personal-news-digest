@@ -251,6 +251,41 @@ During Processing Phase, after collecting unprocessed items (step 2) and before 
 
 ---
 
+## Section 0F: Provenance Stage (PROV-02, PROV-03, PROV-04)
+
+Run provenance inference after collection has produced raw items and before the existing classify/summarize batch flow. This stage extends item metadata with deterministic URL-rule and citation evidence before any provenance LLM call.
+
+### URL Rule Pre-classification
+
+1. Load `config/t1-sources.json` and `config/t2-sources.json`.
+2. Normalize the item URL using the existing normalization rules from `references/collection-instructions.md` Section 2 before matching.
+3. Respect `applies_to_subdomains: true` and `wildcard_depth` from the rule libraries when evaluating each pattern.
+4. If a T1 rule matches: set `tier_guess = "T1"`, `tier_confidence = 0.95`, `tier_source = "url_rule"`.
+5. If a T2 rule matches: set `tier_guess = "T2"`, `tier_confidence = 0.85`, `tier_source = "url_rule"`.
+6. If no rule matches: set `tier_guess = null`, `tier_confidence = 0.0`, `tier_source = null`.
+
+### Citation Graph Extension
+
+Extract deterministic citation evidence from `content_snippet` before provenance classification. Scan the snippet for all of the following input types:
+
+- explicit URLs matching `https://` or `http://`
+- HTML anchor tags via `<a href="...">`
+- explicit labels `Original link:`, `original link:`, `Source:`, `source:`
+- attribution phrases `according to`, `press release`, `blog post`, `reported by`, `citing`, `references`
+
+Normalize extracted citations to URLs where possible and store them as candidate `cited_sources`.
+
+### Provenance Classification Batch
+
+1. Batch up to 10 items per provenance LLM call.
+2. Only send items with `tier_guess = null` or `tier_confidence < 0.95`.
+3. For each item sent to the prompt, include `title`, `normalized_url`, `content_snippet`, `tier_guess`, and extracted `cited_sources`.
+4. Read `references/prompts/provenance-classify.md` and use it for the structured provenance call.
+5. Reuse the repo's existing retry-once pattern for structured LLM failures.
+6. Continue to honor the repo's existing budget and circuit-breaker conventions rather than inventing a separate provenance budget path.
+
+---
+
 ## Section 1: Batch LLM Processing
 
 ### Collecting Unprocessed Items

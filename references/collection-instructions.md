@@ -24,7 +24,7 @@ From the fetched XML text, extract the following fields for each `<item>` (or `<
 |-----------|---------------|-------|
 | `<title>` | `title` | Strip CDATA wrapper if present |
 | `<link>` | `url` | Original URL before normalization |
-| `<description>` | `content_snippet` | Strip HTML tags, truncate to ~500 chars |
+| `<description>` | `content_snippet` | Strip HTML tags, preserve upstream link targets as plain text `Original link: <url>` lines when present, truncate to ~500 chars |
 | `<pubDate>` | `published_at` | Parse to ISO8601; if missing, use `fetched_at` |
 | `<dc:creator>` or `<author>` | _(not stored in MVP)_ | Optional, for future use |
 
@@ -32,9 +32,17 @@ From the fetched XML text, extract the following fields for each `<item>` (or `<
 
 - **CDATA wrapping**: `<![CDATA[content]]>` -- strip the CDATA markers, keep inner content
 - **Missing pubDate**: Use `fetched_at` (current ISO8601 timestamp) as fallback
-- **HTML in description**: Strip all HTML tags to produce plain text `content_snippet`
+- **HTML in description**: Strip all HTML tags to produce plain text `content_snippet`, but preserve anchor destinations as `Original link: <url>` lines when a link target exists
 - **Encoded entities**: Decode `&amp;`, `&lt;`, `&gt;`, `&quot;` to their character equivalents
 - **Atom feeds**: Map `<entry>` to item, `<link href="...">` to url, `<summary>` or `<content>` to description
+
+### Provenance Preservation Guarantee
+
+When stripping HTML from RSS descriptions or extracted content:
+
+- Preserve anchor destinations as plain text `Original link: <url>` lines when a link target exists.
+- Do not discard upstream URLs from `content_snippet` during cleanup.
+- Keep this as a collection guarantee so downstream provenance and citation extraction can rely on stable `content_snippet` input.
 
 ### Fallback Method: exec + feedparser
 
