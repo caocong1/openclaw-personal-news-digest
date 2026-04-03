@@ -13,7 +13,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 
 ## Collection Phase
 
-0. **Bootstrap**: Verify required directories exist. Create any missing: `{baseDir}/data/`, `{baseDir}/data/news/`, `{baseDir}/data/cache/`, `{baseDir}/data/events/`, `{baseDir}/data/events/archived/`, `{baseDir}/data/alerts/`, `{baseDir}/data/feedback/`, `{baseDir}/data/metrics/`, `{baseDir}/output/`, `{baseDir}/config/`. If `{baseDir}/config/sources.json` does not exist, log error and abort: "Missing sources.json -- run setup first."
+0. **Bootstrap**: Verify required directories exist. Create any missing: `{baseDir}/data/`, `{baseDir}/data/news/`, `{baseDir}/data/cache/`, `{baseDir}/data/events/`, `{baseDir}/data/events/archived/`, `{baseDir}/data/alerts/`, `{baseDir}/data/feedback/`, `{baseDir}/data/metrics/`, `{baseDir}/data/provenance/`, `{baseDir}/output/`, `{baseDir}/config/`. If `{baseDir}/config/sources.json` does not exist, log error and abort: "Missing sources.json -- run setup first."
 1. **Acquire lock**: Read `{baseDir}/data/.lock`. If absent or `started_at` > 15 min ago, write `{ "run_id": "run-YYYYMMDD-HHmmss-XXXX", "started_at": "ISO8601" }`. If locked < 15 min, skip this run. Emit run_log entry: step="pipeline_start", details={run_id}.
 2. **Generate run_id**: `run-YYYYMMDD-HHmmss-XXXX` (XXXX = random 4 chars).
 3. **Load sources**: Read `{baseDir}/config/sources.json`, filter `enabled: true`. If budget effective_usage >= 0.8, additionally skip `status: "degraded"` sources.
@@ -22,6 +22,16 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 6. **Dedup**: Compute `SHA256(normalized_url)[:16]`. Check `{baseDir}/data/news/dedup-index.json` -- skip if hash exists.
 7. **Write items**: Append new items to `{baseDir}/data/news/YYYY-MM-DD.jsonl` atomically (write `.tmp.{run_id}`, then rename). (Apply Pre-Write Quality Contract from `processing-instructions.md` Section 0D before writing.)
 8. **Update dedup index**: Add new hashes to `dedup-index.json` atomically. Emit run_log entry: step="collection_complete", details={sources_attempted, items_fetched, failed_sources}.
+
+## Provenance Phase
+
+1. **Collect unresolved items**: Collect today's items that do not yet have provenance records.
+2. **Load rule libraries**: Load `{baseDir}/config/t1-sources.json` and `{baseDir}/config/t2-sources.json`.
+3. **Run URL-rule preclassification**: Run URL-rule preclassification and produce `tier_guess`, `tier_confidence`, and `tier_source`.
+4. **Extract upstream evidence**: Extract cited URLs and named upstream sources from `content_snippet`.
+5. **Batch unresolved items**: Batch unresolved or low-confidence items through `{baseDir}/references/prompts/provenance-classify.md`.
+6. **Persist provenance artifacts**: Write `{baseDir}/data/provenance/provenance-db.json`, `{baseDir}/data/provenance/citation-graph.json`, `{baseDir}/data/provenance/tier-stats.json`, and `{baseDir}/data/provenance/provenance-discrepancies.jsonl`.
+7. **Gate processing on provenance**: Continue into the existing Processing Phase only after provenance artifacts are updated.
 
 ## Processing Phase
 

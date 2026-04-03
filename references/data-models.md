@@ -77,6 +77,141 @@ Each news item collected from a source.
 
 ---
 
+Phase 13 does not add inline provenance fields to `NewsItem`. The authoritative join path is `NewsItem.id -> data/provenance/provenance-db.json`.
+
+---
+
+## ProvenanceRecord
+
+Authoritative provenance record keyed by `NewsItem.id` and stored in `data/provenance/provenance-db.json`.
+
+```json
+{
+  "id": "string (matches NewsItem.id)",
+  "tier": "T0|T1|T2|T3|T4",
+  "tier_confidence": 0.0,
+  "tier_source": "string",
+  "rule_result": {
+    "tier": "T0|T1|T2|T3|T4|null",
+    "category": "string or null"
+  },
+  "llm_result": {
+    "tier": "T0|T1|T2|T3|T4|null",
+    "confidence": 0.0
+  },
+  "original_source_name": "string or null",
+  "original_source_url": "string or null",
+  "current_source_name": "string or null",
+  "current_source_url": "string or null",
+  "cited_sources": [
+    {
+      "name": "string",
+      "url": "string or null",
+      "tier": "T1|T2|T3|T4|unknown"
+    }
+  ],
+  "propagation_hops": 0,
+  "provenance_chain": [
+    {
+      "name": "string",
+      "url": "string",
+      "tier": "T0|T1|T2|T3|T4|unknown"
+    }
+  ],
+  "classified_at": "ISO8601",
+  "_schema_v": 1
+}
+```
+
+**Field notes:**
+- `id`: Primary key. Join this record back to the collected item via `NewsItem.id`.
+- `rule_result`: Preserves the URL-rule candidate used before any provenance LLM fallback.
+- `llm_result`: Preserves the structured provenance classification result when the LLM is used.
+- `current_source_*`: The fetched article/source currently stored in the repo.
+- `original_source_*`: The highest-confidence upstream origin identified for the item.
+- `provenance_chain`: Ordered provenance hops used to reconstruct how the current item points back to the origin.
+
+---
+
+## CitationGraph
+
+Normalized citation graph stored in `data/provenance/citation-graph.json`.
+
+```json
+{
+  "_schema_v": 1,
+  "nodes": {
+    "{normalized_url_or_token}": {
+      "url": "string or null",
+      "label": "string",
+      "tier": "T0|T1|T2|T3|T4|unknown"
+    }
+  },
+  "edges": [
+    {
+      "from": "{normalized_url_or_token}",
+      "to": "{normalized_url_or_token}",
+      "relation": "references|cites|original_link|reported_by",
+      "ts": "ISO8601"
+    }
+  ]
+}
+```
+
+**Field notes:**
+- `nodes`: Object keyed by normalized URL or canonical URL token.
+- `edges`: Appendable relationship records that connect one citation node to another.
+- `relation`: Captures the deterministic citation relationship extracted from the item snippet.
+
+---
+
+## TierStats
+
+Daily provenance tier counters stored in `data/provenance/tier-stats.json`.
+
+```json
+{
+  "_schema_v": 1,
+  "days": {
+    "YYYY-MM-DD": {
+      "total_items": 0,
+      "tiers": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0
+      },
+      "resolved_by": {
+        "url_rule": 0,
+        "llm": 0,
+        "resolved_disagreement": 0
+      }
+    }
+  },
+  "sources": {
+    "source_id": {
+      "total_items": 0,
+      "tiers": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0
+      }
+    }
+  },
+  "last_updated": "ISO8601"
+}
+```
+
+**Field notes:**
+- `days`: Daily counters keyed by `YYYY-MM-DD`.
+- `resolved_by`: Tracks whether provenance was resolved by URL rules, the LLM, or a disagreement-resolution step.
+- `sources`: Source-level rollups keyed by `source_id`, each containing `total_items` and per-tier counts.
+
+---
+
 ## Event
 
 Each event groups related news items about the same real-world occurrence, tracked through a lifecycle with timeline entries.
@@ -614,6 +749,9 @@ Authoritative record of all data model versions, their current `_schema_v`, and 
 | Event | v3 | v1: initial fields (Phase 0). v2: +keywords, timeline (Phase 2). v3: +last_alerted_at, last_alert_news_id, last_alert_brief (Phase 10). |
 | CacheEntry | v2 | v1: initial fields (Phase 0). v2: +prompt_version (Phase 8). |
 | Preferences | v2 | v1: initial 5-layer model (Phase 0). v2: +depth_preference, judgment_angles (Phase 3). |
+| ProvenanceRecord | v1 | v1: initial authoritative provenance store keyed by `NewsItem.id` (Phase 13). |
+| CitationGraph | v1 | v1: initial citation graph with normalized nodes and timestamped edges (Phase 13). |
+| TierStats | v1 | v1: initial daily/source provenance counters (Phase 13). |
 | ScheduleProfileConfig | v1 | v1: initial named profile config with `active_profile` and job schedules (Phase 12). |
 | AlertState | v1 | v1: initial -- daily cap, URL dedup, alert_log (Phase 10). |
 | DigestHistory | v1 | v1: initial -- rolling 5-run window with event timeline snapshots (Phase 10). |
