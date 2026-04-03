@@ -1,0 +1,30 @@
+{
+  "_schema_v": 1,
+  "categories": {
+    "ai_tech_media": {
+      "applies_to_subdomains": true,
+      "patterns": [
+        "machineintro.com",
+        "the-decoder.com",
+        "venturebeat.com/ai",
+        "papers.lab",
+        "mittrchina.com",
+        "jiqizhixin.com",
+        "leiphone.com",
+        "turingtopia.com"
+      ]
+    },
+    "general_tech": {
+      "applies_to_subdomains": true,
+      "patterns": [
+        "techcrunch.com",
+        "theverge.com",
+        "wired.com",
+        "arstechnica.com",
+        "engadget.com",
+        "sina.com.cn/tech",
+        "ifeng.com/tech"
+      ]
+    }
+  }
+}
