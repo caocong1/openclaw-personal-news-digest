@@ -13,7 +13,6 @@ set -euo pipefail
 BASE_DIR="${1:-.}"
 NEWS_DIR="$BASE_DIR/data/news"
 INDEX_FILE="$NEWS_DIR/dedup-index.json"
-TEMP_FILE="$INDEX_FILE.tmp.rebuild"
 
 # Verify news directory exists
 if [ ! -d "$NEWS_DIR" ]; then
@@ -21,37 +20,22 @@ if [ ! -d "$NEWS_DIR" ]; then
   exit 1
 fi
 
-# Start with empty index
-echo "{}" > "$TEMP_FILE"
+# Rebuild index using dedup_tools module
+python3 - "$BASE_DIR" "$NEWS_DIR" "$INDEX_FILE" <<'PY'
+import os
+import sys
 
-# Process JSONL files from last 7 days
-JSONL_COUNT=0
-ENTRY_COUNT=0
+# Add project root to path for module import
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-for f in $(find "$NEWS_DIR" -name "*.jsonl" -mtime -7 2>/dev/null | sort); do
-  JSONL_COUNT=$((JSONL_COUNT + 1))
-  while IFS= read -r line; do
-    # Skip empty lines
-    [ -z "$line" ] && continue
+from scripts.lib import dedup_tools
 
-    id=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('id',''))" 2>/dev/null)
-    source_id=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('source_id',''))" 2>/dev/null)
-    fetched_at=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('fetched_at',''))" 2>/dev/null)
+base_dir = sys.argv[1]
+days = 7  # fixed: last 7 days
 
-    if [ -n "$id" ]; then
-      python3 -c "
-import json, sys
-idx = json.load(open('$TEMP_FILE'))
-idx['$id'] = {'news_id': '$id', 'source_id': '$source_id', 'fetched_at': '$fetched_at'}
-json.dump(idx, open('$TEMP_FILE', 'w'), ensure_ascii=False, indent=2)
-"
-      ENTRY_COUNT=$((ENTRY_COUNT + 1))
-    fi
-  done < "$f"
-done
+result = dedup_tools.rebuild_index(base_dir, days)
+print(f"Rebuilt dedup-index from {result['jsonl_count']} JSONL files")
+print(f"Total entries: {result['entry_count']}")
+PY
 
-# Atomic rename
-mv "$TEMP_FILE" "$INDEX_FILE"
-
-echo "Rebuilt dedup-index from $JSONL_COUNT JSONL files"
-echo "Total entries: $(python3 -c "import json; print(len(json.load(open('$INDEX_FILE'))))" 2>/dev/null || echo "$ENTRY_COUNT")"
+echo "Index rebuild complete."
