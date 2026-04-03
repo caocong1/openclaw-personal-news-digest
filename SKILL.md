@@ -65,8 +65,8 @@ Run source discovery accumulation after the Processing Phase has produced event-
 
 ## Output Phase
 
-1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items (all 7 dimensions active, including event_boost from `data/events/active.json`), sort by `final_score` descending. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool. Exclude items with `digest_eligible: false` from the scoring pool.
-1b. **Cross-digest repetition penalty**: Read `{baseDir}/data/digest-history.json`. For events with no new timeline progress since last digest, apply 0.7x penalty to final_score. After quota allocation, count repeat_suppressed_count (penalized items that were excluded from the digest). See `{baseDir}/references/processing-instructions.md` Section 4A.
+1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items (all 7 dimensions active, including event_boost from `data/events/active.json`), sort by `final_score` descending. Apply provenance modifiers from `references/scoring-formula.md` to compute `adjusted_score`. Run event representative selection per Section 4R before quota allocation. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool. Exclude items with `digest_eligible: false` from the scoring pool.
+1b. **Cross-digest repetition penalty**: Read `{baseDir}/data/digest-history.json`. For events with no new timeline progress since last digest, apply 0.7x penalty to `adjusted_score`. After quota allocation, count repeat_suppressed_count (penalized items that were excluded from the digest). See `{baseDir}/references/processing-instructions.md` Section 4A.
 2. **Quality gate**: If < 3 items, output shortened version. If 0 items, skip output entirely.
 3. **Quota allocation**: Assign items to sections (Core/Adjacent/Hotspot/Explore) per `{baseDir}/references/processing-instructions.md` Section 4 quota algorithm. Tag each item with `quota_group`.
 4. **Generate digest**: Read `{baseDir}/references/output-templates.md`. Build daily digest markdown.

@@ -961,12 +961,13 @@ For items with `processing_status: "partial"`:
 
 1. Read `references/scoring-formula.md`
 2. For each item with `processing_status: "complete"` or `"partial"`:
-   - Compute `final_score` using the 7-dimension formula (MVP simplification: `feedback_boost = 0`, `event_boost = 0`)
+   - Compute `final_score` using the 7-dimension formula
    - For `"partial"` items with missing data, use defaults:
      - `importance_score` default: `0.3`
      - `categories.primary` default: `null` (routes to Exploration section)
      - `form_type` default: `"other"`
 3. Sort all scored items by `final_score` descending
+4. Apply provenance modifier: For each scored item, compute `adjusted_score = final_score * lookup_provenance_modifier(item)` using the provenance modifier table from `references/scoring-formula.md`. Re-sort by `adjusted_score` descending. All downstream steps (repetition penalty, representative selection, quota allocation) use `adjusted_score` instead of `final_score`.
 
 ### Quality Gate
 
@@ -1005,7 +1006,7 @@ Given N = target item count (15-25 for daily digest):
 
 #### Step 3 -- Fill from Each Group
 
-Select items from each group, ordered by `final_score` descending, up to the group's target count.
+Select items from each group, ordered by `adjusted_score` descending, up to the group's target count.
 
 #### Step 4 -- One-Way Chain Yielding (ANTI-02)
 
@@ -1015,13 +1016,13 @@ If any group is underfilled (fewer available items than target), yield remaining
 2. If **adjacent** underfilled: yield remaining slots to **hotspot**
 3. If **hotspot** underfilled: yield remaining slots to **core**
 
-Direction is strictly one-way: explore -> adjacent -> hotspot -> core (one-way chain yielding). Slots never yield in the reverse direction (core never yields to explore). Each yield step selects the next-best items by `final_score` from the receiving group.
+Direction is strictly one-way: explore -> adjacent -> hotspot -> core (one-way chain yielding). Slots never yield in the reverse direction (core never yields to explore). Each yield step selects the next-best items by `adjusted_score` from the receiving group.
 
 #### Step 5 -- Reverse Diversity Constraints (ANTI-03)
 
 Read last 3 days of `data/metrics/daily-*.json` to get `category_proportions` and `source_proportions` history.
 
-- **Topic concentration cap:** If the same `categories.primary` topic exceeds 60% of the digest for 3 consecutive days, cap that topic at 50% today. Replace excess items with next-best items from other categories (by `final_score`).
+- **Topic concentration cap:** If the same `categories.primary` topic exceeds 60% of the digest for 3 consecutive days, cap that topic at 50% today. Replace excess items with next-best items from other categories (by `adjusted_score`).
 - **Source concentration cap:** If the same `source_id` exceeds 30% of the digest for 3 consecutive days, cap that source at 20% today. Replace excess items with next-best items from other sources.
 - **Stale event filter:** If the same event (`event_id`) has been pushed for > 3 consecutive days, include only if the item has `relation != "initial"` (i.e., new developments only).
 
@@ -1119,11 +1120,11 @@ After output and metrics are written:
 
 ## Section 4A: Cross-Digest Repetition Penalty (DEDUP-02)
 
-Applied during Output Phase, AFTER computing final_score (Section 4 scoring) and BEFORE quota allocation (Section 4 Step 1 through Step 3). This penalizes events that appear in consecutive digests without new developments.
+Applied during Output Phase, AFTER computing `adjusted_score` (Section 4 scoring) and BEFORE representative selection plus quota allocation. This penalizes events that appear in consecutive digests without new developments.
 
 ### When to Run
 
-After all items are scored (final_score computed), before quota group assignment.
+After all items are scored (`final_score` and `adjusted_score` computed), before representative selection and quota group assignment.
 
 ### Penalty Procedure
 
@@ -1139,13 +1140,13 @@ After all items are scored (final_score computed), before quota group assignment
       - Read current event from `data/events/active.json`
       - Compare `current_event.timeline.length` vs `snapshot[event_id].timeline_count`
       - If `current_event.timeline.length == snapshot.timeline_count`:
-        -> No new progress. Apply penalty: `item.final_score *= 0.7`
+        -> No new progress. Apply penalty: `item.adjusted_score *= 0.7`
       - If `current_event.timeline.length > snapshot.timeline_count`:
         -> New progress exists. No penalty.
 
 5. After quota allocation is complete (items selected for digest), count `repeat_suppressed_count`:
    - For each item that received the 0.7x penalty in step 4c above:
-     - If the item's post-penalty final_score caused it to fall below the selection threshold (i.e., it was NOT selected for the digest):
+     - If the item's post-penalty `adjusted_score` caused it to fall below the selection threshold (i.e., it was NOT selected for the digest):
        -> Increment `repeat_suppressed_count`
    - Items that received the penalty but were STILL selected for the digest do NOT count as "suppressed"
    - This definition aligns with DEDUP-03: "suppressed" means actually excluded from the digest due to the penalty
@@ -1154,16 +1155,57 @@ After all items are scored (final_score computed), before quota group assignment
 
 - The 0.7 multiplier is applied ONCE (not compounding). It only compares against the LAST digest run, not all previous runs.
 - Items with genuinely high importance (0.85+) still score competitively even with penalty: 0.85 * 0.25 weight = 0.2125 for importance dimension alone, plus other dimensions.
-- The penalty applies to `final_score` (the already-computed weighted sum), not to any individual dimension.
+- The penalty applies to `adjusted_score` (the provenance-aware post-formula score), not to any individual dimension or weight.
 - Items penalized may still be selected if their penalized score remains above the selection threshold.
 - `repeat_suppressed_count` tracks ONLY items that were both penalized AND excluded from the digest as a result. This is the count shown in the transparency footer.
 
 ### Interaction with Other Steps
 
-- Runs AFTER: Section 4 scoring (final_score computed)
-- Runs BEFORE: Section 4 Step 1-3 quota allocation
+- Runs AFTER: Section 4 scoring (`adjusted_score` computed)
+- Runs BEFORE: Section 4R representative selection and Section 4 Step 1-3 quota allocation
 - Does NOT interact with noise filter (Section 0E) -- items already filtered by noise never reach scoring
 - Does NOT interact with stale event filter (ANTI-03 Step 5) -- that filter checks 3-day consecutive push, this checks timeline progress
+
+---
+
+## Section 4R: Event Representative Selection (PIPE-03)
+
+Runs AFTER Section 4A repetition penalty and BEFORE Section 4 quota allocation (Step 1 through Step 3).
+
+### Purpose
+
+For events with multiple items in the scored pool, select exactly one representative item per event. Non-representative items are excluded from the digest scoring pool for the current run only.
+
+### TIER_RANK
+
+```json
+{ "T0": 0, "T1": 1, "T2": 2, "T3": 3, "T4": 4 }
+```
+
+### Representative Selection Procedure
+
+1. Group scored items by `event_id`.
+   - Items with `event_id = null` are always eligible and skip this section.
+2. For groups with exactly 1 item:
+   - That item is the representative.
+   - Set `Event.representative_item_id = item.id` in `data/events/active.json`.
+3. For groups with 2+ items:
+   - Join each item to `data/provenance/provenance-db.json` to read `tier`.
+   - Join each item to `config/sources.json` to read source credibility.
+   - Sort by:
+     1. tier rank ascending (`T0=0`, `T1=1`, `T2=2`, `T3=3`, `T4=4`)
+     2. source credibility descending
+     3. `adjusted_score` descending
+   - The first item after sort is the representative.
+   - Set `Event.representative_item_id = item.id` in `data/events/active.json`.
+4. For every non-representative item in a multi-item event:
+   - Set runtime flag `digest_pool_excluded: true`
+   - Remove the item from the digest pool for this run only
+5. Persist the selected representative on the event record, but do not persist any runtime-only exclusion flags to news storage.
+
+### Warning
+
+Non-representative exclusion is runtime-only. Do NOT write `digest_eligible: false` or any other persistent exclusion flag back to the news JSONL file.
 
 ---
 

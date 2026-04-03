@@ -182,3 +182,68 @@ phase2_score =
 
 Effective max: 1.00 (with both feedback data and active high-importance events)
 ```
+
+## Provenance Modifier (Post-Formula)
+
+Apply provenance as a post-formula multiplier after the 7-dimension weighted sum computes `final_score`.
+This does NOT add an eighth dimension and does NOT change any of the existing weights above.
+
+| Tier / Condition | `provenance_modifier` | Notes |
+|------------------|-----------------------|-------|
+| `T0` | `1.15` | Rare, highest-value original content |
+| `T1` | `1.10` | Direct source |
+| `T2` | `1.05` | Original reporting |
+| `T3` | `1.00` | Neutral |
+| `T4` with no direct-coverage sibling in the same event | `1.00` | Neutral when aggregation is the only coverage |
+| `T4` with a `T0`/`T1`/`T2` sibling in the same event | `0.75` | Decay redundant aggregation when direct coverage exists |
+
+```
+adjusted_score = final_score * provenance_modifier
+```
+
+`final_score` remains the output of the existing 7-dimension formula. `adjusted_score` is the provenance-aware score used by downstream ranking, repetition-penalty, representative-selection, and quota steps.
+
+### `lookup_provenance_modifier(item, provenance_db, events)`
+
+```text
+# Join path: NewsItem.id -> data/provenance/provenance-db.json
+record = provenance_db[item.id]
+if record is null:
+  return 1.00
+
+tier = record.tier
+
+if tier == "T0":
+  return 1.15
+if tier == "T1":
+  return 1.10
+if tier == "T2":
+  return 1.05
+if tier == "T3":
+  return 1.00
+
+if tier != "T4":
+  return 1.00
+
+if item.event_id is null:
+  return 1.00
+
+# Same-event sibling lookup: Event.item_ids from data/events/active.json
+event = events[item.event_id]
+if event is null:
+  return 1.00
+
+for sibling_id in event.item_ids:
+  if sibling_id == item.id:
+    continue
+
+  sibling_record = provenance_db[sibling_id]
+  if sibling_record is not null and sibling_record.tier in ["T0", "T1", "T2"]:
+    return 0.75
+
+return 1.00
+```
+
+If an item has no provenance record, use the neutral modifier `1.00`. If a `T4` item has no `event_id`, or its event cannot be found, also use `1.00` because there is no same-event context for sibling detection.
+
+These modifier values are configurable starting points. Tune them after deployment observation if ranking outcomes show over- or under-correction.
