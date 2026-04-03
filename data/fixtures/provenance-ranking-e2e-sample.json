@@ -1,0 +1,179 @@
+{
+  "_description": "End-to-end Phase 15 verification fixture. Proves PIPE-01 through PIPE-05 in a single pipeline run scenario.",
+  "_scenario": "2026-04-07 daily digest run with 5 items, 2 events, provenance scoring, representative selection, alert gating, and provenance rendering.",
+  "PIPE-01_provenance_scoring": {
+    "_proof": "T1 item outranks T4 item for the same event after provenance modifier application.",
+    "items": [
+      {
+        "id": "e2e-t1-openai",
+        "title": "OpenAI Releases GPT-5 Model",
+        "source_id": "src-openai-blog",
+        "source_name": "OpenAI Blog",
+        "event_id": "evt-gpt5",
+        "final_score": 0.72,
+        "tier": "T1",
+        "modifier": 1.1,
+        "adjusted_score": 0.792
+      },
+      {
+        "id": "e2e-t4-36kr",
+        "title": "36Kr: OpenAI 发布 GPT-5",
+        "source_id": "src-36kr",
+        "source_name": "36Kr",
+        "event_id": "evt-gpt5",
+        "final_score": 0.8,
+        "tier": "T4",
+        "modifier": 0.75,
+        "adjusted_score": 0.6,
+        "_note": "Higher final_score (0.80) but T4 decay drops adjusted_score below T1 item (0.60 < 0.792)"
+      },
+      {
+        "id": "e2e-t3-analysis",
+        "title": "AI Industry Analysis: GPT-5 Impact",
+        "source_id": "src-techreview",
+        "source_name": "MIT Tech Review",
+        "event_id": "evt-gpt5",
+        "final_score": 0.68,
+        "tier": "T3",
+        "modifier": 1.0,
+        "adjusted_score": 0.68
+      }
+    ],
+    "ranking_after_modifier": [
+      "e2e-t1-openai (0.792)",
+      "e2e-t3-analysis (0.68)",
+      "e2e-t4-36kr (0.60)"
+    ]
+  },
+  "PIPE-03_representative_selection": {
+    "_proof": "T1 item wins representative selection for evt-gpt5. T3 and T4 items excluded from digest pool (runtime only).",
+    "event_id": "evt-gpt5",
+    "candidates_sorted": [
+      {
+        "id": "e2e-t1-openai",
+        "tier_rank": 1,
+        "credibility": 0.95,
+        "adjusted_score": 0.792,
+        "selected": true
+      },
+      {
+        "id": "e2e-t3-analysis",
+        "tier_rank": 3,
+        "credibility": 0.9,
+        "adjusted_score": 0.68,
+        "selected": false
+      },
+      {
+        "id": "e2e-t4-36kr",
+        "tier_rank": 4,
+        "credibility": 0.7,
+        "adjusted_score": 0.6,
+        "selected": false
+      }
+    ],
+    "representative_item_id": "e2e-t1-openai",
+    "_note": "Non-representative items excluded from digest pool for this run only. digest_eligible field NOT modified."
+  },
+  "PIPE-02_alert_gating": {
+    "_proof": "Event-level suppression and tier-aware threshold both demonstrated.",
+    "scenario_a_event_suppression": {
+      "item_id": "e2e-t4-36kr",
+      "event_id": "evt-gpt5",
+      "importance_score": 0.93,
+      "alert_log_entries_for_event_today": 1,
+      "result": "SKIP",
+      "reason": "Step 0: event evt-gpt5 already alerted today (1 prior alert in alert_log)"
+    },
+    "scenario_b_t4_threshold": {
+      "item_id": "e2e-t4-solo",
+      "title": "36Kr: New AI Regulation Draft",
+      "event_id": "evt-regulation",
+      "tier": "T4",
+      "importance_score": 0.88,
+      "effective_threshold": 0.92,
+      "result": "SKIP",
+      "reason": "Step 0A: T4 item importance 0.88 < T4 threshold 0.92"
+    },
+    "scenario_c_t1_passes": {
+      "item_id": "e2e-t1-openai",
+      "tier": "T1",
+      "importance_score": 0.88,
+      "effective_threshold": 0.85,
+      "result": "CONTINUE",
+      "reason": "Step 0A: T1 item importance 0.88 >= standard threshold 0.85"
+    }
+  },
+  "PIPE-04_provenance_rendering": {
+    "_proof": "Digest output shows tier, original-source attribution, and provenance chain correctly.",
+    "core_focus_example": {
+      "item_id": "e2e-t1-openai",
+      "rendered_lines": [
+        "### OpenAI Releases GPT-5 Model",
+        "OpenAI announced the release of GPT-5...",
+        "来源: OpenAI Blog | 信源层级: 直接来源 | 新闻 | 重要性: 0.88",
+        "入选依据: importance | 配额: core | 证据: importance_score=0.88; topic_weight=0.9; event_boost=0.5"
+      ],
+      "_note_no_original_source": "original_source_name == source_name, so 原始来源 line is omitted",
+      "_note_no_chain": "provenance_chain.length == 1 (single hop), so 溯源链 line is omitted"
+    },
+    "compact_example_with_chain": {
+      "item_id": "hypothetical-t4-with-chain",
+      "rendered_lines": [
+        "- **某聚合新闻标题** -- 一句话摘要 (36Kr | 聚合转载)",
+        "  原始来源: Reuters",
+        "  溯源链: Reuters (直接来源) -> TechCrunch (原创报道) -> 36Kr (聚合转载)"
+      ],
+      "_note": "original_source_name (Reuters) != source_name (36Kr), and chain.length == 3, so both lines render"
+    },
+    "internal_fields_suppressed": [
+      "tier_source",
+      "tier_confidence",
+      "rule_result",
+      "llm_result",
+      "original_source_url"
+    ]
+  },
+  "PIPE-05_weekly_discovery_report": {
+    "_proof": "Weekly report includes all four discovery subsections.",
+    "newly_enabled": [
+      {
+        "domain": "openai.com",
+        "tier": "T1",
+        "representative_title": "OpenAI Releases GPT-5 Model",
+        "reason": "All 5 gates passed: frequency 7/7d, quality t1_ratio 0.85, uniqueness 2 exclusive events, age 5 days, not previously enabled",
+        "first_seen": "2026-04-02",
+        "hit_count_7d": 7
+      }
+    ],
+    "newly_disabled": [],
+    "tier_distribution": {
+      "this_week": {
+        "T1": 12,
+        "T2": 8,
+        "T3": 15,
+        "T4": 45
+      },
+      "last_week": {
+        "T1": 5,
+        "T2": 6,
+        "T3": 14,
+        "T4": 52
+      },
+      "delta": {
+        "T1": "+7",
+        "T2": "+2",
+        "T3": "+1",
+        "T4": "-7"
+      }
+    },
+    "watchlist": [
+      {
+        "domain": "github.blog",
+        "tier": "T1",
+        "hit_count_7d": 3,
+        "t1_ratio": "0.90",
+        "gap": "需 5次/7天命中, 当前 3次"
+      }
+    ]
+  }
+}
