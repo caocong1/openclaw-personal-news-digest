@@ -11,6 +11,8 @@
 #   Temp files:       15 minutes
 #   Archived events:  permanent (no TTL)
 
+set -euo pipefail
+
 BASE_DIR="${1:-.}"
 
 echo "=== Data Lifecycle Management ==="
@@ -30,149 +32,63 @@ done
 echo "News JSONL: removed $ARCHIVED_JSONL files (TTL: 30 days)"
 
 # ─────────────────────────────────────────────────────────
-# 2. Dedup-index entries (7-day TTL) -- remove entries by fetched_at
+# 2-4. Dedup-index, Feedback, and Cache cleanup (single Python call)
 # ─────────────────────────────────────────────────────────
 
-DEDUP_REMOVED=0
-DEDUP_PATH="$BASE_DIR/data/news/dedup-index.json"
-if [ -f "$DEDUP_PATH" ]; then
-  DEDUP_REMOVED=$(python3 -c "
-import json, os
-from datetime import datetime, timezone, timedelta
+RESULTS=$(python3 - "$BASE_DIR" <<'PY'
+import json, os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from scripts.lib import archive_tools
 
-path = '$DEDUP_PATH'
-data = json.load(open(path))
-cutoff = datetime.now(timezone.utc) - timedelta(days=7)
-original_count = len(data)
+base = sys.argv[1]
+results = {"dedup": 0, "feedback": 0, "cache": 0}
 
-cleaned = {}
-for key, entry in data.items():
-    fetched_at = entry.get('fetched_at', '')
-    if fetched_at:
-        try:
-            ts = datetime.fromisoformat(fetched_at.replace('Z', '+00:00'))
-            if ts >= cutoff:
-                cleaned[key] = entry
-                continue
-        except ValueError:
-            pass
-    # Keep entries without valid fetched_at (don't delete unknowns)
-    cleaned[key] = entry
+# Dedup-index cleanup
+dedup_path = os.path.join(base, "data", "news", "dedup-index.json")
+if os.path.exists(dedup_path):
+    results["dedup"] = archive_tools.cleanup_dedup_index(dedup_path, ttl_days=7)
+else:
+    results["dedup"] = None  # signals NOT_FOUND
 
-removed = original_count - len(cleaned)
+# Feedback cleanup
+feedback_path = os.path.join(base, "data", "feedback", "log.jsonl")
+if os.path.exists(feedback_path):
+    results["feedback"] = archive_tools.cleanup_feedback(feedback_path, ttl_days=90)
+else:
+    results["feedback"] = None  # signals NOT_FOUND
 
-# Atomic write: write to .tmp, then rename
-tmp_path = path + '.tmp'
-with open(tmp_path, 'w') as f:
-    json.dump(cleaned, f, indent=2, ensure_ascii=False)
-os.rename(tmp_path, path)
+# Cache cleanup
+for name in ("classify-cache.json", "summary-cache.json"):
+    cache_path = os.path.join(base, "data", "cache", name)
+    if os.path.exists(cache_path):
+        removed = archive_tools.cleanup_cache_entry(cache_path, ttl_days=7)
+        results["cache"] += removed
 
-print(removed)
-" 2>/dev/null)
-  if [ -z "$DEDUP_REMOVED" ]; then
-    DEDUP_REMOVED=0
-    echo "Dedup-index: error during cleanup"
-  fi
-else
+print(json.dumps(results))
+PY
+)
+
+DEDUP_REMOVED=$(echo "$RESULTS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('dedup',0) if d.get('dedup') is not None else 'skip')" 2>/dev/null)
+FEEDBACK_REMOVED=$(echo "$RESULTS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('feedback',0) if d.get('feedback') is not None else 'skip')" 2>/dev/null)
+CACHE_TOTAL_REMOVED=$(echo "$RESULTS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('cache',0))" 2>/dev/null)
+
+if [ "$DEDUP_REMOVED" = "skip" ] || [ -z "$DEDUP_REMOVED" ]; then
   echo "Dedup-index: file not found, skipping"
+  DEDUP_REMOVED=0
 fi
 echo "Dedup-index entries: removed $DEDUP_REMOVED entries (TTL: 7 days)"
 
-# ─────────────────────────────────────────────────────────
-# 3. Feedback detail (90-day TTL) -- remove entries by timestamp
-# ─────────────────────────────────────────────────────────
-
-FEEDBACK_REMOVED=0
-FEEDBACK_PATH="$BASE_DIR/data/feedback/log.jsonl"
-if [ -f "$FEEDBACK_PATH" ]; then
-  FEEDBACK_REMOVED=$(python3 -c "
-import json, os
-from datetime import datetime, timezone, timedelta
-
-path = '$FEEDBACK_PATH'
-cutoff = datetime.now(timezone.utc) - timedelta(days=90)
-
-kept = []
-removed = 0
-with open(path) as f:
-    for line in f:
-        line = line.strip()
-        if not line:
-            continue
-        try:
-            entry = json.loads(line)
-            ts_str = entry.get('timestamp', '')
-            if ts_str:
-                ts = datetime.fromisoformat(ts_str.replace('Z', '+00:00'))
-                if ts < cutoff:
-                    removed += 1
-                    continue
-            kept.append(line)
-        except (json.JSONDecodeError, ValueError):
-            kept.append(line)  # Keep entries we can't parse
-
-# Atomic write: write to .tmp, then rename
-tmp_path = path + '.tmp'
-with open(tmp_path, 'w') as f:
-    for line in kept:
-        f.write(line + '\n')
-os.rename(tmp_path, path)
-
-print(removed)
-" 2>/dev/null)
-  if [ -z "$FEEDBACK_REMOVED" ]; then
-    FEEDBACK_REMOVED=0
-    echo "Feedback: error during cleanup"
-  fi
-else
+if [ "$FEEDBACK_REMOVED" = "skip" ] || [ -z "$FEEDBACK_REMOVED" ]; then
   echo "Feedback: log.jsonl not found, skipping"
+  FEEDBACK_REMOVED=0
 fi
 echo "Feedback entries: removed $FEEDBACK_REMOVED entries (TTL: 90 days)"
 
-# ─────────────────────────────────────────────────────────
-# 4. Cache files (7-day TTL) -- remove entries by cached_at
-# ─────────────────────────────────────────────────────────
-
-CACHE_TOTAL_REMOVED=0
+# Per-file cache breakdown (no additional cleanup -- just report)
 for CACHE_NAME in "classify-cache.json" "summary-cache.json"; do
   CACHE_PATH="$BASE_DIR/data/cache/$CACHE_NAME"
   if [ -f "$CACHE_PATH" ]; then
-    CACHE_REMOVED=$(python3 -c "
-import json, os
-from datetime import datetime, timezone, timedelta
-
-path = '$CACHE_PATH'
-data = json.load(open(path))
-cutoff = datetime.now(timezone.utc) - timedelta(days=7)
-original_count = len(data)
-
-cleaned = {}
-for key, entry in data.items():
-    cached_at = entry.get('cached_at', '')
-    if cached_at:
-        try:
-            ts = datetime.fromisoformat(cached_at.replace('Z', '+00:00'))
-            if ts < cutoff:
-                continue  # Skip expired entry
-        except ValueError:
-            pass
-    cleaned[key] = entry
-
-removed = original_count - len(cleaned)
-
-# Atomic write: write to .tmp, then rename
-tmp_path = path + '.tmp'
-with open(tmp_path, 'w') as f:
-    json.dump(cleaned, f, indent=2, ensure_ascii=False)
-os.rename(tmp_path, path)
-
-print(removed)
-" 2>/dev/null)
-    if [ -z "$CACHE_REMOVED" ]; then
-      CACHE_REMOVED=0
-    fi
-    CACHE_TOTAL_REMOVED=$((CACHE_TOTAL_REMOVED + CACHE_REMOVED))
-    echo "  $CACHE_NAME: removed $CACHE_REMOVED entries"
+    echo "  $CACHE_NAME: present (cleanup included in total above)"
   else
     echo "  $CACHE_NAME: not found, skipping"
   fi
