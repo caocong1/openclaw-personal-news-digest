@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Provenance & Source Discovery
 status: ready
-stopped_at: Completed 16-01 plan
-last_updated: "2026-04-03T22:01:13Z"
-last_activity: 2026-04-03 -- Completed Phase 16 Plan 01: inline Python extraction and pipeline_state enum
+stopped_at: Completed 16-02 plan
+last_updated: "2026-04-03T14:08:00Z"
+last_activity: 2026-04-03 -- Completed Phase 16 Plan 02: roundup atomization and PIPE-03 confirmation
 progress:
   total_phases: 4
   completed_phases: 3
@@ -27,9 +27,9 @@ See: .planning/PROJECT.md (updated 2026-04-03)
 
 Milestone: `v3.0 Provenance & Source Discovery`
 Phase: 16 (operational-hardening-&-verification)
-Plan: 01 complete (of 4)
+Plan: 02 complete (of 4)
 Status: Ready for next plan
-Last activity: 2026-04-03 -- Completed Phase 16 Plan 01: inline Python extraction and pipeline_state enum
+Last activity: 2026-04-03 -- Completed Phase 16 Plan 02: roundup atomization and PIPE-03 confirmation
 
 Progress: [██████████] 100%
 
@@ -67,7 +67,11 @@ Progress: [██████████] 100%
 - Key decision: data-archive.sh consolidates all Python cleanup into a single heredoc call to avoid double-execution.
 - Key decision: pipeline_state backward-compat default is "success" matching the most common case.
 - Key decision: scripts/source-status.sh remains the reference model and is not modified.
-- Next step: Phase 16 Plan 02 (HARD-02 roundup atomization)
+- Phase 16 Plan 02 complete: NewsItem schema v6 with is_roundup/roundup_children, roundup-patterns.json with 11 patterns, Roundup Classification directive in classify.md, Collection Phase step 7b atomization wiring, Output Phase PIPE-03 confirmation.
+- Key decision: is_roundup uses three-state semantics -- null (unevaluated, backward compat), false (confirmed not-a-roundup), true (atomize and exclude)
+- Key decision: fast-path pattern match is default, LLM classify is the fallback for roundup detection
+- Key decision: parent roundup stays in JSONL for audit, child items carry parent_roundup_id for traceability
+- Next step: Phase 16 Plan 03 (OPER-01/02/03/04 run journal, version check, backlog sync, source profiles)
 
 ## Audit Notes
 
@@ -96,6 +100,9 @@ Progress: [██████████] 100%
 - [Phase 16-01]: Dedup index rebuild uses in-memory collection then single atomic write
 - [Phase 16-01]: JSON parsing from heredoc uses python3 - ARG <<'PY' not echo | python3 - <<'PY'
 - [Phase 16-01]: pipeline_state backward-compat default is "success"
+- [Phase 16-02]: is_roundup null=false=true three-state semantics (unevaluated/not-roundup/roundup)
+- [Phase 16-02]: fast-path pattern match as default, LLM classify as fallback for roundup detection
+- [Phase 16-02]: parent roundup preserved in JSONL for audit, child items carry parent_roundup_id
 
 ## Blockers
 
@@ -109,9 +116,10 @@ None
 | Phase 15 P02 | 7min | 2 tasks | 4 files |
 | Phase 15 P03 | 4min | 2 tasks | 3 files |
 | Phase 16 P01 | 9min | 5 tasks | 11 files |
+| Phase 16 P02 | 3min | 3 tasks | 4 files |
 
 ## Session
 
-Last Date: 2026-04-03T22:01:13Z
-Stopped At: Completed Phase 16 Plan 01
+Last Date: 2026-04-03T14:08:00Z
+Stopped At: Completed Phase 16 Plan 02
 Resume File: None
