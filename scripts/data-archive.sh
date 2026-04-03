@@ -68,9 +68,26 @@ print(json.dumps(results))
 PY
 )
 
-DEDUP_REMOVED=$(echo "$RESULTS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('dedup',0) if d.get('dedup') is not None else 'skip')" 2>/dev/null)
-FEEDBACK_REMOVED=$(echo "$RESULTS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('feedback',0) if d.get('feedback') is not None else 'skip')" 2>/dev/null)
-CACHE_TOTAL_REMOVED=$(echo "$RESULTS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('cache',0))" 2>/dev/null)
+DEDUP_REMOVED=$(python3 - "$RESULTS" <<'PY' 2>/dev/null
+import json, sys
+d = json.loads(sys.argv[1])
+v = d.get("dedup")
+print(v if v is not None else "skip")
+PY
+)
+FEEDBACK_REMOVED=$(python3 - "$RESULTS" <<'PY' 2>/dev/null
+import json, sys
+d = json.loads(sys.argv[1])
+v = d.get("feedback")
+print(v if v is not None else "skip")
+PY
+)
+CACHE_TOTAL_REMOVED=$(python3 - "$RESULTS" <<'PY' 2>/dev/null
+import json, sys
+d = json.loads(sys.argv[1])
+print(d.get("cache", 0))
+PY
+)
 
 if [ "$DEDUP_REMOVED" = "skip" ] || [ -z "$DEDUP_REMOVED" ]; then
   echo "Dedup-index: file not found, skipping"
