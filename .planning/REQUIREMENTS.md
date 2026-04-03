@@ -1,0 +1,82 @@
+# Requirements: OpenClaw News Digest Skill
+
+**Defined:** 2026-04-03
+**Core Value:** Replace "pushing messages to the user" with "continuously observing the world on the user's behalf" while preserving anti-echo-chamber exposure alongside deep personalization.
+
+## v3.0 Requirements
+
+### Provenance
+
+- [ ] **PROV-01**: Every collected news item can be classified into T0/T1/T2/T3/T4 with a confidence score and classification source.
+- [ ] **PROV-02**: URL-rule preclassification identifies known T1/T2 domains from dedicated pattern libraries without an LLM call.
+- [ ] **PROV-03**: Citation extraction captures cited URLs or named upstream sources from article content before provenance classification.
+- [ ] **PROV-04**: Batched provenance classification can infer original source URL/name, cited sources, and propagation hops for items not conclusively resolved by rules.
+- [ ] **PROV-05**: Cross-validation resolves rule-vs-LLM disagreements, logs discrepancies, and preserves why the final tier won.
+- [ ] **PROV-06**: Provenance results persist to `data/provenance/` stores that can reconstruct the delivered item's provenance chain later.
+
+### Source Discovery
+
+- [ ] **DISC-01**: The system accumulates unique T1/T2 domains with rolling hit counts, last-seen dates, representative titles, and tier ratios.
+- [ ] **DISC-02**: A discovered source auto-enables only after frequency, quality, uniqueness, age, and not-already-enabled checks all pass.
+- [ ] **DISC-03**: Auto-discovered sources auto-disable when quality or sustained activity drops below documented thresholds.
+- [ ] **DISC-04**: Auto-enabled sources are written into `config/sources.json` with inferred type, defaults, and audit metadata.
+- [ ] **DISC-05**: T1/T2 source libraries in dedicated config files can grow as new direct sources are discovered.
+
+### Pipeline Integration
+
+- [ ] **PIPE-01**: Final ranking adds provenance boost/penalty so T1/T2 items outrank redundant T4 aggregation when the underlying event is the same.
+- [ ] **PIPE-02**: T4 items use a stricter breaking-alert threshold, and event-level alert suppression runs before the importance gate.
+- [ ] **PIPE-03**: Each merged event keeps exactly one representative item chosen by highest tier first, then credibility and score tie-breakers.
+- [ ] **PIPE-04**: Digest and alert rendering show source tier, provenance chain, and normalized English-title display without leaking internal fields.
+- [ ] **PIPE-05**: A weekly source-discovery report summarizes newly discovered sources, auto-enable/disable actions, tier mix, and watchlist changes.
+
+### Hardening
+
+- [ ] **HARD-01**: Inline Python or brittle here-doc execution paths are replaced with auditable scripts under `scripts/`.
+- [ ] **HARD-02**: Collection-style roundup items can be atomized into child items, and the parent roundup is excluded from scoring and output.
+- [ ] **HARD-03**: Pipeline output distinguishes success-empty, failed-no-scan, and partial-degraded states so silence is not confused with failure.
+
+### Operations
+
+- [ ] **OPER-01**: Failures, exceptions, and security blocks append structured entries to `data/metrics/run-journal.jsonl`.
+- [ ] **OPER-02**: Health checks surface OpenClaw version drift and documented recovery hints for blocked runs.
+- [ ] **OPER-03**: The skill appends failure follow-up to the external backlog path and keeps repo docs aligned with that path.
+- [ ] **OPER-04**: A documented production source profile enables a multi-source baseline instead of a single-source default.
+- [ ] **OPER-05**: CLI/docs parity checks and a channel recovery matrix document how operators recover across Web UI, terminal, and Discord workflows.
+- [ ] **OPER-06**: Live platform smoke tests cover cron delivery, isolated session loading, exec permissions, timeout behavior, and empty-input quality gates after the provenance rollout.
+
+## v4+ Requirements
+
+### Governance
+
+- **GOV-01**: Operators can review or veto auto-discovered source changes before activation.
+- **GOV-02**: Historical news records can be backfilled with provenance after the initial rollout.
+
+### Expansion
+
+- **EXP-01**: Source discovery works outside the current OpenClaw VM deployment context.
+- **EXP-02**: Render-layer delivery contracts are decoupled further from internal content-model contracts for future channels.
+- **EXP-03**: Multi-user source governance and personalized source pools are supported.
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Manual source approval dashboard | Spec explicitly chooses a fully automated discovery loop for v3.0 |
+| Historical provenance backfill for existing items | High data-migration cost and not required to validate forward-looking provenance |
+| Cross-platform discovery outside OpenClaw VM | Milestone is bounded to the current deployment environment |
+| Standalone frontend for source curation | Repo remains a skill/prompt/config project, not a separate app |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+
+**Coverage:**
+- v3.0 requirements: 25 total
+- Mapped to phases: 0
+- Unmapped: 25
+
+---
+*Requirements defined: 2026-04-03*
+*Last updated: 2026-04-03 after initial milestone requirement definition*
