@@ -494,6 +494,35 @@ After generating the entry:
 3. Append the new source entry
 4. Write `config/sources.json` atomically (write to `.tmp`, then rename)
 
+### Discovery Audit Artifacts
+
+Every discovery evaluation run must produce a human-readable audit artifact that captures the current state of all discovery decisions. The audit artifact is the authoritative record of why each observed domain was enabled, deferred, rejected, or disabled.
+
+#### Required Fields per Audited Domain
+
+Each domain entry in the audit artifact must include these fields:
+
+| Field | Description |
+|-------|-------------|
+| `domain` | Normalized root domain (e.g., `openai.com`) |
+| `tier` | Discovery tier at last evaluation (`T1` or `T2`) |
+| `first_seen` | ISO8601 timestamp of first observation |
+| `last_seen` | ISO8601 timestamp of most recent observation |
+| `hit_count_7d` | Rolling 7-day T1/T2 observation count |
+| `t1_ratio` | Ratio of T1 observations to total T1/T2 observations in the rolling window |
+| `decision` | Current lifecycle decision: `observed`, `enabled`, `deferred`, `rejected`, or `disabled` |
+| `reason` | Machine-readable reason code for the current decision (e.g., `all_gates_passed`, `below_frequency_threshold`, `tier_ratio_below_disable_threshold`) |
+| `representative_urls` | Up to 10 representative source URLs preserving path segments for path-sensitive rule-library updates |
+| `representative_titles` | Up to 5 representative article titles showing the domain's content profile |
+
+#### Audit Artifact Location
+
+The machine-readable discovery state at `data/provenance/discovered-sources.json` serves as the canonical audit store. Human-readable audit summaries may be derived from this store for operator review. The audit store must never be truncated or pruned of disabled or rejected records -- those records are the evidence trail.
+
+#### Decision History Completeness
+
+Each domain's `decision_history` array must preserve every lifecycle transition in chronological order. A domain that was observed, then enabled, then later disabled must retain all three entries. This allows operators to reconstruct the full lifecycle: `observed -> enabled -> disabled`.
+
 ---
 
 ## Section 1: Batch LLM Processing

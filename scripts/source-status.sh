@@ -121,7 +121,7 @@ if not query:
 
     for source in sources:
         stats = source.get("stats", {})
-        print(
+        line = (
             f"- {source.get('name', '?')} | {source.get('id', '?')} | "
             f"Enabled: {fmt_bool(source.get('enabled', True))} | "
             f"Status: {fmt_text(source.get('status'), 'unknown')} | "
@@ -130,6 +130,9 @@ if not query:
             f"Selection rate: {fmt_ratio(stats.get('selection_rate'))} | "
             f"Consecutive failures: {fmt_count(stats.get('consecutive_failures'))}"
         )
+        if source.get("auto_discovered") is True:
+            line += " | Auto discovered: true"
+        print(line)
     raise SystemExit(0)
 
 matches = find_matches(sources, query)
@@ -163,4 +166,11 @@ if last_error not in (None, ""):
 
 if source.get("status") == "degraded" and stats.get("degraded_since"):
     print(f"Degraded since: {stats.get('degraded_since')}")
+
+if source.get("auto_discovered") is True:
+    print(f"Auto discovered: true")
+    print(f"Discovery domain: {fmt_text(source.get('discovery_domain'))}")
+    print(f"Discovery tier: {fmt_text(source.get('discovery_tier'))}")
+    print(f"Discovery decision: {fmt_text(source.get('discovery_decision'))}")
+    print(f"Discovery decided at: {fmt_text(source.get('discovery_decided_at'))}")
 PY
