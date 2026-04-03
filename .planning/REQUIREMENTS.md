@@ -9,8 +9,8 @@
 
 - [x] **PROV-01**: Every collected news item can be classified into T0/T1/T2/T3/T4 with a confidence score and classification source.
 - [x] **PROV-02**: URL-rule preclassification identifies known T1/T2 domains from dedicated pattern libraries without an LLM call.
-- [ ] **PROV-03**: Citation extraction captures cited URLs or named upstream sources from article content before provenance classification.
-- [ ] **PROV-04**: Batched provenance classification can infer original source URL/name, cited sources, and propagation hops for items not conclusively resolved by rules.
+- [x] **PROV-03**: Citation extraction captures cited URLs or named upstream sources from article content before provenance classification.
+- [x] **PROV-04**: Batched provenance classification can infer original source URL/name, cited sources, and propagation hops for items not conclusively resolved by rules.
 - [ ] **PROV-05**: Cross-validation resolves rule-vs-LLM disagreements, logs discrepancies, and preserves why the final tier won.
 - [x] **PROV-06**: Provenance results persist to `data/provenance/` stores that can reconstruct the delivered item's provenance chain later.
 
@@ -73,8 +73,8 @@
 |-------------|-------|--------|
 | PROV-01 | Phase 13 | Complete |
 | PROV-02 | Phase 13 | Complete |
-| PROV-03 | Phase 13 | Pending |
-| PROV-04 | Phase 13 | Pending |
+| PROV-03 | Phase 13 | Complete |
+| PROV-04 | Phase 13 | Complete |
 | PROV-05 | Phase 13 | Pending |
 | PROV-06 | Phase 13 | Complete |
 | DISC-05 | Phase 13 | Complete |
