@@ -2,7 +2,9 @@
 
 Step-by-step verification checklist for confirming that the OpenClaw platform can execute the news digest pipeline in cron-triggered isolated sessions. Run this procedure once during initial setup.
 
-**Requirements covered:** PLAT-01, PLAT-02, PLAT-03, PLAT-04
+**Requirements covered:** PLAT-01, PLAT-02, PLAT-03, PLAT-04, OPER-06
+
+> **OPER-06 refresh (2026-04-03):** This document was written for initial Phase 0 setup. It is now maintained as the authoritative OPER-06 smoke test reference. Prefer `scripts/smoke-test.sh` for automated execution.
 
 ## Capability 1: Isolated Session File Access (PLAT-03)
 
@@ -176,6 +178,35 @@ browser("https://example.com")
 | 5 | Timeout (>= 5 min) | YES | Reduce batch sizes, split into multiple runs |
 
 **Minimum viable:** Capabilities 1, 2, and 5 must pass. Capabilities 3 and 4 are nice-to-have for Phase 0.
+
+## OPER-06 Smoke Test Coverage
+
+OPER-06 requires automated smoke tests covering five criteria. The table below maps each OPER-06 criterion to the automated test function and the manual verification procedure:
+
+| OPER-06 Criterion | Automated Test | Manual Procedure |
+|---|---|---|
+| Cron delivery | `test_cron_delivery()` in `scripts/smoke-test.sh` | Capability 4: Delivery Routing |
+| Isolated session loading | `test_file_access()` in `scripts/smoke-test.sh` | Capability 1: Isolated Session File Access |
+| Exec permissions | `test_exec_permissions()` in `scripts/smoke-test.sh` | Capability 2: Exec Tool Permissions |
+| Timeout behavior | `test_timeout_behavior()` in `scripts/smoke-test.sh` | Capability 5: Timeout Limits |
+| Empty-input quality gates | `test_empty_input_quality_gate()` in `scripts/smoke-test.sh` | N/A (automated only) |
+
+## Automated Smoke Tests
+
+For ongoing automated verification, use `scripts/smoke-test.sh`:
+
+```bash
+# Quick mode (3 essential tests, ~1s)
+bash scripts/smoke-test.sh --mode quick .
+
+# Full mode (9 tests including cron, atomic write, version metadata, ~1s)
+bash scripts/smoke-test.sh --mode full .
+
+# From a specific directory
+bash scripts/smoke-test.sh --mode full /path/to/project
+```
+
+The script returns exit code 0 on all-pass, non-zero on any failure. Integrate into CI/CD or run manually after deployment changes.
 
 **After verification:** Record results in `data/metrics/platform-verification.json` for reference:
 ```json
