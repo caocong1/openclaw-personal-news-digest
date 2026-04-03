@@ -104,6 +104,18 @@ When an item could belong to multiple categories, use these rules to determine t
 
 **General principle:** Classify by the PRIMARY ACTION or EVENT, not by the subject domain. "AI" as a subject does not automatically mean `ai-models` -- the action (funding, regulation, vulnerability, tool release) determines the category.
 
+## Roundup Classification
+
+In addition to the fields above, set `is_roundup` on each output object:
+
+- `is_roundup: true` -- The item is a collection or roundup that aggregates multiple pieces of news without original reporting or analysis. Examples: "Top 10 AI Papers", "Weekly Roundup", "5 Best Open Source LLMs". The item summarizes or links to other items rather than reporting a single story.
+- `is_roundup: false` -- The item is a standalone report, article, or analysis with original content or findings. It covers a single story or topic.
+- `is_roundup: null` -- Only if the item type cannot be determined (e.g., ambiguous titles).
+
+When `is_roundup` is `true`, also populate `roundup_children` with the IDs of any known child items that should be created by atomizing this roundup (e.g., URLs or IDs extracted from the roundup's content). If no child items are known, set `roundup_children` to an empty array `[]`.
+
+**Important:** The LLM does NOT create child items -- it only sets the `is_roundup` flag and optionally lists known child URLs/IDs in `roundup_children`. Child item creation is handled by the Collection Phase atomization step in SKILL.md.
+
 ## Output Format
 
 Return ONLY a valid JSON array. No markdown fencing, no explanation outside the JSON.

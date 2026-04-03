@@ -1,0 +1,61 @@
+{
+  "_schema_v": 1,
+  "description": "Fast-path roundup detection patterns for title matching. Lower priority number = higher precedence. Patterns are matched case-insensitively against NewsItem.title.",
+  "patterns": [
+    {
+      "pattern": "^Top \\d+",
+      "priority": 1,
+      "example": "Top 10 AI Papers of 2025"
+    },
+    {
+      "pattern": "^\\d+ Best",
+      "priority": 1,
+      "example": "5 Best Open Source LLMs"
+    },
+    {
+      "pattern": "weekly roundup",
+      "priority": 2,
+      "example": "AI Weekly Roundup: Feb 2025"
+    },
+    {
+      "pattern": "monthly digest",
+      "priority": 2,
+      "example": "February Monthly AI Digest"
+    },
+    {
+      "pattern": " \\d+ articles?",
+      "priority": 3,
+      "example": "10 Articles Every Developer Must Read"
+    },
+    {
+      "pattern": "\\d+ links?",
+      "priority": 3,
+      "example": "7 Links Worth Your Attention"
+    },
+    {
+      "pattern": "highlights of (the )?week",
+      "priority": 3,
+      "example": "Highlights of the Week in Tech"
+    },
+    {
+      "pattern": "everything you need to know",
+      "priority": 4,
+      "example": "Everything You Need to Know About GPT-5"
+    },
+    {
+      "pattern": "summary of",
+      "priority": 4,
+      "example": "Summary of Latest LLM Research"
+    },
+    {
+      "pattern": "collection of",
+      "priority": 4,
+      "example": "Collection of AI Safety Resources"
+    },
+    {
+      "pattern": "curated (list|links|picks)",
+      "priority": 4,
+      "example": "Curated List of AI Tools"
+    }
+  ]
+}
