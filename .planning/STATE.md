@@ -1,17 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Provenance & Source Discovery
-status: ready
-stopped_at: Completed 16-02 plan
-last_updated: "2026-04-03T14:08:00Z"
-last_activity: 2026-04-03 -- Completed Phase 16 Plan 02: roundup atomization and PIPE-03 confirmation
+milestone: v1.0
+milestone_name: milestone
+status: unknown
+last_updated: "2026-04-03T14:10:55.662Z"
 progress:
-  total_phases: 4
-  completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
-  percent: 100
+  total_phases: 12
+  completed_phases: 9
+  total_plans: 29
+  completed_plans: 28
 ---
 
 # Project State
@@ -27,9 +24,9 @@ See: .planning/PROJECT.md (updated 2026-04-03)
 
 Milestone: `v3.0 Provenance & Source Discovery`
 Phase: 16 (operational-hardening-&-verification)
-Plan: 02 complete (of 4)
+Plan: 03 complete (of 4)
 Status: Ready for next plan
-Last activity: 2026-04-03 -- Completed Phase 16 Plan 02: roundup atomization and PIPE-03 confirmation
+Last activity: 2026-04-03 -- Completed Phase 16 Plan 03: run journal, external backlog sync, and source profiles (OPER-01/03/04)
 
 Progress: [██████████] 100%
 
@@ -71,7 +68,8 @@ Progress: [██████████] 100%
 - Key decision: is_roundup uses three-state semantics -- null (unevaluated, backward compat), false (confirmed not-a-roundup), true (atomize and exclude)
 - Key decision: fast-path pattern match is default, LLM classify is the fallback for roundup detection
 - Key decision: parent roundup stays in JSONL for audit, child items carry parent_roundup_id for traceability
-- Next step: Phase 16 Plan 03 (OPER-01/02/03/04 run journal, version check, backlog sync, source profiles)
+- Phase 16 Plan 03 complete: run journal, OPER_BACKLOG_PATH, and named source profiles (OPER-01/03/04)
+- Next step: Phase 16 Plan 04 (OPER-05 CLI parity, OPER-06 smoke tests)
 
 ## Audit Notes
 
@@ -103,6 +101,9 @@ Progress: [██████████] 100%
 - [Phase 16-02]: is_roundup null=false=true three-state semantics (unevaluated/not-roundup/roundup)
 - [Phase 16-02]: fast-path pattern match as default, LLM classify as fallback for roundup detection
 - [Phase 16-02]: parent roundup preserved in JSONL for audit, child items carry parent_roundup_id
+- [Phase 16]: Run journal uses atomic .tmp rename pattern for crash-safe appends
+- [Phase 16]: OPER_BACKLOG_PATH defaults to null (repo-managed) with optional external path
+- [Phase 16]: production profile is the documented baseline for daily operation; minimal enables 1 source; full enables all 6 sources
 
 ## Blockers
 
@@ -117,9 +118,10 @@ None
 | Phase 15 P03 | 4min | 2 tasks | 3 files |
 | Phase 16 P01 | 9min | 5 tasks | 11 files |
 | Phase 16 P02 | 3min | 3 tasks | 4 files |
+| Phase 16 P03 | 5 | 4 tasks | 11 files |
 
 ## Session
 
-Last Date: 2026-04-03T14:08:00Z
-Stopped At: Completed Phase 16 Plan 02
+Last Date: 2026-04-03T14:09:52Z
+Stopped At: Completed Phase 16 Plan 03
 Resume File: None
