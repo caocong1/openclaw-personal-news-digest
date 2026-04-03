@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Provenance & Source Discovery
 status: executing
-stopped_at: Completed 15-02-PLAN.md
-last_updated: "2026-04-03T07:06:06.089Z"
-last_activity: 2026-04-03 -- Completed 15-02 tier-aware alert gating and provenance rendering docs
+stopped_at: Completed 15-03-PLAN.md
+last_updated: "2026-04-03T07:24:22Z"
+last_activity: 2026-04-03 -- Completed 15-03 weekly discovery reporting and provenance E2E fixture docs
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 9
-  completed_plans: 8
-  percent: 89
+  completed_plans: 9
+  percent: 100
 ---
 
 # Project State
@@ -27,11 +27,11 @@ See: .planning/PROJECT.md (updated 2026-04-03)
 
 Milestone: `v3.0 Provenance & Source Discovery`
 Phase: 15 (provenance-aware-ranking-delivery) — EXECUTING
-Plan: 3 of 3
-Status: Ready to execute
-Last activity: 2026-04-03 -- Completed 15-02 tier-aware alert gating and provenance rendering docs
+Plan: all 3 plans complete
+Status: Ready to verify
+Last activity: 2026-04-03 -- Completed 15-03 weekly discovery reporting and provenance E2E fixture docs
 
-Progress: [█████████░] 89%
+Progress: [██████████] 100%
 
 ## Milestone Summary
 
@@ -56,9 +56,13 @@ Progress: [█████████░] 89%
 - Key decision: T4 alert eligibility stays at 0.92 while T0-T3 items retain the 0.85 breaking-news threshold.
 - Key decision: source tier is always user-facing, while original-source attribution and provenance-chain rendering remain conditional.
 - Key decision: provenance diagnostics such as `tier_source` and `llm_result` stay internal-only even when provenance metadata is shown to users.
+- Phase 15 Plan 03 complete: weekly source-discovery reporting and a full provenance-aware E2E verification fixture are now documented.
+- Key decision: weekly discovery reporting reads the repo's current `tier-stats.json` `days` map and normalizes legacy `daily` readers if needed.
+- Key decision: weekly discovery sections render explicit placeholders rather than disappearing when enabled, disabled, or watchlist results are empty.
+- Key decision: the Phase 15 E2E fixture is organized by PIPE requirement ID so verification can check each requirement independently.
 - Planning docs now target source discovery, provenance-aware ranking/output, and the remaining P0/P1 hardening backlog.
 - Roadmap continues phase numbering after the shipped v2.0 milestone, starting at Phase 13.
-- Next step: execute Phase 15 Plan 03 for weekly source-discovery reporting and end-to-end verification
+- Next step: verify Phase 15 and mark the provenance-aware ranking/delivery phase complete
 
 ## Audit Notes
 
@@ -81,6 +85,9 @@ Progress: [█████████░] 89%
 - [Phase 15]: T4 alert eligibility stays at 0.92 while T0-T3 items retain the 0.85 breaking-news threshold
 - [Phase 15]: Source tier is always user-facing, while original-source attribution and provenance-chain rendering remain conditional
 - [Phase 15]: Provenance diagnostics such as tier_source and llm_result stay internal-only even when provenance metadata is shown to users
+- [Phase 15]: Weekly discovery reporting reads the current tier-stats days map and normalizes legacy daily readers when needed
+- [Phase 15]: Weekly discovery output renders placeholders instead of empty enabled, disabled, or watchlist sections
+- [Phase 15]: The Phase 15 E2E fixture is organized by PIPE requirement ID within one coherent scenario
 
 ## Blockers
 
@@ -92,9 +99,10 @@ None
 |-------|----------|-------|-------|
 | Phase 15 P01 | 8min | 2 tasks | 5 files |
 | Phase 15 P02 | 7min | 2 tasks | 4 files |
+| Phase 15 P03 | 4min | 2 tasks | 3 files |
 
 ## Session
 
-Last Date: 2026-04-03T07:06:06.085Z
-Stopped At: Completed 15-02-PLAN.md
+Last Date: 2026-04-03T07:24:22Z
+Stopped At: Completed 15-03-PLAN.md
 Resume File: None

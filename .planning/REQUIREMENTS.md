@@ -28,7 +28,7 @@
 - [x] **PIPE-02**: T4 items use a stricter breaking-alert threshold, and event-level alert suppression runs before the importance gate.
 - [x] **PIPE-03**: Each merged event keeps exactly one representative item chosen by highest tier first, then credibility and score tie-breakers.
 - [x] **PIPE-04**: Digest and alert rendering show source tier, provenance chain, and normalized English-title display without leaking internal fields.
-- [ ] **PIPE-05**: A weekly source-discovery report summarizes newly discovered sources, auto-enable/disable actions, tier mix, and watchlist changes.
+- [x] **PIPE-05**: A weekly source-discovery report summarizes newly discovered sources, auto-enable/disable actions, tier mix, and watchlist changes.
 
 ### Hardening
 
@@ -86,7 +86,7 @@
 | PIPE-02 | Phase 15 | Complete |
 | PIPE-03 | Phase 15 | Complete |
 | PIPE-04 | Phase 15 | Complete |
-| PIPE-05 | Phase 15 | Pending |
+| PIPE-05 | Phase 15 | Complete |
 | HARD-01 | Phase 16 | Pending |
 | HARD-02 | Phase 16 | Pending |
 | HARD-03 | Phase 16 | Pending |
@@ -104,4 +104,4 @@
 
 ---
 *Requirements defined: 2026-04-03*
-*Last updated: 2026-04-03 after completing Phase 15 Plan 02*
+*Last updated: 2026-04-03 after completing Phase 15 Plan 03*

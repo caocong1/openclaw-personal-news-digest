@@ -53,12 +53,12 @@ Plans:
 **Goal:** Use provenance to influence ranking, alerting, event representative selection, and user-facing output.
 **Depends on:** Phase 14
 **Requirements:** `PIPE-01`..`PIPE-05`
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans executed
 
 Plans:
 - [x] `15-01-PLAN.md` - Add provenance scoring, aggregator decay, and event representative selection
 - [x] `15-02-PLAN.md` - Add tier-aware alert gating plus provenance and English-title rendering rules
-- [ ] `15-03-PLAN.md` - Add weekly source-discovery reporting and end-to-end verification for provenance-aware output
+- [x] `15-03-PLAN.md` - Add weekly source-discovery reporting and end-to-end verification for provenance-aware output
 
 **Success Criteria:**
 1. T1/T2 items receive provenance-based ranking lifts and T4 aggregation decays when direct coverage exists
@@ -113,5 +113,5 @@ Plans:
 |-------|----------------|--------|-----------|
 | 13. Provenance Core | 3/3 | Complete    | 2026-04-03 |
 | 14. Source Discovery Automation | 3/3 | Complete    | 2026-04-03 |
-| 15. Provenance-Aware Ranking & Delivery | 2/3 | In Progress|  |
+| 15. Provenance-Aware Ranking & Delivery | 3/3 | In Progress|  |
 | 16. Operational Hardening & Verification | 0/4 | Not started | - |
