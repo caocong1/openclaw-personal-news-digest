@@ -308,6 +308,61 @@ The provenance stage must:
 
 ---
 
+## Section 0G: Source Discovery Accumulation (DISC-01)
+
+Run discovery accumulation after provenance artifacts are updated (Section 0F) and before batch LLM processing (Section 1). This stage maintains the persistent discovery state at `data/provenance/discovered-sources.json`.
+
+**Discovery state is NOT the same as `config/sources.json`:**
+- `data/provenance/discovered-sources.json` is the audit and accumulation store for all observed, deferred, and rejected domains
+- `config/sources.json` remains the live collection-source inventory
+- Observed or deferred domains must remain visible in discovery state even before they are enabled as live sources
+- Discovery state preserves decision history that would be lost if domains were only tracked in the source inventory
+
+### Source Discovery Accumulation
+
+#### Accumulation Sequence
+
+1. Load today's processed items with non-null `event_id` from `data/news/YYYY-MM-DD.jsonl`
+2. Join each item to its `ProvenanceRecord` by `NewsItem.id` in `data/provenance/provenance-db.json`
+3. Keep only records whose final provenance `tier` is `T1` or `T2`
+4. Derive `domain` from `original_source_url` when present, otherwise from `current_source_url`
+5. Normalize the domain:
+   - Strip scheme (`https://`, `http://`)
+   - Strip `www.` prefix
+   - Lowercase the hostname
+   - Group equivalent subdomains to the registrable/root domain for counting
+   - Preserve representative URLs separately so path-sensitive rule-library updates remain possible
+6. Upsert or create the discovered-source record in `data/provenance/discovered-sources.json`
+7. Update fields on the upserted record:
+   - `first_seen`: set to current timestamp if this is a new record
+   - `last_seen`: always update to current timestamp
+   - `hit_count_7d`: recount T1/T2 observations in the last 7 days
+   - `t1_count_7d`: recount only T1 observations in the last 7 days
+   - `t2_count_7d`: recount only T2 observations in the last 7 days
+   - `t1_ratio`: recompute as `t1_count_7d / max(hit_count_7d, 1)`
+   - `sample_item_ids`: prepend new item IDs, keep at most 10 ordered newest first
+   - `representative_titles`: prepend new titles, deduplicate, keep at most 5 unique titles ordered newest first
+   - `representative_urls`: prepend the source URL used for domain derivation, deduplicate, keep at most 10 ordered newest first
+
+#### Rolling-Window Rules
+
+- `hit_count_7d` counts T1/T2 observations in the last 7 calendar days (inclusive of today)
+- `t1_count_7d` counts only T1 observations in the last 7 calendar days
+- `t2_count_7d` counts only T2 observations in the last 7 calendar days
+- `t1_ratio = t1_count_7d / max(hit_count_7d, 1)` -- avoids division by zero
+- `representative_titles` keeps at most 5 unique titles ordered newest first; when a sixth title arrives, drop the oldest
+- `sample_item_ids` keeps at most 10 item IDs ordered newest first; when an eleventh ID arrives, drop the oldest
+- `representative_urls` keeps at most 10 URLs ordered newest first; deduplicate by normalized URL before counting
+
+#### Persistence
+
+After accumulation completes:
+1. Write `data/provenance/discovered-sources.json` atomically (write to `.tmp.{run_id}`, then rename)
+2. Set `last_updated` to current ISO8601 timestamp
+3. Set `last_evaluated` to current ISO8601 timestamp (or to the evaluation timestamp if enable/disable evaluation runs separately)
+
+---
+
 ## Section 1: Batch LLM Processing
 
 ### Collecting Unprocessed Items

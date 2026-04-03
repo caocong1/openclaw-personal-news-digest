@@ -52,6 +52,17 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 12. **Compute source stats**: Update quality_score, dedup_rate, selection_rate per `{baseDir}/references/collection-instructions.md` "Source Health Metrics Computation".
 13. **Source status check**: Auto-demotion/recovery per `{baseDir}/references/processing-instructions.md` Section 6.
 
+## Source Discovery Phase
+
+Run source discovery accumulation after the Processing Phase has produced event-merged, provenance-classified items and before the Output Phase scores and renders the digest. This phase consumes provenance output to maintain the discovery state at `{baseDir}/data/provenance/discovered-sources.json`.
+
+1. **Join processed items to provenance**: Collect today's processed `NewsItem` records that have a non-null `event_id`. Join each item to its `ProvenanceRecord` via `NewsItem.id` in `{baseDir}/data/provenance/provenance-db.json`.
+2. **Collect candidate discovered domains**: Keep only records whose final provenance `tier` is `T1` or `T2`. These are candidate domains for discovery accumulation.
+3. **Normalize to domain-level identity**: For each candidate, derive the domain from `original_source_url` when present, otherwise from `current_source_url`. Normalize each candidate to a domain-level discovery key (strip scheme, `www.`, lowercase hostname, group to registrable/root domain) while preserving representative URLs separately.
+4. **Update discovery state**: Upsert or create the discovered-source record in `{baseDir}/data/provenance/discovered-sources.json` with rolling metrics (`hit_count_7d`, `t1_count_7d`, `t2_count_7d`, `t1_ratio`, `first_seen`, `last_seen`, `representative_titles`, `sample_item_ids`) and decision history. See `{baseDir}/references/processing-instructions.md` Section 0G for the full accumulation sequence and rolling-window rules.
+5. **Evaluate enable and disable candidates**: After event coverage and source inventory are available, evaluate discovered domains against documented enable and disable thresholds. (Thresholds defined in Plan 14-02.)
+6. **Pass discovery artifacts forward**: Pass the updated discovery state forward to output and operator surfaces for transparency and audit.
+
 ## Output Phase
 
 1. **Score items**: Read `{baseDir}/references/scoring-formula.md`. Score all completed items (all 7 dimensions active, including event_boost from `data/events/active.json`), sort by `final_score` descending. Exclude items with `dedup_status: "title_dup"` or `"url_dup"` from the scoring pool. Exclude items with `digest_eligible: false` from the scoring pool.
