@@ -112,6 +112,6 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 13. Provenance Core | 3/3 | Complete    | 2026-04-03 |
-| 14. Source Discovery Automation | 3/3 | Complete   | 2026-04-03 |
+| 14. Source Discovery Automation | 3/3 | Complete    | 2026-04-03 |
 | 15. Provenance-Aware Ranking & Delivery | 0/3 | Not started | - |
 | 16. Operational Hardening & Verification | 0/4 | Not started | - |
