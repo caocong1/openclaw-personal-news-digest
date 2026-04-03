@@ -89,7 +89,57 @@ else
   WARNINGS=$((WARNINGS + 1))
 fi
 
-# 2. Check budget.json date is current
+# 2. Version drift check: read SKILL.md frontmatter for version metadata
+SKILL_PATH="$BASE_DIR/SKILL.md"
+if [ -f "$SKILL_PATH" ]; then
+  VERSION_OUTPUT=$(python3 - "$SKILL_PATH" "$BASE_DIR" <<'PY'
+import json, re, os, sys
+skill_path = sys.argv[1]
+base = sys.argv[2]
+try:
+    content = open(skill_path).read()
+    skill_ver = re.search(r'_skill_version:\s*["\']?([\d.]+)', content)
+    min_ver = re.search(r'minimum_openclaw_version:\s*["\']?([\d.]+)', content)
+    skill_version = skill_ver.group(1) if skill_ver else "unknown"
+    min_version = min_ver.group(1) if min_ver else "unknown"
+    openclaw_version = os.environ.get("OPENCLAW_VERSION", "unknown")
+    if openclaw_version == "unknown":
+        openclaw_version = min_version
+    print(f"VERSION_CHECK:skill={skill_version}:min={min_version}:current={openclaw_version}")
+except Exception as e:
+    print(f"VERSION_CHECK:error:{e}")
+PY
+)
+  SKILL_V=${VERSION_OUTPUT#*skill=}
+  SKILL_V=${SKILL_V%%:*}
+  MIN_V=${VERSION_OUTPUT#*min=}
+  MIN_V=${MIN_V%%:*}
+  CURRENT_V=${VERSION_OUTPUT#*current=}
+  echo "OK: Skill version $SKILL_V, minimum OpenClaw version $MIN_V"
+  if [ "$CURRENT_V" != "unknown" ] && [ "$CURRENT_V" != "$MIN_V" ]; then
+    COMPARE=$(python3 - "$CURRENT_V" "$MIN_V" <<'PYCMP'
+import sys
+def parse_v(v):
+    return [int(x) for x in v.split('.')]
+try:
+    cur = parse_v(sys.argv[1])
+    minv = parse_v(sys.argv[2])
+    print("MISMATCH" if cur < minv else "OK")
+except:
+    print("UNKNOWN")
+PYCMP
+)
+    if [ "$COMPARE" = "MISMATCH" ]; then
+      echo "WARN: OpenClaw version mismatch -- expected >=$MIN_V, found $CURRENT_V"
+      WARNINGS=$((WARNINGS + 1))
+    fi
+  fi
+else
+  echo "WARN: SKILL.md not found at $SKILL_PATH"
+  WARNINGS=$((WARNINGS + 1))
+fi
+
+# 3. Check budget.json date is current
 if [ -f "$BASE_DIR/config/budget.json" ]; then
   python3 - "$BASE_DIR" <<'PY' 2>/dev/null
 import json, os, sys
@@ -143,7 +193,7 @@ PY
   fi
 fi
 
-# 3. Check for stale lock files
+# 4. Check for stale lock files
 LOCK_AGE="0"
 if [ -f "$BASE_DIR/data/.lock" ]; then
   LOCK_AGE=$(python3 - "$BASE_DIR/data/.lock" <<'PY' 2>/dev/null
@@ -165,14 +215,14 @@ PY
   fi
 fi
 
-# 4. Check for orphaned temp files
+# 5. Check for orphaned temp files
 TEMP_COUNT=$(find "$BASE_DIR/data" -name "*.tmp.*" 2>/dev/null | wc -l | tr -d ' ')
 if [ "$TEMP_COUNT" -gt 0 ]; then
   echo "WARN: $TEMP_COUNT orphaned temp files found in data/"
   WARNINGS=$((WARNINGS + 1))
 fi
 
-# 5. Check today's JSONL exists (after first run)
+# 6. Check today's JSONL exists (after first run)
 TODAY_FILE="$BASE_DIR/data/news/$(date +%Y-%m-%d).jsonl"
 if [ -f "$TODAY_FILE" ]; then
   LINES=$(wc -l < "$TODAY_FILE" | tr -d ' ')
@@ -181,7 +231,7 @@ else
   echo "INFO: no JSONL file for today yet"
 fi
 
-# 6. Check latest digest
+# 7. Check latest digest
 if [ -f "$BASE_DIR/output/latest-digest.md" ]; then
   DIGEST_DATE=$(head -1 "$BASE_DIR/output/latest-digest.md" | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' || echo "unknown")
   echo "OK: latest digest date: $DIGEST_DATE"
@@ -627,4 +677,7 @@ fi  # end weekly mode
 
 echo ""
 echo "=== Health check complete (mode: $MODE): $ERRORS error(s), $ALERTS alert(s), $WARNINGS warning(s) ==="
+if [ "$ALERTS" -gt 0 ] || [ "$WARNINGS" -gt 0 ]; then
+  echo "HINT: See references/recovery-matrix.md for recovery actions."
+fi
 exit $ERRORS

@@ -3,6 +3,8 @@ name: news-digest
 description: Personalized news research and delivery system
 user-invocable: true
 metadata: {"openclaw":{"always":true}}
+_skill_version: "16.0.0"
+minimum_openclaw_version: "1.4.0"
 ---
 
 # News Digest Skill
@@ -14,7 +16,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 ## Collection Phase
 
 0. **Bootstrap**: Verify required directories exist. Create any missing: `{baseDir}/data/`, `{baseDir}/data/news/`, `{baseDir}/data/cache/`, `{baseDir}/data/events/`, `{baseDir}/data/events/archived/`, `{baseDir}/data/alerts/`, `{baseDir}/data/feedback/`, `{baseDir}/data/metrics/`, `{baseDir}/data/provenance/`, `{baseDir}/output/`, `{baseDir}/config/`. If `{baseDir}/config/sources.json` does not exist, log error and abort: "Missing sources.json -- run setup first."
-1. **Acquire lock**: Read `{baseDir}/data/.lock`. If absent or `started_at` > 15 min ago, write `{ "run_id": "run-YYYYMMDD-HHmmss-XXXX", "started_at": "ISO8601" }`. If locked < 15 min, skip this run. Emit run_log entry: step="pipeline_start", details={run_id}.
+1. **Acquire lock**: Read `{baseDir}/data/.lock`. If absent or `started_at` > 15 min ago, write `{ "run_id": "run-YYYYMMDD-HHmmss-XXXX", "started_at": "ISO8601" }`. If locked < 15 min, skip this run. If the existing lock is stale (> 15 min), clean it up and additionally call `bash {baseDir}/scripts/run-journal.sh append "$RUN_ID" warning collection STALE_LOCK "Stale lock cleaned up after 15 min expiry" "Restart run manually if needed"` with the stuck run_id in details. Emit run_log entry: step="pipeline_start", details={run_id}.
 2. **Generate run_id**: `run-YYYYMMDD-HHmmss-XXXX` (XXXX = random 4 chars).
 3. **Load sources**: Read `{baseDir}/config/sources.json`, filter `enabled: true`. If budget effective_usage >= 0.8, additionally skip `status: "degraded"` sources.
 4. **Fetch by type**: For each source, route by `source.type`. If type == `rss`: web_fetch XML, parse RSS/Atom. If type == `github`: web_fetch GitHub API JSON, parse releases. If type == `search`: web_search keywords + LLM filter. If type == `official`: web_fetch or browser + LLM extract. If type == `community`: browser + LLM extract. If type == `ranking`: web_fetch or browser + LLM extract. See `{baseDir}/references/collection-instructions.md` per-type sections for detailed steps. Track per-source counters (fetched, deduped, status, error) during collection for DailyMetrics `per_source` field.
@@ -128,3 +130,4 @@ Use `{baseDir}/references/feedback-rules.md` "Intent Recognition Table" as the c
 2. **Atomic writes**: All data files written via `.tmp.{run_id}` then rename. Never write directly to target path.
 3. **Schema versioning**: All JSON records include `_schema_v`. Readers handle older versions with missing-field defaults. See `{baseDir}/references/data-models.md`.
 4. **Crash recovery**: On startup, scan `{baseDir}/data/**/*.tmp.*` -- delete temp files older than 15 minutes.
+5. **Version metadata**: SKILL.md frontmatter declares `_skill_version` (skill's own semver) and `minimum_openclaw_version` (minimum platform version). `scripts/health-check.sh` reads these fields and alerts on drift.
