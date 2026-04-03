@@ -23,12 +23,12 @@ See: .planning/PROJECT.md (updated 2026-04-03)
 ## Current Position
 
 Milestone: `v3.0 Provenance & Source Discovery`
-Phase: 16 (operational-hardening-&-verification)
-Plan: 04 complete (of 4)
-Status: All plans complete
-Last activity: 2026-04-03 -- Completed Phase 16 Plan 04: version drift detection, cross-channel recovery matrix, automated smoke tests (OPER-02/05/06)
+Phase: 17 (initialize-provenance-data-store)
+Plan: 01 complete (of 1)
+Status: Phase complete
+Last activity: 2026-04-04 -- Completed Phase 17 Plan 01: created data/provenance/ directory, all 5 artifact files, and verification script (PROV-06, PIPE-01, PIPE-04, DISC-01, PIPE-05)
 
-Progress: [██████████] 100%
+Progress: [██████░░░░] 58%
 
 ## Milestone Summary
 
@@ -77,7 +77,7 @@ Progress: [██████████] 100%
 - Key decision: fast-path pattern match is default, LLM classify is the fallback for roundup detection
 - Key decision: parent roundup stays in JSONL for audit, child items carry parent_roundup_id for traceability
 - Phase 16 Plan 03 complete: run journal, OPER_BACKLOG_PATH, and named source profiles (OPER-01/03/04)
-- Next step: Phase 16 all plans complete -- v3.0 milestone ready for review
+- Next step: Phase 17 complete -- ready for Phase 18 (Wire Backlog Failure Follow-up, OPER-03)
 
 ## Audit Notes
 
@@ -88,7 +88,7 @@ Progress: [██████████] 100%
 ## Continuity
 
 - Last shipped milestone: `v2.0 Quality & Robustness`
-- Active roadmap phase range: `13-16`
+- Active roadmap phase range: `13-17`
 - Phase numbering continues from the previous milestone
 - Planning source of truth: provenance/source-discovery design spec dated `2026-04-03`
 
@@ -115,6 +115,10 @@ Progress: [██████████] 100%
 - [Phase 16]: OPER-02: SKILL.md declares both _skill_version (16.0.0) and minimum_openclaw_version (1.4.0) in frontmatter for version drift detection
 - [Phase 16]: OPER-05: Recovery matrix uses lowercase version drift as the failure type string for consistent programmatic matching
 - [Phase 16]: OPER-06: smoke-test.sh uses heredoc Python pattern consistent with existing project scripts
+- [Phase 17-01]: .gitkeep pattern consistent with other data/ subdirectories for git tracking
+- [Phase 17-01]: last_updated initialized to 2026-04-03 matching plan date
+- [Phase 17-01]: empty provenance-discrepancies.jsonl as 0-byte file (valid empty JSONL)
+- [Phase 17-01]: verification script uses python3 for robust JSON parsing, exits 0/1 for CI integration
 
 ## Blockers
 
@@ -132,9 +136,10 @@ None
 | Phase 16 P02 | 3min | 3 tasks | 4 files |
 | Phase 16 P03 | 5 | 4 tasks | 11 files |
 | Phase 16 P04 | 6 | 3 tasks | 5 files |
+| Phase 17 P01 | 2min | 7 tasks | 7 files |
 
 ## Session
 
-Last Date: 2026-04-03T14:11:43Z
-Stopped At: Completed Phase 16 Plan 04 (all Phase 16 plans complete)
+Last Date: 2026-04-04T16:04:00Z
+Stopped At: Completed Phase 17 Plan 01 (Phase 17 complete)
 Resume File: None
