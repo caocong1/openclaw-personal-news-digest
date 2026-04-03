@@ -16,7 +16,7 @@
 
 ### Source Discovery
 
-- [ ] **DISC-01**: The system accumulates unique T1/T2 domains with rolling hit counts, last-seen dates, representative titles, and tier ratios.
+- [x] **DISC-01**: The system accumulates unique T1/T2 domains with rolling hit counts, last-seen dates, representative titles, and tier ratios.
 - [ ] **DISC-02**: A discovered source auto-enables only after frequency, quality, uniqueness, age, and not-already-enabled checks all pass.
 - [ ] **DISC-03**: Auto-discovered sources auto-disable when quality or sustained activity drops below documented thresholds.
 - [ ] **DISC-04**: Auto-enabled sources are written into `config/sources.json` with inferred type, defaults, and audit metadata.
@@ -78,7 +78,7 @@
 | PROV-05 | Phase 13 | Complete |
 | PROV-06 | Phase 13 | Complete |
 | DISC-05 | Phase 13 | Complete |
-| DISC-01 | Phase 14 | Pending |
+| DISC-01 | Phase 14 | Complete |
 | DISC-02 | Phase 14 | Pending |
 | DISC-03 | Phase 14 | Pending |
 | DISC-04 | Phase 14 | Pending |

@@ -35,7 +35,7 @@ Plans:
 **Goal:** Turn provenance output into an auditable source-discovery loop that can accumulate, enable, and disable direct sources automatically.
 **Depends on:** Phase 13
 **Requirements:** `DISC-01`..`DISC-04`
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] `14-01-PLAN.md` - Add domain normalization, discovered-source accumulation, and rolling discovery metrics
@@ -112,6 +112,6 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 13. Provenance Core | 3/3 | Complete    | 2026-04-03 |
-| 14. Source Discovery Automation | 0/3 | Not started | - |
+| 14. Source Discovery Automation | 1/3 | In Progress|  |
 | 15. Provenance-Aware Ranking & Delivery | 0/3 | Not started | - |
 | 16. Operational Hardening & Verification | 0/4 | Not started | - |
