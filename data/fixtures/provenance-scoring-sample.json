@@ -1,0 +1,73 @@
+{
+  "_description": "Provenance scoring and representative selection fixture. Shows three items covering the same event (evt-prov-demo) with different tiers, demonstrating T1 boost, T4 conditional decay, and representative selection.",
+  "items": [
+    {
+      "id": "news-prov-t1",
+      "title": "OpenAI Announces GPT-5",
+      "source_id": "src-openai-blog",
+      "event_id": "evt-prov-demo",
+      "final_score": 0.72,
+      "provenance_tier": "T1",
+      "provenance_modifier": 1.1,
+      "adjusted_score": 0.792,
+      "source_credibility": 0.95,
+      "is_representative": true,
+      "_note": "T1 direct source. Highest tier in event -> wins representative selection despite lower final_score than T4 item."
+    },
+    {
+      "id": "news-prov-t2",
+      "title": "TechCrunch: OpenAI Launches GPT-5",
+      "source_id": "src-techcrunch",
+      "event_id": "evt-prov-demo",
+      "final_score": 0.75,
+      "provenance_tier": "T2",
+      "provenance_modifier": 1.05,
+      "adjusted_score": 0.7875,
+      "source_credibility": 0.85,
+      "is_representative": false,
+      "_note": "T2 original reporting. Same event as T1 item -> not representative (T1 wins by tier rank)."
+    },
+    {
+      "id": "news-prov-t4",
+      "title": "36Kr: OpenAI GPT-5 Released",
+      "source_id": "src-36kr",
+      "event_id": "evt-prov-demo",
+      "final_score": 0.8,
+      "provenance_tier": "T4",
+      "provenance_modifier": 0.75,
+      "adjusted_score": 0.6,
+      "_note_decay": "T4 aggregation WITH T1 sibling in same event -> 0.75 decay applied. Despite highest final_score (0.80), adjusted_score (0.60) is lowest.",
+      "source_credibility": 0.7,
+      "is_representative": false
+    },
+    {
+      "id": "news-prov-t4-solo",
+      "title": "36Kr: China Tech Regulation Update",
+      "source_id": "src-36kr",
+      "event_id": "evt-prov-solo",
+      "final_score": 0.78,
+      "provenance_tier": "T4",
+      "provenance_modifier": 1.0,
+      "adjusted_score": 0.78,
+      "_note_no_decay": "T4 aggregation but NO T1/T2 sibling in event evt-prov-solo -> no penalty applied. Aggregation is the only coverage for this event.",
+      "source_credibility": 0.7,
+      "is_representative": true
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-prov-demo",
+      "title": "OpenAI GPT-5 Launch",
+      "item_ids": ["news-prov-t1", "news-prov-t2", "news-prov-t4"],
+      "representative_item_id": "news-prov-t1",
+      "_selection_reason": "T1 (rank 1) beats T2 (rank 2) and T4 (rank 4). Only news-prov-t1 enters the digest pool."
+    },
+    {
+      "id": "evt-prov-solo",
+      "title": "China Tech Regulation Update",
+      "item_ids": ["news-prov-t4-solo"],
+      "representative_item_id": "news-prov-t4-solo",
+      "_selection_reason": "Single item in event -> implicit representative. No T4 decay because no higher-tier sibling."
+    }
+  ]
+}

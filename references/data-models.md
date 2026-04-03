@@ -338,7 +338,8 @@ Each event groups related news items about the same real-world occurrence, track
   "last_alerted_at": "ISO8601 or null",
   "last_alert_news_id": "string or null",
   "last_alert_brief": "string or null",
-  "_schema_v": 3
+  "representative_item_id": "string or null",
+  "_schema_v": 4
 }
 ```
 
@@ -352,6 +353,7 @@ Each event groups related news items about the same real-world occurrence, track
 - `last_alerted_at`: ISO8601 timestamp of when this event was last used in an alert. Null if never alerted.
 - `last_alert_news_id`: The news_id of the item that triggered the last alert for this event. Null if never alerted.
 - `last_alert_brief`: One-sentence summary of what the last alert communicated. Used by delta alerts to describe what changed. Null if never alerted.
+- `representative_item_id`: The `NewsItem.id` chosen as the event's digest representative during Section 4R. Updated each run. Null when the event has no items in the current scoring pool.
 
 **Defaults for missing fields (older schema versions):**
 - `keywords`: `[]`
@@ -360,6 +362,7 @@ Each event groups related news items about the same real-world occurrence, track
 - `last_alerted_at`: `null`
 - `last_alert_news_id`: `null`
 - `last_alert_brief`: `null`
+- `representative_item_id`: `null`
 
 ---
 
@@ -879,7 +882,7 @@ Authoritative record of all data model versions, their current `_schema_v`, and 
 | Model | Current Version | History |
 |-------|----------------|---------|
 | NewsItem | v5 | v1: initial fields (Phase 0). v2: +content_hash, processing_status, duplicate_of (Phase 0). v3: +dedup_status, language (Phase 2). v4: +digest_eligible (Phase 9). v5: +recommendation_evidence (Phase 12). |
-| Event | v3 | v1: initial fields (Phase 0). v2: +keywords, timeline (Phase 2). v3: +last_alerted_at, last_alert_news_id, last_alert_brief (Phase 10). |
+| Event | v4 | v1: initial fields (Phase 0). v2: +keywords, timeline (Phase 2). v3: +last_alerted_at, last_alert_news_id, last_alert_brief (Phase 10). v4: +representative_item_id (Phase 15). |
 | CacheEntry | v2 | v1: initial fields (Phase 0). v2: +prompt_version (Phase 8). |
 | Preferences | v2 | v1: initial 5-layer model (Phase 0). v2: +depth_preference, judgment_angles (Phase 3). |
 | ProvenanceRecord | v1 | v1: initial authoritative provenance store keyed by `NewsItem.id` (Phase 13). |
@@ -928,6 +931,7 @@ All fields added across phases, with version, default, and migration behavior.
 | `last_alerted_at` | Event | Phase 10 | v3 | `null` | Timestamp of last alert for this event |
 | `last_alert_news_id` | Event | Phase 10 | v3 | `null` | News ID that triggered last alert |
 | `last_alert_brief` | Event | Phase 10 | v3 | `null` | Summary of last alert content |
+| `representative_item_id` | Event | Phase 15 | v4 | `null` | NewsItem.id of digest representative |
 | `repeat_suppressed` | DailyMetrics.items | Phase 10 | - | `0` | Count of items penalized AND excluded from digest due to cross-digest repetition |
 | `runs` | DigestHistory | Phase 10 | v1 | `[]` | Rolling 5-run digest history with event snapshots |
 | `run_log` | DailyMetrics | Phase 11 | - | `[]` | Timestamped pipeline milestone entries |
