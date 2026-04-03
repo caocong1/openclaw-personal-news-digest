@@ -71,7 +71,7 @@ Plans:
 **Goal:** Close the remaining P0/P1 backlog so the skill is auditable, script-driven, and operator-safe in live runs.
 **Depends on:** Phase 15
 **Requirements:** `HARD-01` (done), `HARD-02` (done), `HARD-03` (done), `OPER-01`..`OPER-06`
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 - [x] `16-01-PLAN.md` - Extract brittle exec paths into scripts and add explicit success/failure state differentiation
@@ -114,4 +114,4 @@ Plans:
 | 13. Provenance Core | 3/3 | Complete    | 2026-04-03 |
 | 14. Source Discovery Automation | 3/3 | Complete    | 2026-04-03 |
 | 15. Provenance-Aware Ranking & Delivery | 3/3 | Complete    | 2026-04-03 |
-| 16. Operational Hardening & Verification | 3/4 | In Progress|  |
+| 16. Operational Hardening & Verification | 4/4 | Complete    | 2026-04-03 |
