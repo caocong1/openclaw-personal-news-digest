@@ -91,7 +91,7 @@ Plans:
 **Depends on:** Phase 16
 **Requirements:** `PROV-06`, `PIPE-01`, `PIPE-04`, `DISC-01`, `PIPE-05`
 **Gap Closure:** Closes DATA-PROV-001 — uninitialized provenance artifact store that blocks PROV-06, PIPE-01, PIPE-04, DISC-01, PIPE-05 at runtime; restores broken E2E flow Collection -> Provenance -> Source Discovery -> Ranking -> Output
-**Plans:** 1/1 plan complete
+**Plans:** 1/1 plans complete
 
 Plans:
 - [x] `17-01-PLAN.md` - Create data/provenance/ directory and all 5 artifact files with verification script
@@ -140,6 +140,6 @@ Plans:
 | 14. Source Discovery Automation | 3/3 | Complete    | 2026-04-03 |
 | 15. Provenance-Aware Ranking & Delivery | 3/3 | Complete    | 2026-04-03 |
 | 16. Operational Hardening & Verification | 4/4 | Complete    | 2026-04-03 |
-| 17. Initialize Provenance Data Store | 1/1 | Complete   | 2026-04-04 |
+| 17. Initialize Provenance Data Store | 1/1 | Complete    | 2026-04-03 |
 | 18. Wire Backlog Failure Follow-up | —/1 | Planned     | — |
 | 19. Add Missing E2E Fixture | —/1 | Planned     | — |

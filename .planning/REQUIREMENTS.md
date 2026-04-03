@@ -12,11 +12,11 @@
 - [x] **PROV-03**: Citation extraction captures cited URLs or named upstream sources from article content before provenance classification.
 - [x] **PROV-04**: Batched provenance classification can infer original source URL/name, cited sources, and propagation hops for items not conclusively resolved by rules.
 - [x] **PROV-05**: Cross-validation resolves rule-vs-LLM disagreements, logs discrepancies, and preserves why the final tier won.
-- [ ] **PROV-06**: Provenance results persist to `data/provenance/` stores that can reconstruct the delivered item's provenance chain later.
+- [x] **PROV-06**: Provenance results persist to `data/provenance/` stores that can reconstruct the delivered item's provenance chain later.
 
 ### Source Discovery
 
-- [ ] **DISC-01**: The system accumulates unique T1/T2 domains with rolling hit counts, last-seen dates, representative titles, and tier ratios.
+- [x] **DISC-01**: The system accumulates unique T1/T2 domains with rolling hit counts, last-seen dates, representative titles, and tier ratios.
 - [x] **DISC-02**: A discovered source auto-enables only after frequency, quality, uniqueness, age, and not-already-enabled checks all pass.
 - [x] **DISC-03**: Auto-discovered sources auto-disable when quality or sustained activity drops below documented thresholds.
 - [x] **DISC-04**: Auto-enabled sources are written into `config/sources.json` with inferred type, defaults, and audit metadata.
@@ -24,11 +24,11 @@
 
 ### Pipeline Integration
 
-- [ ] **PIPE-01**: Final ranking adds provenance boost/penalty so T1/T2 items outrank redundant T4 aggregation when the underlying event is the same.
+- [x] **PIPE-01**: Final ranking adds provenance boost/penalty so T1/T2 items outrank redundant T4 aggregation when the underlying event is the same.
 - [x] **PIPE-02**: T4 items use a stricter breaking-alert threshold, and event-level alert suppression runs before the importance gate.
 - [x] **PIPE-03**: Each merged event keeps exactly one representative item chosen by highest tier first, then credibility and score tie-breakers.
-- [ ] **PIPE-04**: Digest and alert rendering show source tier, provenance chain, and normalized English-title display without leaking internal fields.
-- [ ] **PIPE-05**: A weekly source-discovery report summarizes newly discovered sources, auto-enable/disable actions, tier mix, and watchlist changes.
+- [x] **PIPE-04**: Digest and alert rendering show source tier, provenance chain, and normalized English-title display without leaking internal fields.
+- [x] **PIPE-05**: A weekly source-discovery report summarizes newly discovered sources, auto-enable/disable actions, tier mix, and watchlist changes.
 
 ### Hardening
 
@@ -76,17 +76,17 @@
 | PROV-03 | Phase 13 | Complete |
 | PROV-04 | Phase 13 | Complete |
 | PROV-05 | Phase 13 | Complete |
-| PROV-06 | Phase 17 | Pending |
+| PROV-06 | Phase 17 | Complete |
 | DISC-05 | Phase 13 | Complete |
-| DISC-01 | Phase 17 | Pending |
+| DISC-01 | Phase 17 | Complete |
 | DISC-02 | Phase 14 | Complete |
 | DISC-03 | Phase 14 | Complete |
 | DISC-04 | Phase 14 | Complete |
-| PIPE-01 | Phase 17 | Pending |
+| PIPE-01 | Phase 17 | Complete |
 | PIPE-02 | Phase 15 | Complete |
 | PIPE-03 | Phase 15 | Complete |
-| PIPE-04 | Phase 17 | Pending |
-| PIPE-05 | Phase 17 | Pending |
+| PIPE-04 | Phase 17 | Complete |
+| PIPE-05 | Phase 17 | Complete |
 | HARD-01 | Phase 16-01 | Complete |
 | HARD-02 | Phase 16 | Complete |
 | HARD-03 | Phase 16-01 | Complete |
