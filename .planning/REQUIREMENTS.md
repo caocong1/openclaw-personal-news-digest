@@ -11,7 +11,7 @@
 - [x] **PROV-02**: URL-rule preclassification identifies known T1/T2 domains from dedicated pattern libraries without an LLM call.
 - [x] **PROV-03**: Citation extraction captures cited URLs or named upstream sources from article content before provenance classification.
 - [x] **PROV-04**: Batched provenance classification can infer original source URL/name, cited sources, and propagation hops for items not conclusively resolved by rules.
-- [ ] **PROV-05**: Cross-validation resolves rule-vs-LLM disagreements, logs discrepancies, and preserves why the final tier won.
+- [x] **PROV-05**: Cross-validation resolves rule-vs-LLM disagreements, logs discrepancies, and preserves why the final tier won.
 - [x] **PROV-06**: Provenance results persist to `data/provenance/` stores that can reconstruct the delivered item's provenance chain later.
 
 ### Source Discovery
@@ -75,7 +75,7 @@
 | PROV-02 | Phase 13 | Complete |
 | PROV-03 | Phase 13 | Complete |
 | PROV-04 | Phase 13 | Complete |
-| PROV-05 | Phase 13 | Pending |
+| PROV-05 | Phase 13 | Complete |
 | PROV-06 | Phase 13 | Complete |
 | DISC-05 | Phase 13 | Complete |
 | DISC-01 | Phase 14 | Pending |

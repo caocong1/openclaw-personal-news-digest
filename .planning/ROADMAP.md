@@ -17,12 +17,12 @@
 **Goal:** Add tier-aware provenance classification, citation extraction, and persistent provenance records for every collected item.
 **Depends on:** Phase 12
 **Requirements:** `PROV-01`..`PROV-06`, `DISC-05`
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] `13-01-PLAN.md` - Add T1/T2 pattern libraries, URL-rule preclassification, and provenance data models
 - [x] `13-02-PLAN.md` - Add citation extraction, batched provenance classification, and provenance prompt contracts
-- [ ] `13-03-PLAN.md` - Add cross-validation, discrepancy logging, persistence, and verification fixtures
+- [x] `13-03-PLAN.md` - Add cross-validation, discrepancy logging, persistence, and verification fixtures
 
 **Success Criteria:**
 1. Every newly collected item receives tier, confidence, original-source, and propagation metadata that can be reconstructed after the run
@@ -111,7 +111,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 13. Provenance Core | 2/3 | In Progress | - |
+| 13. Provenance Core | 3/3 | Complete   | 2026-04-03 |
 | 14. Source Discovery Automation | 0/3 | Not started | - |
 | 15. Provenance-Aware Ranking & Delivery | 0/3 | Not started | - |
 | 16. Operational Hardening & Verification | 0/4 | Not started | - |
