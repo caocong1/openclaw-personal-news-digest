@@ -125,11 +125,12 @@ Authoritative provenance record keyed by `NewsItem.id` and stored in `data/prove
 
 **Field notes:**
 - `id`: Primary key. Join this record back to the collected item via `NewsItem.id`.
-- `rule_result`: Preserves the URL-rule candidate used before any provenance LLM fallback.
-- `llm_result`: Preserves the structured provenance classification result when the LLM is used.
+- `tier_source`: Must be one of `url_rule`, `llm`, or `resolved_disagreement`.
+- `rule_result`: Preserves the URL-rule candidate used before any provenance LLM fallback when available.
+- `llm_result`: Preserves the structured provenance classification result when the LLM is used and should be kept when available.
 - `current_source_*`: The fetched article/source currently stored in the repo.
 - `original_source_*`: The highest-confidence upstream origin identified for the item.
-- `provenance_chain`: Ordered provenance hops used to reconstruct how the current item points back to the origin.
+- `provenance_chain`: Ordered provenance hops from upstream origin to the current item URL.
 
 ---
 
@@ -209,6 +210,28 @@ Daily provenance tier counters stored in `data/provenance/tier-stats.json`.
 - `days`: Daily counters keyed by `YYYY-MM-DD`.
 - `resolved_by`: Tracks whether provenance was resolved by URL rules, the LLM, or a disagreement-resolution step.
 - `sources`: Source-level rollups keyed by `source_id`, each containing `total_items` and per-tier counts.
+
+---
+
+## ProvenanceDiscrepancyLog
+
+Append-only JSONL store at `data/provenance/provenance-discrepancies.jsonl`.
+
+Each line records a disagreement between rule-based and LLM-based provenance results:
+
+```json
+{"ts":"ISO8601","item_id":"1234abcd5678ef90","url":"https://36kr.com/p/1234567890","rule_result":"T1","rule_category":"ai_models","llm_result":"T4","final_tier":"T4","final_winner":"llm"}
+```
+
+**Field notes:**
+- `ts`: ISO8601 timestamp when the disagreement was resolved.
+- `item_id`: `NewsItem.id` for the item whose provenance was disputed.
+- `url`: The current item URL under evaluation.
+- `rule_result`: Tier candidate from rule-based matching.
+- `rule_category`: Rule-library category that produced the rule candidate.
+- `llm_result`: Tier candidate from the provenance prompt.
+- `final_tier`: Tier persisted after applying the precedence policy.
+- `final_winner`: Which resolver won the dispute (`url_rule` or `llm`).
 
 ---
 

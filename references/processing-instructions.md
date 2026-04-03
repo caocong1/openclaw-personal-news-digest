@@ -284,6 +284,28 @@ Normalize extracted citations to URLs where possible and store them as candidate
 5. Reuse the repo's existing retry-once pattern for structured LLM failures.
 6. Continue to honor the repo's existing budget and circuit-breaker conventions rather than inventing a separate provenance budget path.
 
+### Cross-Validation
+
+- `T1: URL-rule wins`
+- `T0: LLM wins`
+- `T2/T3/T4: LLM wins`
+
+When both a rule result and an LLM result exist and they differ, append a discrepancy record to `data/provenance/provenance-discrepancies.jsonl` using this exact JSONL shape:
+
+```json
+{"ts":"ISO8601","item_id":"1234abcd5678ef90","url":"https://36kr.com/p/1234567890","rule_result":"T1","rule_category":"ai_models","llm_result":"T2","final_tier":"T1","final_winner":"url_rule"}
+```
+
+### Provenance Persistence
+
+The provenance stage must:
+
+1. Upsert one record per item into `data/provenance/provenance-db.json`.
+2. Upsert citation nodes and edges into `data/provenance/citation-graph.json`.
+3. Append discrepancy records to `data/provenance/provenance-discrepancies.jsonl`.
+4. Update `data/provenance/tier-stats.json` day and source counters.
+5. Write `provenance_chain` ordered from original source to current source.
+
 ---
 
 ## Section 1: Batch LLM Processing
