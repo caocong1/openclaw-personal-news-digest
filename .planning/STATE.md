@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-04-03T16:06:12.564Z"
+last_updated: "2026-04-04T16:07:00.000Z"
 progress:
   total_phases: 15
   completed_phases: 11
@@ -18,7 +18,7 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-03)
 
 **Core value:** Replace "pushing messages to the user" with "continuously observing the world on the user's behalf" while preserving anti-echo-chamber exposure
-**Current focus:** Phase 16 — operational-hardening-&-verification
+**Current focus:** Phase 18 — wire-backlog-failure-follow-up
 
 ## Current Position
 
@@ -28,7 +28,7 @@ Plan: 01 complete (of 1)
 Status: Phase complete
 Last activity: 2026-04-04 -- Completed Phase 17 Plan 01: created data/provenance/ directory, all 5 artifact files, and verification script (PROV-06, PIPE-01, PIPE-04, DISC-01, PIPE-05)
 
-Progress: [██████░░░░] 58%
+Progress: [██████████] 100%
 
 ## Milestone Summary
 
@@ -77,7 +77,12 @@ Progress: [██████░░░░] 58%
 - Key decision: fast-path pattern match is default, LLM classify is the fallback for roundup detection
 - Key decision: parent roundup stays in JSONL for audit, child items carry parent_roundup_id for traceability
 - Phase 16 Plan 03 complete: run journal, OPER_BACKLOG_PATH, and named source profiles (OPER-01/03/04)
-- Next step: Phase 17 complete -- ready for Phase 18 (Wire Backlog Failure Follow-up, OPER-03)
+- Phase 17 Plan 01 complete: provenance data store initialized with 5 artifact files and verification script.
+- Key decision: .gitkeep pattern consistent with other data/ subdirectories for git tracking.
+- Key decision: empty provenance-discrepancies.jsonl as 0-byte file (valid empty JSONL).
+- Key decision: last_updated initialized to 2026-04-03 matching plan date.
+- Key decision: verification script uses python3 for robust JSON parsing, exits 0/1 for CI integration.
+- Next step: Phase 18 (Wire Backlog Failure Follow-up, OPER-03)
 
 ## Audit Notes
 
@@ -88,7 +93,7 @@ Progress: [██████░░░░] 58%
 ## Continuity
 
 - Last shipped milestone: `v2.0 Quality & Robustness`
-- Active roadmap phase range: `13-17`
+- Active roadmap phase range: `13-18`
 - Phase numbering continues from the previous milestone
 - Planning source of truth: provenance/source-discovery design spec dated `2026-04-03`
 
@@ -119,6 +124,7 @@ Progress: [██████░░░░] 58%
 - [Phase 17-01]: last_updated initialized to 2026-04-03 matching plan date
 - [Phase 17-01]: empty provenance-discrepancies.jsonl as 0-byte file (valid empty JSONL)
 - [Phase 17-01]: verification script uses python3 for robust JSON parsing, exits 0/1 for CI integration
+- [Phase 17-01]: provenance stores use _schema_v=1 for forward compatibility
 
 ## Blockers
 
@@ -140,6 +146,6 @@ None
 
 ## Session
 
-Last Date: 2026-04-04T16:04:00Z
-Stopped At: Completed Phase 17 Plan 01 (Phase 17 complete)
+Last Date: 2026-04-04T16:07:00Z
+Stopped At: Phase 17 complete, ready to plan Phase 18
 Resume File: None

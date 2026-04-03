@@ -43,6 +43,7 @@ Replace "pushing messages to the user" with "continuously observing the world on
 - v3.0 Phase 13 delivered dedicated T1/T2 provenance rule libraries, a first-class provenance stage, deterministic citation extraction rules, a structured provenance prompt, fixed disagreement resolution, and persistent provenance fixtures/contracts under `data/provenance/`.
 - v3.0 Phase 14 delivered passive T1/T2 source discovery with rolling metrics, auto-enable/disable rules, generated source metadata, and discovery audit artifacts.
 - v3.0 Phase 15 delivered provenance-aware ranking, event representative selection, tier-aware alert gating, provenance-aware digest/alert rendering, weekly source-discovery reporting, and an end-to-end verification fixture.
+- v3.0 Phase 17 initialized the provenance data store (`data/provenance/`) with all 5 artifact files and a verification script, unblocking PROV-06, PIPE-01, PIPE-04, DISC-01, and PIPE-05 at runtime.
 
 ### Active
 
@@ -111,4 +112,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-03 after completing Phase 15 Provenance-Aware Ranking & Delivery*
+*Last updated: 2026-04-04 after completing Phase 17 Provenance Data Store Initialization*
