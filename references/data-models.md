@@ -235,6 +235,82 @@ Each line records a disagreement between rule-based and LLM-based provenance res
 
 ---
 
+## DiscoveredSourcesState
+
+Persistent discovery accumulation store at `data/provenance/discovered-sources.json`. Tracks normalized T1/T2 domains observed through provenance output, rolling metrics, representative evidence, and decision history. This file is the audit and accumulation store -- it is NOT the same as `config/sources.json`, which remains the live collection-source inventory. Observed, deferred, and rejected domains must remain visible in discovery state even before they are enabled as live sources.
+
+```json
+{
+  "_schema_v": 1,
+  "sources": [
+    {
+      "domain": "string (normalized registrable/root domain, e.g. openai.com)",
+      "canonical_domain": "string (canonical domain string after normalization)",
+      "representative_urls": [
+        "string (concrete URLs preserving path-specific evidence, e.g. https://openai.com/blog/gpt-5-release)"
+      ],
+      "tier": "T1|T2",
+      "category_candidate": "string or null",
+      "first_seen": "ISO8601",
+      "last_seen": "ISO8601",
+      "hit_count_7d": 0,
+      "t1_count_7d": 0,
+      "t2_count_7d": 0,
+      "t1_ratio": 0.0,
+      "representative_titles": ["string (1-5 unique titles, newest first)"],
+      "sample_item_ids": ["string (NewsItem.id, up to 10, newest first)"],
+      "decision_history": [
+        {
+          "ts": "ISO8601",
+          "decision": "observed|deferred|enabled|disabled|rejected",
+          "reason": "string (e.g. below_frequency_threshold)",
+          "details": "string or null (additional context)"
+        }
+      ],
+      "_schema_v": 1
+    }
+  ],
+  "last_evaluated": "ISO8601",
+  "last_updated": "ISO8601"
+}
+```
+
+**Field notes:**
+- `domain`: The discovery identity key. Normalized registrable/root domain used for counting and enable/disable evaluation. For example, `openai.com` not `https://www.openai.com/blog`.
+- `canonical_domain`: Canonical domain string produced by normalization. May equal `domain` when no further canonicalization is needed.
+- `representative_urls`: Array of concrete URLs that preserve path-specific evidence. These are kept so that pattern-library expansion (e.g., adding `openai.com/blog` or `github.com/*/releases` to T1/T2 rule libraries) remains precise rather than over-broad. At most 10 URLs, newest first.
+- `tier`: The most recently observed provenance tier for this domain (`T1` or `T2`). Only T1/T2 domains enter discovery state.
+- `category_candidate`: Optional category string inferred from representative content. Null until enough evidence exists.
+- `first_seen`, `last_seen`: ISO8601 timestamps of the first and most recent observation.
+- `hit_count_7d`: Count of T1/T2 observations in the rolling 7-day window.
+- `t1_count_7d`: Count of only T1 observations in the rolling 7-day window.
+- `t2_count_7d`: Count of only T2 observations in the rolling 7-day window.
+- `t1_ratio`: `t1_count_7d / max(hit_count_7d, 1)`. Measures how often the domain produces T1 (direct/original) content.
+- `representative_titles`: At most 5 unique titles ordered newest first. Provides human-readable evidence of what the domain produces.
+- `sample_item_ids`: At most 10 `NewsItem.id` strings ordered newest first. Enables join-back to full item and provenance records.
+- `decision_history`: Append-only array of decision records. Each entry records a timestamp, the decision taken, a machine-readable reason, and optional human-readable details. Decision strings: `observed`, `deferred`, `enabled`, `disabled`, `rejected`.
+- `_schema_v`: Per-record schema version (integer). Readers must handle older versions with missing-field defaults.
+
+**Normalization rules:**
+- Strip scheme (`https://`, `http://`)
+- Strip `www.` prefix
+- Lowercase the hostname
+- Group equivalent subdomains to the registrable/root domain for counting (e.g., `blog.openai.com` and `openai.com/blog` both count under `openai.com`)
+- Preserve representative URLs separately so path-sensitive rule-library updates remain possible
+
+**Defaults for missing fields (older schema versions):**
+- `canonical_domain`: same as `domain`
+- `representative_urls`: `[]`
+- `category_candidate`: `null`
+- `t1_count_7d`: `0`
+- `t2_count_7d`: `0`
+- `t1_ratio`: `0.0`
+- `representative_titles`: `[]`
+- `sample_item_ids`: `[]`
+- `decision_history`: `[]`
+
+---
+
 ## Event
 
 Each event groups related news items about the same real-world occurrence, tracked through a lifecycle with timeline entries.

@@ -1,0 +1,129 @@
+{
+  "_schema_v": 1,
+  "sources": [
+    {
+      "domain": "openai.com",
+      "canonical_domain": "openai.com",
+      "representative_urls": [
+        "https://openai.com/blog/gpt-5-release",
+        "https://openai.com/blog/new-safety-framework",
+        "https://openai.com/blog/api-updates-2026"
+      ],
+      "tier": "T1",
+      "category_candidate": "ai_models",
+      "first_seen": "2026-03-25T08:00:00Z",
+      "last_seen": "2026-04-02T14:30:00Z",
+      "hit_count_7d": 6,
+      "t1_count_7d": 6,
+      "t2_count_7d": 0,
+      "t1_ratio": 1.0,
+      "representative_titles": [
+        "OpenAI Releases GPT-5 with Enhanced Reasoning",
+        "OpenAI Publishes New AI Safety Framework",
+        "OpenAI API Updates: Function Calling v3",
+        "GPT-5 Benchmark Results Across Tasks",
+        "OpenAI Announces Enterprise Tier Changes"
+      ],
+      "sample_item_ids": [
+        "a1b2c3d4e5f60001",
+        "a1b2c3d4e5f60002",
+        "a1b2c3d4e5f60003",
+        "a1b2c3d4e5f60004",
+        "a1b2c3d4e5f60005",
+        "a1b2c3d4e5f60006"
+      ],
+      "decision_history": [
+        {
+          "ts": "2026-03-27T08:00:00Z",
+          "decision": "observed",
+          "reason": "below_frequency_threshold",
+          "details": "Domain first reached 3 T1 items in 7d window but frequency gate requires >= 5"
+        }
+      ],
+      "_schema_v": 1
+    },
+    {
+      "domain": "techcrunch.com",
+      "canonical_domain": "techcrunch.com",
+      "representative_urls": [
+        "https://techcrunch.com/2026/03/28/ai-startup-funding-q1",
+        "https://techcrunch.com/2026/03/30/new-robotics-lab",
+        "https://techcrunch.com/2026/04/01/cloud-infrastructure-trends"
+      ],
+      "tier": "T2",
+      "category_candidate": "general_tech",
+      "first_seen": "2026-03-28T10:15:00Z",
+      "last_seen": "2026-04-01T16:45:00Z",
+      "hit_count_7d": 4,
+      "t1_count_7d": 0,
+      "t2_count_7d": 4,
+      "t1_ratio": 0.0,
+      "representative_titles": [
+        "AI Startup Funding Surges in Q1 2026",
+        "New Robotics Lab Opens in Shanghai",
+        "Cloud Infrastructure Trends for Enterprise AI",
+        "TechCrunch Analysis: Developer Tools Market"
+      ],
+      "sample_item_ids": [
+        "b2c3d4e5f6a70001",
+        "b2c3d4e5f6a70002",
+        "b2c3d4e5f6a70003",
+        "b2c3d4e5f6a70004"
+      ],
+      "decision_history": [
+        {
+          "ts": "2026-04-01T08:00:00Z",
+          "decision": "deferred",
+          "reason": "awaiting_enable_evaluation",
+          "details": "Domain has 4 T2 items in 7d but t1_ratio is 0.0; does not meet quality gate (t1_ratio >= 0.3)"
+        }
+      ],
+      "_schema_v": 1
+    },
+    {
+      "domain": "github.com",
+      "canonical_domain": "github.com",
+      "representative_urls": [
+        "https://github.com/vercel/next.js/releases/tag/v15.1.0",
+        "https://github.com/astral-sh/ruff/releases/tag/0.9.0",
+        "https://github.com/anthropics/anthropic-sdk-python/releases/tag/v1.2.0"
+      ],
+      "tier": "T1",
+      "category_candidate": "github_releases",
+      "first_seen": "2026-03-26T12:00:00Z",
+      "last_seen": "2026-04-02T09:20:00Z",
+      "hit_count_7d": 8,
+      "t1_count_7d": 8,
+      "t2_count_7d": 0,
+      "t1_ratio": 1.0,
+      "representative_titles": [
+        "Next.js v15.1.0 Release",
+        "Ruff 0.9.0: New Linting Rules",
+        "Anthropic SDK Python v1.2.0",
+        "LangChain v0.4.0 Release Notes",
+        "Transformers v5.0.0 Release"
+      ],
+      "sample_item_ids": [
+        "c3d4e5f6a7b80001",
+        "c3d4e5f6a7b80002",
+        "c3d4e5f6a7b80003",
+        "c3d4e5f6a7b80004",
+        "c3d4e5f6a7b80005",
+        "c3d4e5f6a7b80006",
+        "c3d4e5f6a7b80007",
+        "c3d4e5f6a7b80008"
+      ],
+      "decision_history": [
+        {
+          "ts": "2026-03-28T08:00:00Z",
+          "decision": "observed",
+          "reason": "below_frequency_threshold",
+          "details": "Path evidence shows github.com/*/releases pattern -- domain-level identity groups all repos but representative_urls preserve release-specific paths for rule-library expansion (e.g. github.com/vercel/next.js/releases, github.com/astral-sh/ruff/releases)"
+        }
+      ],
+      "_schema_v": 1
+    }
+  ],
+  "last_evaluated": "2026-04-02T20:00:00Z",
+  "last_updated": "2026-04-02T20:00:00Z"
+}
