@@ -1319,36 +1319,54 @@ Single decision tree for all alert eligibility checks during Quick-Check flow. T
 
 ### Decision Tree
 
-1. Item has `importance_score >= 0.85`?
-   NO  -> skip (not breaking news)
-   YES -> continue
+Step 0: Event-level alert suppression (PIPE-02)
+- If item has non-null `event_id`:
+  - Read `data/alerts/alert-state-{today YYYY-MM-DD}.json`
+  - If file not found: initialize `{ _schema_v: 1, date: today, alerts_sent: 0, max_alerts: 3, alerted_urls: [], alert_log: [] }`
+  - Count entries in `alert_log` where `event_id == item.event_id`
+  - If count >= 1: skip (event already alerted today, even if this is a new item for the same event)
+- Continue to Step 0A
 
-2. Item `form_type` is `"news"` or `"announcement"`?
+Rationale note: Event-level suppression prevents multiple alerts for the same event in one day. This is especially important when both T1 and T4 items exist for the same event -- the first alert (whichever tier arrives first) is sufficient.
+
+Step 0A: Tier-aware threshold adjustment (PIPE-02)
+- Look up ProvenanceRecord for item via `NewsItem.id -> data/provenance/provenance-db.json`
+- If record exists and `record.tier == "T4"`:
+  - `effective_threshold = 0.92`
+- Else:
+  - `effective_threshold = 0.85` (standard threshold, unchanged for T0-T3 items and items without provenance)
+- Item has `importance_score >= effective_threshold`?
+  - NO  -> skip (below tier-adjusted threshold)
+  - YES -> continue to Step 1
+
+Rationale note: T4 aggregated content must clear a higher bar (0.92 vs 0.85) because aggregation is less likely to represent genuinely breaking news the user has not already seen from a direct source.
+
+1. Item `form_type` is `"news"` or `"announcement"`?
    NO  -> skip (only factual content triggers alerts)
    YES -> continue
 
-3. Read `data/alerts/alert-state-{today YYYY-MM-DD}.json`
+2. Read `data/alerts/alert-state-{today YYYY-MM-DD}.json` if not already loaded in Step 0
    If file not found: initialize `{ _schema_v: 1, date: today, alerts_sent: 0, max_alerts: 3, alerted_urls: [], alert_log: [] }`
 
-4. `alerts_sent >= max_alerts` (3)?
+3. `alerts_sent >= max_alerts` (3)?
    YES -> skip (daily cap reached)
    NO  -> continue
 
-5. Item URL already in `alerted_urls`?
+4. Item URL already in `alerted_urls`?
    YES -> skip (URL dedup)
    NO  -> continue
 
-6. Item has `event_id` AND event has `last_alerted_at` (not null)?
+5. Item has `event_id` AND event has `last_alerted_at` (not null)?
    YES -> DELTA ALERT path (see Section 5B in Plan 10-02)
-   NO  -> STANDARD ALERT path (step 7)
+   NO  -> STANDARD ALERT path (step 6)
 
 STANDARD ALERT (ALERT-06 fallback):
-7. Generate alert using Breaking News Alert template from `references/output-templates.md`
-8. Update alert-state file:
+6. Generate alert using Breaking News Alert template from `references/output-templates.md`
+7. Update alert-state file:
    - Increment `alerts_sent`
    - Append URL to `alerted_urls`
    - Append entry to `alert_log`: `{ news_id, event_id: item.event_id or null, url, title, importance_score, alert_type: "standard", sent_at: now ISO8601 }`
-9. Atomic write alert-state file (tmp + rename)
+8. Atomic write alert-state file (tmp + rename)
 
 ### DailyMetrics Derivation
 
@@ -1367,7 +1385,7 @@ DailyMetrics fields `alerts_sent_today` and `alerted_urls` become DERIVED from t
 
 ## Section 5B: Delta Alert Flow (ALERT-04, ALERT-05)
 
-When the unified decision tree (Section 5A, step 6) routes to the DELTA ALERT path, execute this flow.
+When the unified decision tree (Section 5A, step 5) routes to the DELTA ALERT path, execute this flow.
 
 ### Trigger Condition
 
@@ -1395,7 +1413,7 @@ Item has `event_id` that is not null, AND the linked event in `data/events/activ
    - New timeline entries: format each as `- [{timestamp}] {brief} (relation: {relation})`
 3. Process with LLM (fast model tier -- structured JSON output)
 4. Parse response JSON: `{ delta_summary, current_status }`
-5. If LLM call fails: fall back to standard alert format (ALERT-06 path from Section 5A step 7)
+5. If LLM call fails: fall back to standard alert format (ALERT-06 path from Section 5A step 6)
 
 ### Rendering
 
@@ -1416,7 +1434,7 @@ After successfully sending a delta alert:
 
 ### Alert State Update
 
-Same as standard alert (Section 5A step 8):
+Same as standard alert (Section 5A step 7):
 - Increment alerts_sent in alert-state file
 - Append URL to alerted_urls
 - Append to alert_log with `alert_type: "delta"`
@@ -1424,7 +1442,7 @@ Same as standard alert (Section 5A step 8):
 
 ### Standard Alert Memory Update
 
-When a STANDARD alert (Section 5A step 7) fires for an item WITH an event_id (but event has no last_alerted_at -- first alert for this event):
+When a STANDARD alert (Section 5A step 6) fires for an item WITH an event_id (but event has no last_alerted_at -- first alert for this event):
 1. Update the event in `data/events/active.json`:
    - Set `last_alerted_at` to current ISO8601 timestamp
    - Set `last_alert_news_id` to the item's id

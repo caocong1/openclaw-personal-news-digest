@@ -93,7 +93,7 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 
 ## Breaking News Alert (Kuaixun)
 
-**Trigger condition:** Any item with `importance_score >= 0.85` during a quick-check run.
+**Trigger condition:** Any item that clears the effective alert threshold during a quick-check run (`0.85` for T0-T3 items and `0.92` for T4 items; see `references/processing-instructions.md` Section 5A Step 0A).
 
 **Conservative threshold policy:** Prefer to MISS a breaking story rather than send a false alarm. The threshold of 0.85 is deliberately high. Only events of genuine breaking significance (major policy changes, critical security incidents, landmark product launches by tier-1 companies, significant market events) should reach 0.85.
 
