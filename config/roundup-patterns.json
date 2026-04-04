@@ -56,6 +56,46 @@
       "pattern": "curated (list|links|picks)",
       "priority": 4,
       "example": "Curated List of AI Tools"
+    },
+    {
+      "pattern": "^\\d+点\\d+氪丨",
+      "priority": 1,
+      "example": "8点1氪丨张雪回应陈光标赠1300万元劳斯莱斯；与辉同行曾带货优思益"
+    },
+    {
+      "pattern": "氪金[·|｜丨]",
+      "priority": 1,
+      "example": "氪金丨今日重要商业新闻汇总"
+    },
+    {
+      "pattern": "(^|[；;｜|丨]).*[；;｜|丨].*[；;｜|丨]",
+      "priority": 2,
+      "example": "事件A；事件B；事件C（三段式合集标题）"
+    },
+    {
+      "pattern": "(科技)?早报[：:|]",
+      "priority": 2,
+      "example": "科技早报：今日重要新闻汇总"
+    },
+    {
+      "pattern": "(科技)?晚报[：:|]",
+      "priority": 2,
+      "example": "科技晚报：今日重要新闻汇总"
+    },
+    {
+      "pattern": "(科技)?晨报[：:|]",
+      "priority": 2,
+      "example": "科技晨报：今日重要新闻汇总"
+    },
+    {
+      "pattern": "(每日|今日|本周)?简报[：:|]",
+      "priority": 2,
+      "example": "每日简报：AI行业动态"
+    },
+    {
+      "pattern": "(一周|本周|每周)(回顾|盘点|要闻|速递)",
+      "priority": 3,
+      "example": "一周回顾：本周科技圈大事件"
     }
   ]
 }

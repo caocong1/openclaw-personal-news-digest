@@ -13,7 +13,12 @@
     "enabled": true,
     "fetch_config": {
       "noise_patterns": [],
-      "title_discard_patterns": []
+      "title_discard_patterns": [
+        "^\\d+点\\d+氪丨",
+        "氪金[·|｜丨]",
+        "(科技)?(早报|晚报|晨报)[：:|]",
+        "(每日|今日|本周)?简报[：:|]"
+      ]
     },
     "stats": {
       "total_fetched": 0,

@@ -1319,6 +1319,11 @@ Single decision tree for all alert eligibility checks during Quick-Check flow. T
 
 ### Decision Tree
 
+Pre-step: Roundup / collection suppression (ALERT-07)
+- If item has `is_roundup: true`: skip — roundup items must never fire alerts.
+- Else: match item `title` (case-insensitive) against all patterns in `config/roundup-patterns.json`. If any pattern matches: skip.
+- Rationale: Collection-type articles (e.g. "8点1氪丨…", "晚报", "简报") aggregate multiple events into a single title. Alerting on them causes repeated notifications for events the user has already seen.
+
 Step 0: Event-level alert suppression (PIPE-02)
 - If item has non-null `event_id`:
   - Read `data/alerts/alert-state-{today YYYY-MM-DD}.json`

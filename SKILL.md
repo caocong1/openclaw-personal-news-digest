@@ -15,7 +15,7 @@ You are a news research assistant running in the OpenClaw workspace. Working dir
 
 ## Collection Phase
 
-0. **Bootstrap**: Verify required directories exist. Create any missing: `{baseDir}/data/`, `{baseDir}/data/news/`, `{baseDir}/data/cache/`, `{baseDir}/data/events/`, `{baseDir}/data/events/archived/`, `{baseDir}/data/alerts/`, `{baseDir}/data/feedback/`, `{baseDir}/data/metrics/`, `{baseDir}/data/provenance/`, `{baseDir}/output/`, `{baseDir}/config/`. If `{baseDir}/config/sources.json` does not exist, log error and abort: "Missing sources.json -- run setup first."
+0. **Bootstrap**: Verify `{baseDir}` is the actual skill root, not a parent workspace directory. Check anchor file: `{baseDir}/SKILL.md` must exist AND contain `name: news-digest` in frontmatter. If anchor check fails, abort immediately: "BaseDir drift detected -- expected skill root but got `{baseDir}`. Checked anchor: `{baseDir}/SKILL.md`. Aborting to prevent operating on wrong directory." Verify required directories exist. Create any missing: `{baseDir}/data/`, `{baseDir}/data/news/`, `{baseDir}/data/cache/`, `{baseDir}/data/events/`, `{baseDir}/data/events/archived/`, `{baseDir}/data/alerts/`, `{baseDir}/data/feedback/`, `{baseDir}/data/metrics/`, `{baseDir}/data/provenance/`, `{baseDir}/output/`, `{baseDir}/config/`. If `{baseDir}/config/sources.json` does not exist, log error and abort: "Missing sources.json at `{baseDir}/config/sources.json` -- run setup first." (Error message must include the absolute path being checked.)
 1. **Acquire lock**: Read `{baseDir}/data/.lock`. If absent or `started_at` > 15 min ago, write `{ "run_id": "run-YYYYMMDD-HHmmss-XXXX", "started_at": "ISO8601" }`. If locked < 15 min, skip this run. If the existing lock is stale (> 15 min), clean it up and additionally call `bash {baseDir}/scripts/run-journal.sh append "$RUN_ID" warning collection STALE_LOCK "Stale lock cleaned up after 15 min expiry" "Restart run manually if needed"` with the stuck run_id in details. Emit run_log entry: step="pipeline_start", details={run_id}.
 2. **Generate run_id**: `run-YYYYMMDD-HHmmss-XXXX` (XXXX = random 4 chars).
 3. **Load sources**: Read `{baseDir}/config/sources.json`, filter `enabled: true`. If budget effective_usage >= 0.8, additionally skip `status: "degraded"` sources.
@@ -86,8 +86,11 @@ Run source discovery accumulation after the Processing Phase has produced event-
 
 Triggered by quick-check cron (every 2h):
 1. Run Collection + Processing phases (same as daily).
-2. **Breaking news scan**: For each item with `importance_score >= 0.85`, run the unified alert decision tree from `{baseDir}/references/processing-instructions.md` Section 5A. The decision tree reads/writes `{baseDir}/data/alerts/alert-state-{today YYYY-MM-DD}.json` as authoritative source (initializes file if absent). Enforces 3-alert daily cap, URL dedup, form_type filter (news/announcement only), and routes to standard or delta alert path.
-3. If qualifying items: generate alert, write to `{baseDir}/output/latest-alert.md`, update metrics, and output the full alert text as your reply. If none: reply with nothing (empty response).
+2. **Breaking news scan**: For each item with `importance_score >= 0.85`:
+   a. **Roundup gate**: If item has `is_roundup: true` OR item title matches any pattern in `{baseDir}/config/roundup-patterns.json` (case-insensitive), skip this item — roundup/collection items must never fire alerts. Log skip reason: "roundup_suppressed".
+   b. **Already-alerted URL gate**: Read `{baseDir}/data/alerts/alert-state-{today YYYY-MM-DD}.json`. If item URL already in `alerted_urls`, skip.
+   c. Run the unified alert decision tree from `{baseDir}/references/processing-instructions.md` Section 5A. The decision tree reads/writes alert-state as authoritative source (initializes file if absent). Enforces 3-alert daily cap, URL dedup, form_type filter (news/announcement only), and routes to standard or delta alert path.
+3. If qualifying items: generate alert, write to `{baseDir}/output/latest-alert.md`, update metrics, and output the full alert text as your reply. If none: reply with nothing (empty response). **Do NOT reuse a stale `output/latest-alert.md` from a previous run** — if no new alert is generated this run, do not output anything.
 4. Release lock.
 
 ## Standing Orders
