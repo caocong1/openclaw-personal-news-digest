@@ -5,12 +5,15 @@
 #   bash scripts/run-journal.sh append  <run_id> <severity> <stage> <code> <message> [hint] [source_id]
 #   bash scripts/run-journal.sh query   [--run-id RUN_ID] [--severity SEV] [--stage STAGE] [--limit N]
 #   bash scripts/run-journal.sh summary [--days N]
+#   bash scripts/run-journal.sh backlog <run_id> <failure_type> <summary> <recovery_hint> [source_ids...]
 #
 # Examples:
 #   bash scripts/run-journal.sh append "run-20260403-1200-abcd" "error" "collection" "SRC_TIMEOUT" \
 #     "Source src-36kr timed out after 30s" "Re-enable manually" "src-36kr"
 #   bash scripts/run-journal.sh query --severity error --limit 20
 #   bash scripts/run-journal.sh summary --days 7
+#   bash scripts/run-journal.sh backlog "run-20260403-1200-abcd" "source_timeout" \
+#     "Source src-36kr failed" "Re-enable source manually" "src-36kr"
 
 set -euo pipefail
 
@@ -42,6 +45,7 @@ lib_dir = os.path.join(script_dir, "lib")
 sys.path.insert(0, lib_dir)
 
 from journal_tools import journal_append, journal_query, journal_summary, JOURNAL_PATH
+from backlog_tools import append_failure_followup
 
 journal_path = os.path.join(base_dir, JOURNAL_PATH)
 
@@ -98,6 +102,18 @@ elif cmd == "summary":
 
     result = journal_summary(journal_path, days)
     print(json.dumps(result, ensure_ascii=False, indent=2))
+
+elif cmd == "backlog":
+    # args: run_id failure_type summary recovery_hint [source_ids...]
+    run_id = args[0] if len(args) > 0 else ""
+    failure_type = args[1] if len(args) > 1 else ""
+    summary = args[2] if len(args) > 2 else ""
+    recovery_hint = args[3] if len(args) > 3 else ""
+    source_ids = args[4:] if len(args) > 4 else None
+
+    append_failure_followup(run_id, failure_type, summary, recovery_hint,
+                           source_ids=source_ids, base_dir=base_dir)
+    print(f"Backlog entry appended: [{failure_type}] {run_id}")
 
 else:
     print(f"Unknown command: {cmd}", file=sys.stderr)
