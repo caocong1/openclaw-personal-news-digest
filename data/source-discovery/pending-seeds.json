@@ -1,6 +1,6 @@
 {
   "_doc": "Pre-fetched seed discovery results. Generated externally (Claude Code / local tools) for OpenClaw to consume. OpenClaw reads this file, profiles candidates, and onboards confirmed sources.",
-  "_generated_at": "2026-04-05T00:30:00+08:00",
+  "_generated_at": "2026-04-05T15:30:00+08:00",
   "_generated_by": "claude-code",
   "seeds": [
     {
@@ -49,6 +49,11 @@
           "bvid": "BV187XjB8E5u",
           "title": "Gemini 3.1 Flash 现踪迹；Sora 下月正式停运，API 9月下线 | AI日报",
           "description": ""
+        },
+        {
+          "bvid": "BV1WP9MBcEpS",
+          "title": "震撼登场！小米的 Xiaomi MiMo Token Plan 是神还是屎！",
+          "description": "小米 MiMo Token Plan 评测，四档订阅39-659元/月，统一Credit积分制"
         }
       ],
       "topics_extracted": [
@@ -57,7 +62,11 @@
         "Claude Code source leak",
         "Gemini 3.1 Flash",
         "Sora OpenAI shutdown",
-        "Xiaomi MiMo Token Plan"
+        "Xiaomi MiMo Token Plan",
+        "Microsoft MAI models (Transcribe, Voice, Image)",
+        "Wan2.7-Video Alibaba Tongyi",
+        "Seedance 2.0 ByteDance video generation",
+        "Claude Windows computer use"
       ]
     }
   ],
@@ -73,7 +82,7 @@
       "language": "en",
       "update_frequency": "hourly",
       "discovery_reason": "Covers Sora shutdown, AI industry analysis. Original reporting on OpenAI, Anthropic, Google AI.",
-      "matched_topics": ["Sora OpenAI shutdown", "Claude Code source leak"]
+      "matched_topics": ["Sora OpenAI shutdown", "Claude Code source leak", "Microsoft MAI models"]
     },
     {
       "url": "https://venturebeat.com/",
@@ -178,6 +187,123 @@
       "update_frequency": "weekly",
       "discovery_reason": "T1 official source for Gemma model cards and DeepMind research.",
       "matched_topics": ["Gemma 4 Google open model"]
+    },
+    {
+      "url": "https://the-decoder.com/",
+      "rss_url": "https://the-decoder.com/feed/",
+      "name": "THE DECODER",
+      "name_zh": "THE DECODER",
+      "recommended_type": "rss",
+      "topics": ["ai-models", "tech-products", "science"],
+      "credibility_estimate": 0.8,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "Dedicated AI news site. Covers Claude Windows launch, Microsoft MAI models, Anthropic research. Multiple articles daily.",
+      "matched_topics": ["Claude Windows computer use", "Microsoft MAI models", "Wan2.7-Video Alibaba Tongyi"]
+    },
+    {
+      "url": "https://microsoft.ai/news/",
+      "rss_url": null,
+      "name": "Microsoft AI Blog",
+      "name_zh": "微软AI官方博客",
+      "recommended_type": "official",
+      "topics": ["ai-models", "tech-products"],
+      "credibility_estimate": 0.95,
+      "language": "en",
+      "update_frequency": "weekly",
+      "discovery_reason": "T1 official source for MAI-Transcribe-1, MAI-Voice-1, MAI-Image-2 and Microsoft AI strategy.",
+      "matched_topics": ["Microsoft MAI models (Transcribe, Voice, Image)"]
+    },
+    {
+      "url": "https://thenextweb.com/",
+      "rss_url": "https://feeds.feedburner.com/TheNextWeb",
+      "name": "The Next Web",
+      "name_zh": "TNW科技",
+      "recommended_type": "rss",
+      "topics": ["ai-models", "tech-products", "business"],
+      "credibility_estimate": 0.8,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "European tech news, covers Microsoft MAI models, Claude desktop launch. Strong startup/enterprise coverage.",
+      "matched_topics": ["Microsoft MAI models", "Claude Windows computer use"]
+    },
+    {
+      "url": "https://www.geekwire.com/",
+      "rss_url": "https://www.geekwire.com/feed/",
+      "name": "GeekWire",
+      "name_zh": "GeekWire",
+      "recommended_type": "rss",
+      "topics": ["ai-models", "tech-products", "business"],
+      "credibility_estimate": 0.8,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "Pacific NW tech news with strong Microsoft/AI coverage. Original reporting on MAI model release.",
+      "matched_topics": ["Microsoft MAI models"]
+    },
+    {
+      "url": "https://artificialanalysis.ai/",
+      "rss_url": null,
+      "name": "Artificial Analysis",
+      "name_zh": "Artificial Analysis",
+      "recommended_type": "ranking",
+      "topics": ["ai-models"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "Independent AI model benchmarks and leaderboards. Tracks Xiaomi MiMo, Step 3.5 Flash, all major model performance/pricing.",
+      "matched_topics": ["Xiaomi MiMo Token Plan", "Seedance 2.0 ByteDance"]
+    },
+    {
+      "url": "https://www.aibase.com/",
+      "rss_url": null,
+      "name": "AIBase",
+      "name_zh": "AIBase",
+      "recommended_type": "community",
+      "topics": ["ai-models", "dev-tools", "tech-products"],
+      "credibility_estimate": 0.7,
+      "language": "mixed",
+      "update_frequency": "daily",
+      "discovery_reason": "Multilingual AI news aggregator (EN/ZH/JA). Covers Xiaomi MiMo Token Plan, Wan2.7 launch, AI tool rankings.",
+      "matched_topics": ["Xiaomi MiMo Token Plan", "Wan2.7-Video Alibaba Tongyi"]
+    },
+    {
+      "url": "https://seed.bytedance.com/",
+      "rss_url": null,
+      "name": "ByteDance Seed",
+      "name_zh": "字节跳动Seed",
+      "recommended_type": "official",
+      "topics": ["ai-models", "tech-products"],
+      "credibility_estimate": 0.9,
+      "language": "mixed",
+      "update_frequency": "irregular",
+      "discovery_reason": "T1 official source for Seedance 2.0, Seed2.0 foundation models, ByteDance AI research.",
+      "matched_topics": ["Seedance 2.0 ByteDance video generation"]
+    },
+    {
+      "url": "https://analyticsindiamag.com/",
+      "rss_url": null,
+      "name": "Analytics India Magazine",
+      "name_zh": "Analytics India Magazine",
+      "recommended_type": "community",
+      "topics": ["ai-models", "business"],
+      "credibility_estimate": 0.75,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "AI/data science news, covered Microsoft MAI model launch reducing OpenAI dependence.",
+      "matched_topics": ["Microsoft MAI models"]
+    },
+    {
+      "url": "https://www.gizchina.com/",
+      "rss_url": null,
+      "name": "GizChina",
+      "name_zh": "GizChina",
+      "recommended_type": "community",
+      "topics": ["tech-products", "ai-models"],
+      "credibility_estimate": 0.7,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "English-language coverage of Chinese tech products. Covered Xiaomi MiMo Token Plan pricing details.",
+      "matched_topics": ["Xiaomi MiMo Token Plan"]
     }
   ]
 }
