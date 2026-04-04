@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-04-04T07:08:10.261Z"
+last_updated: "2026-04-04T07:18:27.237Z"
 progress:
   total_phases: 15
-  completed_phases: 12
-  total_plans: 31
-  completed_plans: 31
+  completed_phases: 13
+  total_plans: 32
+  completed_plans: 32
 ---
 
 # Project State
@@ -18,15 +18,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-03)
 
 **Core value:** Replace "pushing messages to the user" with "continuously observing the world on the user's behalf" while preserving anti-echo-chamber exposure
-**Current focus:** Phase 18 — wire-backlog-failure-follow-up
+**Current focus:** Phase 19 — add missing E2E fixture
 
 ## Current Position
 
 Milestone: `v3.0 Provenance & Source Discovery`
-Phase: 18 (wire-backlog-failure-follow-up)
+Phase: 19 (add-missing-e2e-fixture)
 Plan: 01 complete (of 1)
 Status: Phase complete
-Last activity: 2026-04-04 -- Completed Phase 18 Plan 01: wired backlog failure follow-up into SKILL.md via run-journal.sh backlog subcommand (OPER-03)
+Last activity: 2026-04-04 -- Completed Phase 19 Plan 01: added test_provenance_e2e to smoke-test.sh validating PIPE-01 through PIPE-03
 
 Progress: [██████████] 100%
 
@@ -83,6 +83,7 @@ Progress: [██████████] 100%
 - Key decision: last_updated initialized to 2026-04-03 matching plan date.
 - Key decision: verification script uses python3 for robust JSON parsing, exits 0/1 for CI integration.
 - Phase 18 Plan 01 complete: wired `run-journal.sh backlog` calls into SKILL.md so every error journal entry creates a failure follow-up entry via `backlog_tools.append_failure_followup`.
+- Phase 19 Plan 01 complete: added `test_provenance_e2e` to smoke-test.sh validating PIPE-01 through PIPE-03 from provenance-ranking-e2e-sample.json fixture.
 - Key decision: backlog subcommand argument order: run_id, failure_type, summary, recovery_hint, [source_ids...].
 - Key decision: DIGEST_FAILED maps to llm_failure per plan (digest generation is an LLM-tier issue).
 - Key decision: SECURITY_BLOCK journal entries do NOT trigger backlog follow-ups (audit-only events).
@@ -132,6 +133,7 @@ Progress: [██████████] 100%
 - [Phase 18]: backlog subcommand argument order: run_id, failure_type, summary, recovery_hint, [source_ids...]
 - [Phase 18]: DIGEST_FAILED maps to llm_failure per plan (digest generation is an LLM-tier issue)
 - [Phase 18]: SECURITY_BLOCK journal entries do NOT trigger backlog follow-ups (audit-only events)
+- [Phase 19]: test_provenance_e2e is full-mode only (not quick mode), consistent with existing smoke-test.sh conventions
 
 ## Blockers
 
@@ -152,9 +154,10 @@ None
 | Phase 17 P01 | 2min | 7 tasks | 7 files |
 | Phase 18 P01 | 3min | 3 tasks | 2 files |
 | Phase 18 P01 | 3 | 3 tasks | 2 files |
+| Phase 19 P01 | 1 | 1 tasks | 1 files |
 
 ## Session
 
-Last Date: 2026-04-04T07:05:00Z
-Stopped At: Phase 18 complete, ready for Phase 19
+Last Date: 2026-04-04T07:17:54Z
+Stopped At: Phase 19 complete
 Resume File: None

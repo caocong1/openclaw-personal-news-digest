@@ -113,6 +113,10 @@ Plans:
 **Depends on:** Phase 15
 **Requirements:** `PIPE-02`
 **Gap Closure:** Closes tech debt item -- E2E fixture file missing, blocking PIPE-02 smoke test
+**Plans:** 1/1 plans complete
+
+Plans:
+- [x] `19-01-PLAN.md` - Add test_provenance_e2e() to smoke-test.sh validating PIPE-01 through PIPE-03
 
 ## Milestone Summary
 
@@ -147,4 +151,4 @@ Plans:
 | 16. Operational Hardening & Verification | 4/4 | Complete    | 2026-04-03 |
 | 17. Initialize Provenance Data Store | 1/1 | Complete    | 2026-04-03 |
 | 18. Wire Backlog Failure Follow-up | 1/1 | Complete    | 2026-04-04 |
-| 19. Add Missing E2E Fixture | --/1 | Planned     | -- |
+| 19. Add Missing E2E Fixture | 1/1 | Complete    | 2026-04-04 |
