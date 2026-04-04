@@ -17,7 +17,7 @@ Each profile maps onto the same four OpenClaw cron jobs by `job_name`: `news-dai
 
 **Apply flow**
 1. Read `config/schedule-profiles.json` and resolve the `active_profile`.
-2. For each job in that profile, run `cron get <job_name>` to inspect the current deployed state.
+2. For each job in that profile, run `cron edit <job_name>` and inspect the returned job configuration.
 3. If the job is enabled, use `cron create` with the job JSON below or the platform's update path to apply the profile's `expr`.
 4. If the job is disabled, run `cron disable <job_name>` instead of deleting the profile entry.
 
@@ -162,7 +162,7 @@ All management is done via the `cron` tool in an OpenClaw chat session:
 | Disable temporarily | `cron disable news-daily-digest` |
 | Re-enable | `cron enable news-daily-digest` |
 | Delete permanently | `cron delete news-daily-digest` |
-| View job details | `cron get news-daily-digest` |
+| View job details | `cron edit news-daily-digest` (inspect returned config) |
 
 ## Recommended Setup Order
 
