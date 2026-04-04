@@ -1,5 +1,22 @@
 # Milestones
 
+## v3.0 Provenance & Source Discovery (Shipped: 2026-04-04)
+
+**Phases completed:** 7 phases, 16 plans
+
+**Key accomplishments:**
+
+- Added T1/T2 provenance rule libraries, a first-class Provenance Stage, citation extraction, and persistent provenance stores under `data/provenance/` with cross-validation and discrepancy logging
+- Built automated T1/T2 source discovery with rolling metrics, five-gate auto-enable evaluation, three-trigger auto-disable, and generated source config metadata
+- Integrated provenance into ranking as a post-formula modifier, added event representative selection, tier-aware alert gating, and provenance-aware digest/alert rendering with Chinese-tier labels
+- Hardened the operator surface with 5 auditable Python modules (`scripts/lib/`), append-only run journal, `pipeline_state` enum, automated smoke tests, and cross-channel recovery matrix
+- Wired `backlog_tools.append_failure_followup` into SKILL.md so every error journal entry creates a backlog follow-up entry (closing OPER-03)
+- Created E2E fixture and smoke test coverage for provenance-aware pipeline assertions (PIPE-01 through PIPE-03)
+
+**Stats:** 52 commits, 22 files changed, +1107/-45 lines over ~1.5 days (2026-04-03 → 2026-04-04)
+
+---
+
 ## v1.0 MVP (Shipped: 2026-04-02)
 
 **Phases completed:** 7 phases, 18 plans, 35 tasks

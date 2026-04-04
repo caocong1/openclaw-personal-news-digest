@@ -10,23 +10,18 @@ Replace "pushing messages to the user" with "continuously observing the world on
 
 ## Current State
 
-- Shipped `v2.0 Quality & Robustness` on `2026-04-03`.
-- Completed `Phase 13 Provenance Core` on `2026-04-03`, adding dedicated T1/T2 provenance libraries, deterministic citation extraction contracts, fixed disagreement resolution, and file-backed provenance fixtures/stores under `data/provenance/`.
-- Completed `Phase 14 Source Discovery Automation` on `2026-04-03`, adding rolling discovered-source state, auto-enable/disable evaluation, generated source metadata, and discovery audit artifacts.
-- Completed `Phase 15 Provenance-Aware Ranking & Delivery` on `2026-04-03`, adding provenance-based score modifiers, event representative selection, tier-aware alert gating, provenance rendering rules, weekly discovery reporting, and an end-to-end Phase 15 verification fixture.
-- Archived milestones: `v1.0 MVP`, `v2.0 Quality & Robustness`.
-- The current system now supports provenance-aware ranking, representative selection, tier-aware alert gating, source-tier/original-source/provenance-chain rendering, weekly discovery reporting, and automated T1/T2 source discovery alongside the earlier v2.0 operator hardening work.
-- The next phase is `Phase 16 Operational Hardening & Verification`, focused on scripts, atomization, clearer run-state semantics, and remaining operator safeguards.
+- Shipped `v3.0 Provenance & Source Discovery` on `2026-04-04`.
+- The system now tracks item provenance with T0-T4 source tiers, citation chains, propagation hops, and discrepancy logging through a first-class Provenance Stage.
+- Automated T1/T2 source discovery runs with rolling metrics, five-gate auto-enable evaluation, and three-trigger auto-disable — sources accumulate into `data/provenance/discovered-sources.json`.
+- Provenance influences ranking through a post-formula modifier (T1/T2 boost, T4 decay when direct coverage exists), event representative selection, tier-aware alert gating (T4 at 0.92, T0-T3 at 0.85), and provenance-aware digest/alert rendering.
+- Operator surface hardened with 5 auditable Python modules (`scripts/lib/`), append-only run journal, `pipeline_state` enum, automated smoke tests (`smoke-test.sh`), and cross-channel recovery matrix.
+- Backlog failure follow-up wired into SKILL.md — every error journal entry creates a backlog follow-up entry via `backlog_tools.append_failure_followup`.
+- Archived milestones: `v1.0 MVP`, `v2.0 Quality & Robustness`, `v3.0 Provenance & Source Discovery`.
+- The pipeline now runs from collection through provenance classification, source discovery, provenance-aware ranking, and explainable output delivery with full operator audit trails.
 
-## Current Milestone: v3.0 Provenance & Source Discovery
+## Next Milestone
 
-**Goal:** Reduce dependence on T4 aggregation by tracing provenance for every item, discovering direct T1/T2 sources automatically, and hardening the pipeline's operational edges.
-
-**Target features:**
-- Track item provenance with T0-T4 source tiers, citation chains, propagation hops, and discrepancy logging
-- Discover, evaluate, auto-enable, and auto-disable T1/T2 sources directly from observed provenance paths
-- Use provenance in scoring, event selection, alerts, digest rendering, and weekly discovery reporting
-- Close the remaining hardening backlog with auditable scripts, collection atomization, clearer failure states, and operator safeguards
+Not yet planned — use `/gsd:new-milestone` to start the next cycle.
 
 ## Requirements
 
@@ -112,4 +107,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-04 after completing Phase 17 Provenance Data Store Initialization*
+*Last updated: 2026-04-04 after completing v3.0 Provenance & Source Discovery*

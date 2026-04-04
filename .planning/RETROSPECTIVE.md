@@ -41,6 +41,43 @@
 
 ---
 
+## Milestone: v3.0 - Provenance & Source Discovery
+
+**Shipped:** 2026-04-04
+**Phases:** 7 | **Plans:** 16
+
+### What Was Built
+- T1/T2 provenance rule libraries, first-class Provenance Stage, citation extraction, and persistent provenance stores under `data/provenance/` with cross-validation and discrepancy logging
+- Automated T1/T2 source discovery with rolling metrics, five-gate auto-enable, three-trigger auto-disable, and generated source config metadata
+- Provenance-aware ranking as a post-formula modifier, event representative selection, tier-aware alert gating, and provenance-aware digest/alert rendering with Chinese-tier labels
+- Operator hardening: 5 auditable Python modules (`scripts/lib/`), append-only run journal, `pipeline_state` enum, automated smoke tests, and cross-channel recovery matrix
+- Wired backlog failure follow-up into SKILL.md via `backlog_tools.append_failure_followup`, E2E fixture and smoke test coverage for provenance-aware pipeline assertions
+
+### What Worked
+- Audit-then-gap-closure cycle proved again: Phase 17/18/19 gap phases addressed every critical/high/medium finding from the v3.0 audit before shipping
+- Separating provenance data store initialization into its own phase (Phase 17) kept the fix surgical and verifiable in under 2 minutes
+- The `scripts/lib/` module pattern from Phase 16-01 created a foundation that all subsequent phases reused cleanly
+
+### What Was Inefficient
+- The audit ran before all gap-closure phases existed, requiring a second pass to verify fixes
+- Some phase summaries had task counts that didn't match actual task commits (Phase 16 had duplicate plan entries, Phase 17 reported 7 tasks for a 1-plan phase)
+
+### Patterns Established
+- Provenance as a post-formula modifier rather than an eighth scoring dimension keeps ranking changes additive
+- Five-gate auto-enable with event-based uniqueness join prevents false positives without requiring manual approval
+- Phase-level gap closure: audit identifies runtime failures, gap phases fix them, audit re-verifies
+
+### Key Lessons
+1. Run milestone audits only after the gap-closure phases they imply are fully planned and scheduled.
+2. Gap phases should be tracked in ROADMAP.md with their own completion dates — Phase 17/18/19 weren't visible in the original v3.0 roadmap.
+3. Provenance stores need to be initialized on disk before integration testing, not just documented in contracts.
+
+### Cost Observations
+- v3.0 was the most efficient milestone yet: 7 phases, 16 plans, ~1.5 days — faster than v2.0 despite larger architectural scope
+- Phase 17 data store initialization was the highest-leverage single commit of the milestone (fixed 5 partial requirements in one shot)
+
+---
+
 ## Milestone: v2.0 - Quality & Robustness
 
 **Shipped:** 2026-04-03
@@ -86,6 +123,7 @@
 |-----------|--------|-------|------------|
 | v1.0 | 7 | 18 | Initial delivery with audit-driven gap closure |
 | v2.0 | 6 | 16 | Contract hardening, observability, and operator UX improvements |
+| v3.0 | 7 | 16 | Provenance tracking, automated source discovery, and operator hardening |
 
 ### Top Lessons (Verified Across Milestones)
 
