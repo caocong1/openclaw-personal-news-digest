@@ -40,7 +40,7 @@
 
 - [x] **OPER-01**: Failures, exceptions, and security blocks append structured entries to `data/metrics/run-journal.jsonl`.
 - [x] **OPER-02**: Health checks surface OpenClaw version drift and documented recovery hints for blocked runs.
-- [ ] **OPER-03**: The skill appends failure follow-up to the external backlog path and keeps repo docs aligned with that path.
+- [x] **OPER-03**: The skill appends failure follow-up to the external backlog path and keeps repo docs aligned with that path.
 - [x] **OPER-04**: A documented production source profile enables a multi-source baseline instead of a single-source default.
 - [x] **OPER-05**: CLI/docs parity checks and a channel recovery matrix document how operators recover across Web UI, terminal, and Discord workflows.
 - [x] **OPER-06**: Live platform smoke tests cover cron delivery, isolated session loading, exec permissions, timeout behavior, and empty-input quality gates after the provenance rollout.
@@ -92,7 +92,7 @@
 | HARD-03 | Phase 16-01 | Complete |
 | OPER-01 | Phase 16 | Complete |
 | OPER-02 | Phase 16 | Complete |
-| OPER-03 | Phase 18 | Pending |
+| OPER-03 | Phase 18 | Complete |
 | OPER-04 | Phase 16 | Complete |
 | OPER-05 | Phase 16 | Complete |
 | OPER-06 | Phase 16 | Complete |

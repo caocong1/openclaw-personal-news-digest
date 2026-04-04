@@ -146,5 +146,5 @@ Plans:
 | 15. Provenance-Aware Ranking & Delivery | 3/3 | Complete    | 2026-04-03 |
 | 16. Operational Hardening & Verification | 4/4 | Complete    | 2026-04-03 |
 | 17. Initialize Provenance Data Store | 1/1 | Complete    | 2026-04-03 |
-| 18. Wire Backlog Failure Follow-up | 1/1 | Planned     | -- |
+| 18. Wire Backlog Failure Follow-up | 1/1 | Complete    | 2026-04-04 |
 | 19. Add Missing E2E Fixture | --/1 | Planned     | -- |

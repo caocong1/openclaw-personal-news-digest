@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: unknown
-last_updated: "2026-04-04T16:07:00.000Z"
+milestone: v3.0
+milestone_name: v3.0 Provenance & Source Discovery
+status: active
+last_updated: "2026-04-04T07:05:14.562Z"
 progress:
-  total_phases: 15
-  completed_phases: 11
-  total_plans: 30
-  completed_plans: 30
+  total_phases: 19
+  completed_phases: 13
+  total_plans: 32
+  completed_plans: 32
 ---
 
 # Project State
@@ -23,10 +23,10 @@ See: .planning/PROJECT.md (updated 2026-04-03)
 ## Current Position
 
 Milestone: `v3.0 Provenance & Source Discovery`
-Phase: 17 (initialize-provenance-data-store)
+Phase: 18 (wire-backlog-failure-follow-up)
 Plan: 01 complete (of 1)
 Status: Phase complete
-Last activity: 2026-04-04 -- Completed Phase 17 Plan 01: created data/provenance/ directory, all 5 artifact files, and verification script (PROV-06, PIPE-01, PIPE-04, DISC-01, PIPE-05)
+Last activity: 2026-04-04 -- Completed Phase 18 Plan 01: wired backlog failure follow-up into SKILL.md via run-journal.sh backlog subcommand (OPER-03)
 
 Progress: [██████████] 100%
 
@@ -82,7 +82,11 @@ Progress: [██████████] 100%
 - Key decision: empty provenance-discrepancies.jsonl as 0-byte file (valid empty JSONL).
 - Key decision: last_updated initialized to 2026-04-03 matching plan date.
 - Key decision: verification script uses python3 for robust JSON parsing, exits 0/1 for CI integration.
-- Next step: Phase 18 (Wire Backlog Failure Follow-up, OPER-03)
+- Phase 18 Plan 01 complete: wired `run-journal.sh backlog` calls into SKILL.md so every error journal entry creates a failure follow-up entry via `backlog_tools.append_failure_followup`.
+- Key decision: backlog subcommand argument order: run_id, failure_type, summary, recovery_hint, [source_ids...].
+- Key decision: DIGEST_FAILED maps to llm_failure per plan (digest generation is an LLM-tier issue).
+- Key decision: SECURITY_BLOCK journal entries do NOT trigger backlog follow-ups (audit-only events).
+- Next step: Phase 19 (Add Missing E2E Fixture)
 
 ## Audit Notes
 
@@ -125,6 +129,9 @@ Progress: [██████████] 100%
 - [Phase 17-01]: empty provenance-discrepancies.jsonl as 0-byte file (valid empty JSONL)
 - [Phase 17-01]: verification script uses python3 for robust JSON parsing, exits 0/1 for CI integration
 - [Phase 17-01]: provenance stores use _schema_v=1 for forward compatibility
+- [Phase 18]: backlog subcommand argument order: run_id, failure_type, summary, recovery_hint, [source_ids...]
+- [Phase 18]: DIGEST_FAILED maps to llm_failure per plan (digest generation is an LLM-tier issue)
+- [Phase 18]: SECURITY_BLOCK journal entries do NOT trigger backlog follow-ups (audit-only events)
 
 ## Blockers
 
@@ -143,9 +150,11 @@ None
 | Phase 16 P03 | 5 | 4 tasks | 11 files |
 | Phase 16 P04 | 6 | 3 tasks | 5 files |
 | Phase 17 P01 | 2min | 7 tasks | 7 files |
+| Phase 18 P01 | 3min | 3 tasks | 2 files |
+| Phase 18 P01 | 3 | 3 tasks | 2 files |
 
 ## Session
 
-Last Date: 2026-04-04T16:07:00Z
-Stopped At: Phase 17 complete, ready to plan Phase 18
+Last Date: 2026-04-04T07:05:00Z
+Stopped At: Phase 18 complete, ready for Phase 19
 Resume File: None
