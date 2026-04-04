@@ -6,7 +6,10 @@
     "url": "https://36kr.com/feed",
     "weight": 1.0,
     "credibility": 0.8,
-    "topics": ["tech-products", "business"],
+    "topics": [
+      "tech-products",
+      "business"
+    ],
     "enabled": true,
     "fetch_config": {
       "noise_patterns": [],
@@ -34,7 +37,10 @@
     "url": "https://api.github.com/repos/langchain-ai/langchain/releases",
     "weight": 1.0,
     "credibility": 0.9,
-    "topics": ["ai-models", "dev-tools"],
+    "topics": [
+      "ai-models",
+      "dev-tools"
+    ],
     "enabled": false,
     "fetch_config": {
       "owner": "langchain-ai",
@@ -66,10 +72,16 @@
     "url": "",
     "weight": 0.8,
     "credibility": 0.6,
-    "topics": ["macro-policy", "ai-models"],
+    "topics": [
+      "macro-policy",
+      "ai-models"
+    ],
     "enabled": false,
     "fetch_config": {
-      "keywords": ["AI regulation news 2026", "artificial intelligence policy"],
+      "keywords": [
+        "AI regulation news 2026",
+        "artificial intelligence policy"
+      ],
       "max_results": 10,
       "noise_patterns": [],
       "title_discard_patterns": []
@@ -96,7 +108,10 @@
     "url": "https://openai.com/blog",
     "weight": 1.0,
     "credibility": 0.9,
-    "topics": ["ai-models", "tech-products"],
+    "topics": [
+      "ai-models",
+      "tech-products"
+    ],
     "enabled": false,
     "fetch_config": {
       "prefer_browser": false,
@@ -125,7 +140,11 @@
     "url": "https://news.ycombinator.com",
     "weight": 0.9,
     "credibility": 0.7,
-    "topics": ["dev-tools", "tech-products", "open-source"],
+    "topics": [
+      "dev-tools",
+      "tech-products",
+      "open-source"
+    ],
     "enabled": false,
     "fetch_config": {
       "max_items": 15,
@@ -154,7 +173,10 @@
     "url": "https://github.com/trending",
     "weight": 0.8,
     "credibility": 0.8,
-    "topics": ["dev-tools", "open-source"],
+    "topics": [
+      "dev-tools",
+      "open-source"
+    ],
     "enabled": false,
     "fetch_config": {
       "prefer_browser": false,
