@@ -1,0 +1,183 @@
+{
+  "_doc": "Pre-fetched seed discovery results. Generated externally (Claude Code / local tools) for OpenClaw to consume. OpenClaw reads this file, profiles candidates, and onboards confirmed sources.",
+  "_generated_at": "2026-04-05T00:30:00+08:00",
+  "_generated_by": "claude-code",
+  "seeds": [
+    {
+      "seed_url": "https://space.bilibili.com/3493082576193678",
+      "seed_platform": "bilibili",
+      "up_name": "infinite灵感港",
+      "up_bio": "见证AI每一次突破",
+      "analyzed_videos": [
+        {
+          "bvid": "BV1FPXrBjEQ3",
+          "title": "已严肃学习，Claude Code源码几乎被扒光，智谱公布2025全年业绩 | 4月1日AI日报第352期",
+          "description": "今日内容：\n1·Claude Code源码遭泄露[00:03] \n2·智谱发布2025年业绩报告[00:33] \n3·Qwen 3.6 Plus 免费预览版[00:51] \n4·Mistral完成8.3亿债务融资[01:09] \n5·支付宝推出支付集成Skill[01:25]"
+        },
+        {
+          "bvid": "BV136XQBaEm7",
+          "title": "OpenAI全新订阅，Deepseek疑似灰度新模型 | 3月30日AI日报第350期",
+          "description": ""
+        }
+      ],
+      "topics_extracted": [
+        "Claude Code source code leak",
+        "Zhipu 2025 annual revenue report",
+        "Qwen 3.6 Plus preview release",
+        "Mistral AI $830M debt financing",
+        "OpenAI new subscription plan",
+        "DeepSeek new model"
+      ]
+    },
+    {
+      "seed_url": "https://space.bilibili.com/3706929260006322",
+      "seed_platform": "bilibili",
+      "up_name": "黑鸦Heya",
+      "up_bio": "人类覆灭始末考 | 每日更新",
+      "analyzed_videos": [
+        {
+          "bvid": "BV1uE9FBUE7u",
+          "title": "阿里千问正式发布Qwen3.6-Plus；Gemma 4 即将发布 | AI日报0402",
+          "description": ""
+        },
+        {
+          "bvid": "BV1dgXrB3E2A",
+          "title": "Claude Code 源码意外泄露；小米新系统输入法漏洞泄露API密钥 | AI日报3月31日",
+          "description": ""
+        },
+        {
+          "bvid": "BV187XjB8E5u",
+          "title": "Gemini 3.1 Flash 现踪迹；Sora 下月正式停运，API 9月下线 | AI日报",
+          "description": ""
+        }
+      ],
+      "topics_extracted": [
+        "Qwen 3.6 Plus release",
+        "Gemma 4 Google open model",
+        "Claude Code source leak",
+        "Gemini 3.1 Flash",
+        "Sora OpenAI shutdown",
+        "Xiaomi MiMo Token Plan"
+      ]
+    }
+  ],
+  "candidate_sources": [
+    {
+      "url": "https://techcrunch.com/",
+      "rss_url": "https://techcrunch.com/feed/",
+      "name": "TechCrunch",
+      "name_zh": "TechCrunch科技",
+      "recommended_type": "rss",
+      "topics": ["ai-models", "tech-products", "business"],
+      "credibility_estimate": 0.9,
+      "language": "en",
+      "update_frequency": "hourly",
+      "discovery_reason": "Covers Sora shutdown, AI industry analysis. Original reporting on OpenAI, Anthropic, Google AI.",
+      "matched_topics": ["Sora OpenAI shutdown", "Claude Code source leak"]
+    },
+    {
+      "url": "https://venturebeat.com/",
+      "rss_url": "https://venturebeat.com/feed/",
+      "name": "VentureBeat",
+      "name_zh": "VentureBeat",
+      "recommended_type": "rss",
+      "topics": ["ai-models", "tech-products", "business"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "hourly",
+      "discovery_reason": "Original reporting on Claude Code leak, AI model releases. Strong AI/enterprise coverage.",
+      "matched_topics": ["Claude Code source leak", "Qwen 3.6 Plus"]
+    },
+    {
+      "url": "https://blog.google/technology/ai/",
+      "rss_url": null,
+      "name": "Google AI Blog",
+      "name_zh": "Google AI 官方博客",
+      "recommended_type": "official",
+      "topics": ["ai-models", "open-source"],
+      "credibility_estimate": 0.95,
+      "language": "en",
+      "update_frequency": "weekly",
+      "discovery_reason": "T1 official source for Gemma 4, Gemini 3.1 Flash announcements.",
+      "matched_topics": ["Gemma 4 Google open model", "Gemini 3.1 Flash"]
+    },
+    {
+      "url": "https://qwen.ai/blog",
+      "rss_url": null,
+      "name": "Qwen Official Blog",
+      "name_zh": "通义千问官方博客",
+      "recommended_type": "official",
+      "topics": ["ai-models", "open-source"],
+      "credibility_estimate": 0.95,
+      "language": "mixed",
+      "update_frequency": "weekly",
+      "discovery_reason": "T1 official source for Qwen 3.6 Plus and all Qwen model releases.",
+      "matched_topics": ["Qwen 3.6 Plus release", "Qwen 3.6 Plus preview release"]
+    },
+    {
+      "url": "https://siliconangle.com/",
+      "rss_url": "https://siliconangle.com/feed/",
+      "name": "SiliconANGLE",
+      "name_zh": "SiliconANGLE",
+      "recommended_type": "rss",
+      "topics": ["ai-models", "tech-products", "business"],
+      "credibility_estimate": 0.8,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "Covers Mistral financing, Gemma 4, enterprise AI. Original reporting.",
+      "matched_topics": ["Mistral AI $830M financing", "Gemma 4 Google open model"]
+    },
+    {
+      "url": "https://www.theregister.com/",
+      "rss_url": "https://www.theregister.com/headlines.atom",
+      "name": "The Register",
+      "name_zh": "The Register",
+      "recommended_type": "rss",
+      "topics": ["ai-models", "security", "tech-products"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "Covers Claude Code leak security angle, AI industry news. T2 original reporting.",
+      "matched_topics": ["Claude Code source leak"]
+    },
+    {
+      "url": "https://www.scmp.com/tech",
+      "rss_url": "https://www.scmp.com/rss/4/feed",
+      "name": "South China Morning Post - Tech",
+      "name_zh": "南华早报科技版",
+      "recommended_type": "rss",
+      "topics": ["ai-models", "business", "tech-products"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "English-language coverage of Chinese AI companies (Zhipu, Alibaba/Qwen, DeepSeek). T2 original reporting.",
+      "matched_topics": ["Zhipu 2025 annual revenue", "Qwen 3.6 Plus", "DeepSeek new model"]
+    },
+    {
+      "url": "https://www.bleepingcomputer.com/",
+      "rss_url": "https://www.bleepingcomputer.com/feed/",
+      "name": "BleepingComputer",
+      "name_zh": "BleepingComputer",
+      "recommended_type": "rss",
+      "topics": ["security", "ai-models"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "Security angle on Claude Code leak malware exploitation. Strong security coverage.",
+      "matched_topics": ["Claude Code source leak"]
+    },
+    {
+      "url": "https://deepmind.google/blog/",
+      "rss_url": null,
+      "name": "Google DeepMind Blog",
+      "name_zh": "Google DeepMind 官方博客",
+      "recommended_type": "official",
+      "topics": ["ai-models", "science"],
+      "credibility_estimate": 0.95,
+      "language": "en",
+      "update_frequency": "weekly",
+      "discovery_reason": "T1 official source for Gemma model cards and DeepMind research.",
+      "matched_topics": ["Gemma 4 Google open model"]
+    }
+  ]
+}

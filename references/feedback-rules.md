@@ -19,7 +19,7 @@ Feedback flows through a pipeline: user signal -> feedback log -> preference upd
 | `preference_query` | `what have you learned about me`, `show my preferences`, `my interests` | Preference Visualization in this file |
 | `history_query` | `latest news`, `AI news this week`, `what happened with X`, `what did I miss` | `references/prompts/history-query.md` plus `references/processing-instructions.md` Section 8 |
 | `diagnostics` | `system status`, `health check`, `diagnostics` | `bash scripts/diagnostics.sh {baseDir}` |
-| `seed_discovery` | `从这个视频发现源`, `discover sources from`, `从URL找新闻源`, `分析这个链接`, `seed discovery`, `找新闻来源`, `发现新闻源` | Seed Discovery Command (collection-instructions.md Section 7B) |
+| `seed_discovery` | `从这个视频发现源`, `discover sources from`, `从URL找新闻源`, `分析这个链接`, `seed discovery`, `找新闻来源`, `发现新闻源`, `加载预取的种子`, `load pending seeds`, `导入候选源` | Seed Discovery Command (collection-instructions.md Section 7B) |
 | `general` | anything else | General helpful response |
 
 This table is the canonical routing source for SKILL.md. Do not duplicate trigger examples elsewhere.

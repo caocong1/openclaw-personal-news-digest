@@ -501,8 +501,55 @@ User provides a URL with intent to discover news sources. Examples:
 - "从这个B站视频发现新闻源: https://b23.tv/PHDMt7f"
 - "分析这个链接找新闻来源: https://example.com/news-roundup"
 - "discover sources from https://..."
+- "加载预取的种子发现结果" / "load pending seeds"
 
-### Input Handling
+### Two-Phase Mode (Pre-fetched Seeds)
+
+When the agent's network environment cannot reach certain platforms (e.g., B站 blocked by proxy/firewall), the seed discovery flow supports a **two-phase split**:
+
+- **Phase 1 (external)**: Run locally via Claude Code or other tools with full network access. Fetch video/page metadata, extract topics, discover candidate sources via web search. Write results to `data/source-discovery/pending-seeds.json`.
+- **Phase 2 (this agent)**: Read `pending-seeds.json`, skip Steps 1-4, proceed directly to Step 5 (Source Profiling) using the pre-discovered `candidate_sources` array.
+
+**Trigger**: If `data/source-discovery/pending-seeds.json` exists and is non-empty, inform the user: "发现预取的种子发现结果（{N} 个候选源），是否直接进入源画像和确认流程？"
+
+**Pre-fetched file format** (`data/source-discovery/pending-seeds.json`):
+```json
+{
+  "_generated_at": "ISO timestamp",
+  "_generated_by": "claude-code|manual",
+  "seeds": [
+    {
+      "seed_url": "https://...",
+      "seed_platform": "bilibili|generic",
+      "up_name": "UP主 or author name",
+      "topics_extracted": ["topic1", "topic2"]
+    }
+  ],
+  "candidate_sources": [
+    {
+      "url": "https://example.com",
+      "rss_url": "https://example.com/feed/ (or null)",
+      "name": "Source Name",
+      "name_zh": "中文名",
+      "recommended_type": "rss|official|community|ranking|search|github",
+      "topics": ["ai-models", "security"],
+      "credibility_estimate": 0.85,
+      "language": "en|zh|mixed",
+      "update_frequency": "hourly|daily|weekly|irregular",
+      "discovery_reason": "Why this source was found",
+      "matched_topics": ["topic that led to discovery"]
+    }
+  ]
+}
+```
+
+**When reading pre-fetched data**:
+1. Load `pending-seeds.json`, validate structure
+2. For each `candidate_sources` entry, run Step 5 (Source Profiling) if `credibility_estimate` is missing or if the agent wants to verify. Otherwise, trust the pre-fetched profiling and skip directly to Step 6 (User Confirmation)
+3. After successful onboarding, rename the file to `pending-seeds.{timestamp}.done.json` to prevent re-processing
+4. Record in `data/provenance/seed-analyses.jsonl` with `"generated_by"` field from the file
+
+### Input Handling (Direct Mode)
 
 **Step 1: URL Classification & Resolution**
 1. Detect platform: bilibili (b23.tv, bilibili.com, space.bilibili.com), youtube, twitter, weibo, generic
