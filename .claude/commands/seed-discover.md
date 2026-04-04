@@ -106,7 +106,7 @@
 }
 ```
 
-### Step 6: 报告结果
+### Step 6: 报告结果并生成 OpenClaw 交接消息
 
 输出简洁报告：
 
@@ -121,7 +121,21 @@ Seed Discovery 完成:
 2. ...
 
 已写入 data/source-discovery/pending-seeds.json
-→ 在 OpenClaw 中说 "加载预取的种子" 即可导入
+```
+
+然后**必须**输出一段可直接复制粘贴到 OpenClaw 对话的交接消息。OpenClaw 运行在另一台机器上，无法读取本地文件，所以必须把数据内联到消息中。
+
+要求：
+- 用单个代码块包裹整段消息（方便用户一键复制）
+- JSON 压缩为单行（减少体积）
+- 不要嵌套代码块
+
+交接消息格式（整体用一个代码块输出）：
+
+```
+以下是预取的种子发现结果，请将 JSON 写入 `data/source-discovery/pending-seeds.json` 然后进入 Phase 2（源画像 + 确认流程）：
+
+{单行压缩的 pending-seeds.json 内容}
 ```
 
 ## 注意事项
