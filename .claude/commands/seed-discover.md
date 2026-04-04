@@ -134,10 +134,10 @@ Seed Discovery 完成:
 交接消息格式（整体用一个代码块输出）：
 
 ```
-我发现了一些候选新闻源，请帮我处理：
+这是种子发现（Seed Discovery）的 Phase 1 结果，在另一台机器上通过 /seed-discover 命令生成。请执行 Phase 2：
 
 1. 把下面的 JSON 保存到 data/source-discovery/pending-seeds.json
-2. 按 references/collection-instructions.md 里的「Two-Phase Mode」预取种子流程处理：对 candidate_sources 逐个做源画像，然后让我确认哪些要 onboard
+2. 按 references/collection-instructions.md「Two-Phase Mode (Pre-fetched Seeds)」章节处理：对 candidate_sources 逐个做源画像（Source Profiling），然后让我确认哪些要 onboard 到 config/sources.json
 
 数据来源：{实际的来源描述，如 "B站UP主 xxx, xxx" 或 "网页 example.com"}，共 {N} 个候选源（{M} 个有RSS）
 
