@@ -126,6 +126,7 @@ Use `{baseDir}/references/feedback-rules.md` "Intent Recognition Table" as the c
 - **Preference query**: Route to `{baseDir}/references/feedback-rules.md` "Preference Visualization" section.
 - **History query**: Route to `{baseDir}/references/prompts/history-query.md`, then execute via `{baseDir}/references/processing-instructions.md` Section 8.
 - **Diagnostics**: Run `bash {baseDir}/scripts/diagnostics.sh {baseDir}` and present the output.
+- **Seed discovery**: Route to `{baseDir}/references/collection-instructions.md` "Seed Discovery Command" section (Section 7B). seed_discovery → Seed Discovery: analyze URL to discover news sources
 - **General**: Respond helpfully.
 
 ## Operational Rules

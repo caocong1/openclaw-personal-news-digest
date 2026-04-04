@@ -78,7 +78,13 @@ def append_failure_followup(
         "source_ids": source_ids or [],
     }
 
+    existing = ""
+    if os.path.exists(backlog_path):
+        with open(backlog_path, "r", encoding="utf-8") as f:
+            existing = f.read()
     tmp_path = backlog_path + ".tmp"
     with open(tmp_path, "w", encoding="utf-8") as f:
+        if existing:
+            f.write(existing)
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
     os.rename(tmp_path, backlog_path)

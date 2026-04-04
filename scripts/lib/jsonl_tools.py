@@ -31,8 +31,14 @@ def read_jsonl(path: str) -> list[dict]:
 
 def append_jsonl(path: str, entry: dict) -> None:
     """Append a single JSON dict as a newline to a JSONL file atomically."""
+    existing = ""
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            existing = f.read()
     tmp_path = path + ".tmp"
     with open(tmp_path, "w", encoding="utf-8") as f:
+        if existing:
+            f.write(existing)
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
     os.rename(tmp_path, path)
 

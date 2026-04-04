@@ -269,7 +269,7 @@ Persistent discovery accumulation store at `data/provenance/discovered-sources.j
       "decision_history": [
         {
           "ts": "ISO8601",
-          "decision": "observed|deferred|enabled|disabled|rejected",
+          "decision": "observed|deferred|enabled|disabled|rejected|seed_confirmed",
           "reason": "string (e.g. below_frequency_threshold)",
           "details": "string or null (additional context)"
         }
@@ -295,7 +295,10 @@ Persistent discovery accumulation store at `data/provenance/discovered-sources.j
 - `t1_ratio`: `t1_count_7d / max(hit_count_7d, 1)`. Measures how often the domain produces T1 (direct/original) content.
 - `representative_titles`: At most 5 unique titles ordered newest first. Provides human-readable evidence of what the domain produces.
 - `sample_item_ids`: At most 10 `NewsItem.id` strings ordered newest first. Enables join-back to full item and provenance records.
-- `decision_history`: Append-only array of decision records. Each entry records a timestamp, the decision taken, a machine-readable reason, and optional human-readable details. Decision strings: `observed`, `deferred`, `enabled`, `disabled`, `rejected`.
+- `decision_history`: Append-only array of decision records. Each entry records a timestamp, the decision taken, a machine-readable reason, and optional human-readable details. Decision strings: `observed`, `deferred`, `enabled`, `disabled`, `rejected`, `seed_confirmed` (user confirmed this source from a seed discovery analysis).
+- `discovery_origin`: How this source was discovered. `"provenance"` = discovered via pipeline provenance analysis (default, existing behavior); `"seed"` = discovered via user-triggered Seed Discovery command.
+- `seed_url`: The original seed URL that triggered discovery. Only present when `discovery_origin = "seed"`.
+- `seed_platform`: Platform of the seed: `"bilibili"`, `"youtube"`, or `"generic"`. Only present when `discovery_origin = "seed"`.
 - `_schema_v`: Per-record schema version (integer). Readers must handle older versions with missing-field defaults.
 
 **Normalization rules:**
@@ -315,6 +318,37 @@ Persistent discovery accumulation store at `data/provenance/discovered-sources.j
 - `representative_titles`: `[]`
 - `sample_item_ids`: `[]`
 - `decision_history`: `[]`
+- `discovery_origin`: `"provenance"`
+- `seed_url`: absent (omit field entirely)
+- `seed_platform`: absent (omit field entirely)
+
+---
+
+## SeedAnalysis Record
+
+File: `data/provenance/seed-analyses.jsonl` (append-only JSONL)
+
+Each line is a JSON object recording one seed discovery analysis run.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `run_id` | string | Unique ID: `seed-YYYYMMDD-HHmmss` |
+| `seed_url` | string | Original URL provided by user |
+| `seed_platform` | string | `"bilibili"` \| `"youtube"` \| `"generic"` |
+| `analyzed_at` | string | ISO 8601 timestamp |
+| `seed_title` | string | Title extracted from seed content |
+| `topics_found` | integer | Number of topics extracted |
+| `topics` | array | List of topic keywords extracted |
+| `candidates_found` | integer | Total candidate sources discovered |
+| `candidates_confirmed` | integer | Sources confirmed by user |
+| `sources_added` | array | List of source IDs added to sources.json |
+| `llm_calls_used` | integer | LLM calls consumed |
+| `status` | string | `"completed"` \| `"cancelled"` \| `"failed"` |
+| `error` | string? | Error message if status = "failed" |
+
+**Defaults for missing fields (older schema versions):**
+- `seed_platform`: `"generic"`
+- `status`: `"completed"`
 
 ---
 
@@ -423,7 +457,7 @@ These fields record why a source exists and what discovery decisions have been m
 - `auto_discovered_at`: ISO8601 or null. Timestamp when the source was first auto-enabled from discovery state.
 - `discovery_domain`: string or null. The normalized registrable/root domain that was the discovery identity (e.g., `"openai.com"`). Links back to the `domain` key in `data/provenance/discovered-sources.json`.
 - `discovery_tier`: `"T1"` | `"T2"` | null. The provenance tier at the time of auto-enable.
-- `discovery_decision`: `"enabled"` | `"deferred"` | `"disabled"` | `"rejected"` | null. The most recent discovery evaluation outcome. Updated when the source is disabled or re-enabled through discovery evaluation.
+- `discovery_decision`: `"enabled"` | `"deferred"` | `"disabled"` | `"rejected"` | `"seed_confirmed"` | null. The most recent discovery evaluation outcome. Updated when the source is disabled or re-enabled through discovery evaluation. `"seed_confirmed"` indicates the source was added via user-triggered Seed Discovery.
 - `discovery_decided_at`: ISO8601 or null. Timestamp of the most recent discovery decision.
 
 **Generated-source defaults for auto-enabled direct sources:**

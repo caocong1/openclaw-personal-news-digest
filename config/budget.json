@@ -2,6 +2,8 @@
   "daily_llm_call_limit": 500,
   "daily_token_limit": 1000000,
   "alert_threshold": 0.8,
+  "seed_daily_limit": 2,
+  "seed_calls_today": 0,
   "current_date": "2026-03-31",
   "calls_today": 0,
   "tokens_today": 0

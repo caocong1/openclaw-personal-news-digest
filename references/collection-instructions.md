@@ -489,6 +489,150 @@ When user input is ambiguous, do NOT guess. Instead:
 
 ---
 
+## Section 7B: Seed Discovery Command
+
+### Purpose
+
+Discover new text-based news sources from a seed URL (B站 video, blog post, news article, etc.).
+
+### Trigger
+
+User provides a URL with intent to discover news sources. Examples:
+- "从这个B站视频发现新闻源: https://b23.tv/PHDMt7f"
+- "分析这个链接找新闻来源: https://example.com/news-roundup"
+- "discover sources from https://..."
+
+### Input Handling
+
+**Step 1: URL Classification & Resolution**
+1. Detect platform: bilibili (b23.tv, bilibili.com, space.bilibili.com), youtube, twitter, weibo, generic
+2. For short URLs (b23.tv, t.co): resolve via HTTP redirect to full URL
+3. Determine bilibili URL type:
+   - **Video URL** (`bilibili.com/video/BVxxx`): extract BV number -> call bilibili video API (`api.bilibili.com/x/web-interface/view?bvid={bvid}`) via `web_fetch`
+   - **Space/User URL** (`space.bilibili.com/{mid}` or `bilibili.com/space/{mid}`): extract member ID (mid) -> call user card API (`api.bilibili.com/x/web-interface/card?mid={mid}`) to get UP主 name -> use `web_search("{UP主name} bilibili 最新", allowed_domains=["bilibili.com"])` to find recent videos -> pick top 3 video URLs -> for each, extract BV number and call video API
+4. For generic URLs: `web_fetch(url)` to get page content
+5. **Fallback**: If bilibili API fails (403/timeout), fallback to `web_fetch` of the video page HTML and extract title/description from meta tags. If space API rate-limited, fallback to `web_search` with UP主 name from URL.
+
+**Step 2: Content Extraction**
+1. For bilibili video: use API response fields (title, desc, tag list, tname)
+2. For bilibili space: aggregate fields from top 3 recent videos (merge titles, descriptions, tags)
+3. For generic URL: extract title (og:title or `<title>`), description (og:description or meta description), main content (first ~2000 chars)
+4. **Sanitize**: Truncate description/content to 2000 characters max
+5. Extract all URLs found in the content
+6. **Title-only fallback**: If description is empty or very short (< 30 chars), set `title_only_mode: true`. In this mode, Step 3 relies solely on the title for topic extraction. Titles like "阿里千问正式发布Qwen3.6-Plus；Gemma 4 即将发布 | AI日报0402" contain enough signal for topic extraction. When multiple videos are aggregated (space URL), combine all titles into a single text block for richer extraction.
+
+**Step 3: Topic Extraction (LLM)**
+1. Read `references/prompts/seed-extract.md`
+2. Wrap content in `<seed_content>` tags to isolate from prompt instructions
+3. Call LLM with title + description + tags
+4. Output: 3-8 news topics with search queries, extracted URLs with classification
+5. Budget: 1 LLM call
+
+**Step 4: Source Discovery**
+1. For each topic (max 5 topics to search):
+   - `web_search(topic.search_query, max_results=5)`
+   - Collect unique domains from results
+2. For extracted URLs classified as "news_source":
+   - `web_fetch` each URL to verify accessibility
+3. Merge all candidate URLs, deduplicate by domain
+4. Exclude URLs whose domain matches any existing enabled source in `config/sources.json`
+5. Cap at 15 candidate sources maximum
+
+**Step 5: Source Profiling (LLM)**
+1. For each candidate (batch up to 5 per LLM call):
+   - `web_fetch(candidate_url)` to get sample content (~1000 chars)
+   - Read `references/prompts/source-profile.md`
+   - Wrap content in `<candidate_content>` tags
+   - LLM evaluates: type, credibility, topics, overlap, recommendation
+2. Filter: keep only candidates with `recommendation: "add"` or `"review"`
+3. Budget: 1 LLM call per 5 candidates (max 3 calls = 15 candidates)
+
+**Step 6: User Confirmation**
+1. Present candidate list to user in readable format:
+   ```
+   发现 N 个候选新闻源:
+
+   1. [推荐添加] SourceName (rss) — https://example.com/feed.xml
+      话题: ai-models, dev-tools | 可信度: 0.8 | 更新频率: daily
+      推荐理由: ...
+
+   2. [建议审查] AnotherSource (official) — https://another.com/blog
+      话题: tech-products | 可信度: 0.6 | 与现有源重叠: src-36kr
+      审查理由: ...
+   ```
+2. Wait for user to confirm which sources to add
+3. User can say "全部添加", "添加 1,3", "跳过", etc.
+
+**Step 7: Source Onboarding**
+1. **Check pipeline lock**: If `.lock` file exists and is fresh (< 15 min), inform user that pipeline is running and suggest waiting
+2. For each confirmed source, generate source config entry following existing Source schema:
+   - `id`: auto-generate (e.g., `src-{domain-slug}`)
+   - `name`: from profiling result
+   - `type`: from profiling result (rss/official/community/ranking/search/github)
+   - `url`: from profiling result (recommended_url or rss_url if available)
+   - `weight`: from profiling result (suggested_weight)
+   - `credibility`: from profiling result (credibility_estimate)
+   - `topics`: from profiling result
+   - `enabled`: false (user must explicitly enable -- respect Standing Orders)
+   - `auto_discovered`: true
+   - `auto_discovered_at`: current ISO timestamp
+   - `discovery_domain`: extracted domain
+   - `discovery_decision`: "seed_confirmed"
+   - `discovery_decided_at`: current ISO timestamp
+   - `fetch_config`: from profiling hints
+   - `stats`: initialize empty (total_fetched: 0, etc.)
+3. Present constructed source config to user for final confirmation
+4. Atomic write to `config/sources.json` (load -> append -> write via tmp + rename)
+5. Also register in `data/provenance/discovered-sources.json`:
+   - Add entry with `discovery_origin: "seed"`, `seed_url: "{original_input_url}"`
+   - `seed_platform`: platform string ("bilibili", "youtube", or "generic")
+   - `decision_history`: append `{"ts": "ISO timestamp", "decision": "seed_confirmed", "reason": "user confirmed from seed analysis", "details": null}`
+
+**Step 8: Record & Report**
+1. Append analysis record to `data/provenance/seed-analyses.jsonl`:
+   ```json
+   {
+     "run_id": "seed-YYYYMMDD-HHmmss",
+     "seed_url": "...",
+     "seed_platform": "bilibili|generic",
+     "seed_title": "视频/页面标题",
+     "analyzed_at": "ISO timestamp",
+     "topics_found": 5,
+     "topics": ["AI模型", "开源项目", "..."],
+     "candidates_found": 12,
+     "candidates_confirmed": 3,
+     "sources_added": ["src-xxx", "src-yyy"],
+     "llm_calls_used": 5,
+     "status": "completed",
+     "error": null
+   }
+   ```
+2. Update `config/budget.json`: increment `seed_calls_today` counter
+3. Report to user: "已添加 N 个新闻源（默认未启用）。使用 'enable src-xxx' 来启用。"
+
+### Budget Controls
+
+- Check `config/budget.json` field `seed_calls_today` before starting
+- Max 2 seed analyses per day (`seed_daily_limit: 2` in budget.json)
+- Max 30 LLM calls per analysis
+- If daily pipeline budget usage > 80%, warn user but allow proceeding
+- Seed discovery LLM calls count toward `calls_today` in budget.json
+
+### Error Handling
+
+- URL resolution failure -> inform user, suggest checking URL
+- Bilibili API failure -> fallback to page HTML meta extraction
+- web_search returns no results for a topic -> skip that topic, continue
+- All candidates already exist -> inform user "所有发现的源已在配置中"
+- Pipeline lock active -> inform user, suggest waiting
+
+### Repeat Analysis Detection
+
+Before Step 1, check `data/provenance/seed-analyses.jsonl` for same `seed_url` within 7 days.
+If found: "此URL已于 {date} 分析过，发现了 N 个源。是否重新分析？"
+
+---
+
 ## Source Health Metrics Computation
 
 ### When to Compute
