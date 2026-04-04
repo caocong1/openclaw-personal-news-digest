@@ -1,5 +1,6 @@
 .codex-plan-loop/
 .claude/
+!.claude/commands/
 .omc/
 run-all-phases.log
 __pycache__/
