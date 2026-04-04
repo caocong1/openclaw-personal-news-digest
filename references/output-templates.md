@@ -314,6 +314,7 @@ These tables define how internal English enum values are rendered as Chinese lab
 | `T2` | 原创报道 |
 | `T3` | 评论分析 |
 | `T4` | 聚合转载 |
+| `null` | 未分类 |
 
 ### Provenance Chain Rendering
 
