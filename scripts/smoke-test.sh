@@ -136,6 +136,64 @@ EOF
   echo "$out"; [ "$out" = "PASS" ] && return 0; return 1
 }
 
+# ── test_provenance_e2e ───────────────────────────────────
+test_provenance_e2e() {
+  local out
+  out=$(python3 - "$BASE_DIR" 2>/dev/null <<'EOF'
+import json, sys
+base = sys.argv[1]
+fixture_path = f"{base}/data/fixtures/provenance-ranking-e2e-sample.json"
+try:
+    with open(fixture_path) as f:
+        d = json.load(f)
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    print(f"FAIL: fixture not found or invalid: {e}")
+    sys.exit(0)
+
+# PIPE-01: T1 outranks T4 for same event
+pipe01 = d.get("PIPE-01_provenance_scoring", {})
+items = pipe01.get("items", [])
+t1 = next((i for i in items if i.get("tier") == "T1"), None)
+t4 = next((i for i in items if i.get("tier") == "T4"), None)
+if not (t1 and t4):
+    print("FAIL: PIPE-01 missing T1 or T4 items")
+    sys.exit(0)
+if not (t1.get("adjusted_score", 0) > t4.get("adjusted_score", 0)):
+    print(f"FAIL: PIPE-01 T1 ({t1.get('adjusted_score')}) should outrank T4 ({t4.get('adjusted_score')})")
+    sys.exit(0)
+
+# PIPE-02: T4 strict threshold (0.92), T1 standard (0.85)
+pipe02 = d.get("PIPE-02_alert_gating", {})
+b = pipe02.get("scenario_b_t4_threshold", {})
+c = pipe02.get("scenario_c_t1_passes", {})
+if b.get("effective_threshold") != 0.92:
+    print(f"FAIL: PIPE-02 T4 threshold {b.get('effective_threshold')} != 0.92")
+    sys.exit(0)
+if b.get("result") != "SKIP":
+    print(f"FAIL: PIPE-02 scenario_b should SKIP")
+    sys.exit(0)
+if c.get("effective_threshold") != 0.85:
+    print(f"FAIL: PIPE-02 T1 threshold {c.get('effective_threshold')} != 0.85")
+    sys.exit(0)
+if c.get("result") != "CONTINUE":
+    print(f"FAIL: PIPE-02 scenario_c should CONTINUE")
+    sys.exit(0)
+
+# PIPE-03: T1 item is the representative
+pipe03 = d.get("PIPE-03_representative_selection", {})
+rep = pipe03.get("representative_item_id", "")
+if rep != "e2e-t1-openai":
+    print(f"FAIL: PIPE-03 representative {rep} != e2e-t1-openai")
+    sys.exit(0)
+
+print("PASS")
+EOF
+)
+  echo "$out"
+  [ "$out" = "PASS" ] && return 0
+  return 1
+}
+
 # ── Main ─────────────────────────────────────────────────
 echo "=== OpenClaw Smoke Tests (mode: $MODE) ==="
 echo "Base dir: $BASE_DIR"
@@ -172,6 +230,8 @@ else
   run_test "test_version_metadata" "$R" "$D"
   T=$(date +%s%N); R=$(test_jsonl_append); D=$((($(date +%s%N) - $T)/1000000))
   run_test "test_jsonl_append" "$R" "$D"
+  T=$(date +%s%N); R=$(test_provenance_e2e); D=$((($(date +%s%N) - $T)/1000000))
+  run_test "test_provenance_e2e" "$R" "$D"
 fi
 
 END=$(python3 -c "import time; print(time.time())")
