@@ -129,11 +129,17 @@ Seed Discovery 完成:
 - 用单个代码块包裹整段消息（方便用户一键复制）
 - JSON 压缩为单行（减少体积）
 - 不要嵌套代码块
+- 消息要对 OpenClaw 有完整上下文：是什么、从哪来、要做什么、怎么做
 
 交接消息格式（整体用一个代码块输出）：
 
 ```
-以下是预取的种子发现结果，请将 JSON 写入 `data/source-discovery/pending-seeds.json` 然后进入 Phase 2（源画像 + 确认流程）：
+我从 B站 AI日报 UP主那里发现了一些候选新闻源。请帮我处理：
+
+1. 把下面的 JSON 保存到 data/source-discovery/pending-seeds.json
+2. 按 references/collection-instructions.md 里的「Two-Phase Mode」预取种子流程处理：对 candidate_sources 逐个做源画像，然后让我确认哪些要 onboard
+
+数据来源：{UP主名字列表}，共 {N} 个候选源（{M} 个有RSS）
 
 {单行压缩的 pending-seeds.json 内容}
 ```
