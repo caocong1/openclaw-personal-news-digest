@@ -1,5 +1,11 @@
 # Changelog
 
+## [16.1.5] - 2026-04-06
+
+### Fixed
+- Use enumerate for union-find cluster lookup, eliminating wrong-cluster bug with value-equal dicts (LOGIC-03 / B11)
+- Require second non-dollar anchor for event merge, preventing unrelated dollar-amount-only merges (LOGIC-04 / B9)
+
 ## [16.1.4] - 2026-04-06
 
 ### Fixed
