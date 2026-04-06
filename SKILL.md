@@ -3,7 +3,7 @@ name: news-digest
 description: Personalized news research and delivery system
 user-invocable: true
 metadata: {"openclaw":{"always":true}}
-_skill_version: "16.1.0"
+_skill_version: "16.1.1"
 minimum_openclaw_version: "1.4.0"
 ---
 

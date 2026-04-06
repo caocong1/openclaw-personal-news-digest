@@ -1,5 +1,10 @@
 # Changelog
 
+## [16.1.1] - 2026-04-06
+
+### Added
+- fcntl-based concurrency guard in debug_quick_check.py — second cron invocation exits cleanly without corrupting state
+
 ## [16.1.0] - 2026-04-05
 
 ### Fixed
