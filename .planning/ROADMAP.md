@@ -53,7 +53,7 @@
 
 - [x] **Phase 20: P0 Infrastructure Fixes** - Concurrency guard, atomic writes, write ordering (completed 2026-04-06)
 - [x] **Phase 21: P1 Logic Bug Fixes** - Sort fix, alert cap, index fix, anchor guard (completed 2026-04-06)
-- [ ] **Phase 22: Dead Code Cleanup** - Remove unused constants and functions
+- [x] **Phase 22: Dead Code Cleanup** - Remove unused constants and functions (completed 2026-04-06)
 
 ## Phase Details
 
@@ -117,4 +117,4 @@
 | 19. Add Missing E2E Fixture | 1/1 | Complete | 2026-04-04 |
 | 20. P0 Infrastructure Fixes | 2/2 | Complete    | 2026-04-06 |
 | 21. P1 Logic Bug Fixes | 2/2 | Complete    | 2026-04-06 |
-| 22. Dead Code Cleanup | 0/? | Not started | - |
+| 22. Dead Code Cleanup | 1/1 | Complete   | 2026-04-06 |
