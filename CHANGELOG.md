@@ -1,5 +1,10 @@
 # Changelog
 
+## [16.1.3] - 2026-04-06
+
+### Fixed
+- Reordered file writes: state and metrics persisted before alert/digest output to prevent duplicate alerts after crash
+
 ## [16.1.2] - 2026-04-06
 
 ### Added

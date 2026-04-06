@@ -540,6 +540,8 @@ alerts = _final
 
 selected_alerts = alerts[:MAX_ALERTS_PER_RUN]
 out = []
+alert_content = ''
+digest_content = ''
 if MODE == 'quick-check' and selected_alerts:
     new_urls = []
     for idx, selected_alert in enumerate(selected_alerts, 1):
@@ -555,11 +557,11 @@ if MODE == 'quick-check' and selected_alerts:
     report['alerts_sent_today'] = state['alerts_sent']
     report['scan_report']['alerts_sent_this_run'] = len(selected_alerts)
     report['scan_report']['run_conclusion'] = f'已发送 {len(selected_alerts)} 条快讯'
-    ALERT_FILE.write_text('\n'.join(out).strip() + '\n', encoding='utf-8')
+    alert_content = '\n'.join(out).strip() + '\n'
 elif MODE == 'quick-check':
     report['alerts_sent_today'] = state.get('alerts_sent', 0)
     report['scan_report']['run_conclusion'] = '未发送告警：候选已去重或不满足发送条件'
-    ALERT_FILE.write_text('', encoding='utf-8')
+    alert_content = ''
 else:
     report['scan_report']['run_conclusion'] = '已生成调试版 daily 报告'
     digest = ['# 今日新闻摘要（调试版）', '']
@@ -567,10 +569,20 @@ else:
         digest += [f"- {r['title_zh'] or r['title']} ({r['source_name']})"]
         if r['title'] and not is_chinese(r['title']):
             digest += [f"  原文标题: {r['title']}"]
-    DIGEST_FILE.write_text('\n'.join(digest) + '\n', encoding='utf-8')
+    digest_content = '\n'.join(digest) + '\n'
 
+# CRITICAL ORDER: state first, then metrics, then output files
+# A crash after state-write but before alert-write means the alert
+# is lost (no duplicate on retry). A crash before state-write means
+# clean retry.
 atomic_write_text(STATE_FILE, json.dumps(state, ensure_ascii=False, indent=2) + '\n')
 atomic_write_text(METRICS_FILE, json.dumps(report, ensure_ascii=False, indent=2) + '\n')
+
+# Output files last — these are the "publish" step
+if MODE == 'quick-check':
+    ALERT_FILE.write_text(alert_content, encoding='utf-8')
+else:
+    DIGEST_FILE.write_text(digest_content, encoding='utf-8')
 
 parts = []
 if out:
