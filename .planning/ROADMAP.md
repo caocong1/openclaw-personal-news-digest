@@ -51,7 +51,7 @@
 
 **Milestone Goal:** Fix all P0/P1 bugs and clean dead code in `scripts/debug_quick_check.py`, identified by multi-CLI audit with ground-truth verification.
 
-- [ ] **Phase 20: P0 Infrastructure Fixes** - Concurrency guard, atomic writes, write ordering
+- [x] **Phase 20: P0 Infrastructure Fixes** - Concurrency guard, atomic writes, write ordering (completed 2026-04-06)
 - [ ] **Phase 21: P1 Logic Bug Fixes** - Sort fix, alert cap, index fix, anchor guard
 - [ ] **Phase 22: Dead Code Cleanup** - Remove unused constants and functions
 
@@ -112,6 +112,6 @@
 | 17. Initialize Provenance Data Store | 1/1 | Complete | 2026-04-03 |
 | 18. Wire Backlog Failure Follow-up | 1/1 | Complete | 2026-04-04 |
 | 19. Add Missing E2E Fixture | 1/1 | Complete | 2026-04-04 |
-| 20. P0 Infrastructure Fixes | 1/2 | In Progress|  |
+| 20. P0 Infrastructure Fixes | 2/2 | Complete   | 2026-04-06 |
 | 21. P1 Logic Bug Fixes | 0/? | Not started | - |
 | 22. Dead Code Cleanup | 0/? | Not started | - |

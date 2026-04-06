@@ -8,7 +8,7 @@ progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -18,26 +18,27 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Replace "pushing messages to the user" with "continuously observing the world on the user's behalf" while preserving anti-echo-chamber exposure
-**Current focus:** v4.0 Quick-Check Audit Fixes — executing Phase 20, Plan 01 complete
+**Current focus:** v4.0 Quick-Check Audit Fixes — Phase 20 complete (2/2 plans)
 
 ## Current Position
 
 Milestone: `v4.0 Quick-Check Audit Fixes`
-Phase: 20 of 22 (P0 Infrastructure Fixes) — Plan 02 next
-Current Plan: 2 of 2
-Status: Executing
-Progress: [█████░░░░░] 50%
+Phase: 20 of 22 (P0 Infrastructure Fixes) — Complete
+Current Plan: 2 of 2 (done)
+Status: Phase Complete
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1 (v4.0)
-- Average duration: 2min
-- Total execution time: 2min
+- Total plans completed: 2 (v4.0)
+- Average duration: 1.5min
+- Total execution time: 3min
 
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 20    | 01   | 2min     | 2     | 1     |
+| 20    | 02   | 1min     | 1     | 3     |
 
 ## Accumulated Context
 
@@ -49,6 +50,7 @@ Progress: [█████░░░░░] 50%
 - Deferred to v5.0: classify.md tier migration, cross-run event suppression, normalize_event_key activation
 - [20-01] Used .pipeline.lock (not .lock) to avoid collision with JSON-based lock from SKILL.md
 - [20-01] Exit code 0 for second concurrent instance (graceful yield, not error)
+- [20-02] Capture alert/digest content in variables to decouple generation from I/O ordering
 
 ### Blockers
 
@@ -62,6 +64,6 @@ None
 
 ## Session
 
-Last Date: 2026-04-06T03:17:30Z
-Stopped At: Completed 20-01-PLAN.md (concurrency guard + atomic writes)
-Resume File: .planning/phases/20-p0-infrastructure-fixes/20-01-SUMMARY.md
+Last Date: 2026-04-06T03:21:08Z
+Stopped At: Completed 20-02-PLAN.md (write ordering fix) -- Phase 20 complete
+Resume File: .planning/phases/20-p0-infrastructure-fixes/20-02-SUMMARY.md
