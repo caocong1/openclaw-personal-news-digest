@@ -18,7 +18,7 @@ Requirements for quick-check audit fixes. Each maps to roadmap phases.
 
 - [ ] **LOGIC-01**: Alert sort preserves `importance_score` as tiebreaker — the buggy second sort that erases LLM-derived importance is removed (B8)
 - [ ] **LOGIC-02**: Daily alert cap is enforced at 3 per SKILL.md spec — `MAX_ALERTS_PER_RUN` set to 3, remaining computed from state (B5)
-- [ ] **LOGIC-03**: Union-find cluster ID lookup uses `enumerate` instead of `alerts.index()` — eliminates O(n²) and wrong-cluster bug with dict-equal records (B11)
+- [ ] **LOGIC-03**: Union-find cluster ID lookup uses `enumerate` instead of `alerts.index()` — eliminates O(n^2) and wrong-cluster bug with dict-equal records (B11)
 - [ ] **LOGIC-04**: Dollar-amount-only anchor no longer merges unrelated events — requires a second non-generic anchor for merge (B9)
 
 ### Dead Code Cleanup
@@ -79,4 +79,4 @@ Requirements for quick-check audit fixes. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after audit report analysis*
+*Last updated: 2026-04-06 after roadmap creation*
