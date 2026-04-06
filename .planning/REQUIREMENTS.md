@@ -23,9 +23,9 @@ Requirements for quick-check audit fixes. Each maps to roadmap phases.
 
 ### Dead Code Cleanup
 
-- [ ] **CLEAN-01**: Dead constant `MAX_ALERTS_PER_DAY = None` is removed (B15)
-- [ ] **CLEAN-02**: Dead constant `ALERT_THRESHOLD = 0.85` is removed — never referenced in code (B14)
-- [ ] **CLEAN-03**: Dead function `normalize_event_key()` (42 lines) is removed — deferred B7 activation to future milestone (B13)
+- [x] **CLEAN-01**: Dead constant `MAX_ALERTS_PER_DAY = None` is removed (B15)
+- [x] **CLEAN-02**: Dead constant `ALERT_THRESHOLD = 0.85` is removed — never referenced in code (B14)
+- [x] **CLEAN-03**: Dead function `normalize_event_key()` (42 lines) is removed — deferred B7 activation to future milestone (B13)
 
 ## v5.0 Requirements (Deferred)
 
