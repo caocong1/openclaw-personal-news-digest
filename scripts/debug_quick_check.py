@@ -29,10 +29,8 @@ except OSError:
     print('Another pipeline instance is running — exiting.', file=sys.stderr)
     sys.exit(0)
 
-MAX_ALERTS_PER_DAY = None
 MAX_PER_SOURCE_LINES = 12
 MAX_ALERTS_PER_RUN = 3
-ALERT_THRESHOLD = 0.85
 AI_MIN_ALERT_SCORE = 0.84
 
 
@@ -233,48 +231,6 @@ def score_item(title: str, url: str, source_id: str = '') -> float:
     if is_roundup_title(title):
         score = min(score, 0.60)
     return score
-
-
-def normalize_event_key(title: str, url: str = '') -> str:
-    """Cluster same-event articles via specific entity anchors only.
-    Strategy: use named entities + dollar amounts + specific phrases.
-    Generic action words are EXCLUDED to avoid cross-event false matches.
-    """
-    text = title.lower()
-    anchors = []
-    # 1. Dollar amounts — very strong signal
-    for m in re.findall(r'\$[\d.]+[BbMmKk]?', text):
-        anchors.append(m.lower())
-    # 2. Key company/product codenames and names
-    for t in ['openai','anthropic','microsoft','google','meta','xai','apple','nvidia','ibm',
-               'openclaw','claude','gpt','codex','gemma','tbpn','astral',
-               'coefficient-bio','claude-code','gpt-5.4','gemma-4','chatgpt']:
-        if t in text:
-            anchors.append(t)
-    # 3. Specific product codenames embedded in title (e.g. "gemma 4", "tbpn", "astral")
-    for m in re.findall(r'\b([a-z]+[- ][0-9]+[.0-9]*)\b', text):
-        anchors.append(m.lower().replace(' ', '-'))
-    # 4. Specific URL path entities (but skip overly generic paths)
-    for seg in re.findall(r'/([a-z]+(?:[-][a-z]+)+)(?:/|$)', (url or '')):
-        seg = seg.lower()
-        # Only keep if it contains a known entity or is a specific short phrase
-        if len(seg) > 5 and not seg.startswith(('according','reportedly','article','index','www')):
-            anchors.append(seg)
-    # 5. Multi-word specific phrases (entity+action combos)
-    phrases = [
-        'openai-acquires','anthropic-acquires','anthropic-buys','anthropic-launches',
-        'microsoft-launches','google-releases','google-battles',
-        'tbpn','astral','coefficient-bio',
-        'claude-cutoff','openclaw-cutoff',
-        'safety-bug-bounty','bug-bounty',
-        'european-commission-hack','cert-eu',
-        'claude-code-leak','claude-code-infostealer',
-    ]
-    for p in phrases:
-        if p in text:
-            anchors.append(p)
-    anchors.sort()
-    return '|'.join(anchors)
 
 
 def ai_score_item(title: str, url: str, source_name: str = '', source_id: str = ''):
