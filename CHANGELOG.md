@@ -1,5 +1,10 @@
 # Changelog
 
+## [16.1.9] - 2026-04-06
+
+### Changed
+- chore: increase MAX_ALERTS_PER_RUN from 3 to 20 to send all candidates per run
+
 ## [16.1.8] - 2026-04-06
 
 ### Fixed

@@ -30,7 +30,7 @@ except OSError:
     sys.exit(0)
 
 MAX_PER_SOURCE_LINES = 12
-MAX_ALERTS_PER_RUN = 3
+MAX_ALERTS_PER_RUN = 20
 AI_MIN_ALERT_SCORE = 0.84
 
 
