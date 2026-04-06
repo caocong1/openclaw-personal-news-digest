@@ -1,6 +1,6 @@
 {
   "_doc": "Pre-fetched seed discovery results. Generated externally (Claude Code / local tools) for OpenClaw to consume. OpenClaw reads this file, profiles candidates, and onboards confirmed sources.",
-  "_generated_at": "2026-04-05T15:30:00+08:00",
+  "_generated_at": "2026-04-05T18:30:00+08:00",
   "_generated_by": "claude-code",
   "seeds": [
     {
@@ -67,6 +67,21 @@
         "Wan2.7-Video Alibaba Tongyi",
         "Seedance 2.0 ByteDance video generation",
         "Claude Windows computer use"
+      ]
+    },
+    {
+      "seed_url": "https://news.aibase.com/zh/daily",
+      "seed_platform": "generic",
+      "up_name": "AIBase Daily",
+      "up_bio": "AIBase AI日报 — 中文AI行业每日新闻摘要",
+      "analyzed_videos": [],
+      "topics_extracted": [
+        "Alibaba Wan2.7 video generation model",
+        "AI drama content removal regulation",
+        "China broadcast deepfake actor ban",
+        "Zhipu GLM-5V-Turbo multimodal model",
+        "Alibaba Qwen 3.6 Plus OpenRouter",
+        "OpenAI ChatGPT Apple CarPlay integration"
       ]
     }
   ],
@@ -304,6 +319,136 @@
       "update_frequency": "daily",
       "discovery_reason": "English-language coverage of Chinese tech products. Covered Xiaomi MiMo Token Plan pricing details.",
       "matched_topics": ["Xiaomi MiMo Token Plan"]
+    },
+    {
+      "url": "https://www.marktechpost.com/",
+      "rss_url": "https://www.marktechpost.com/feed/",
+      "name": "MarkTechPost",
+      "name_zh": "MarkTechPost",
+      "recommended_type": "rss",
+      "topics": ["ai-models", "dev-tools", "open-source"],
+      "credibility_estimate": 0.75,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "California-based AI/ML news platform. Covered GLM-5V-Turbo launch, Google DeepMind research, Netflix open-source AI. Byte-sized AI research updates.",
+      "matched_topics": ["Zhipu GLM-5V-Turbo multimodal model"]
+    },
+    {
+      "url": "https://www.engadget.com/",
+      "rss_url": "https://www.engadget.com/rss.xml",
+      "name": "Engadget",
+      "name_zh": "Engadget瘾科技",
+      "recommended_type": "rss",
+      "topics": ["tech-products", "ai-models", "gaming", "science"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "hourly",
+      "discovery_reason": "Major tech media (Yahoo-owned). Covered ChatGPT CarPlay integration, AI product launches. Broad tech/science/gaming coverage.",
+      "matched_topics": ["OpenAI ChatGPT Apple CarPlay integration"]
+    },
+    {
+      "url": "https://gizmodo.com/",
+      "rss_url": "https://gizmodo.com/feed",
+      "name": "Gizmodo",
+      "name_zh": "Gizmodo",
+      "recommended_type": "rss",
+      "topics": ["tech-products", "ai-models", "science"],
+      "credibility_estimate": 0.8,
+      "language": "en",
+      "update_frequency": "hourly",
+      "discovery_reason": "Major tech/science media with international editions. Covered China deepfake regulation, AI policy analysis.",
+      "matched_topics": ["China broadcast deepfake actor ban", "AI generated content regulation"]
+    },
+    {
+      "url": "https://www.macrumors.com/",
+      "rss_url": "https://feeds.macrumors.com/MacRumors-All",
+      "name": "MacRumors",
+      "name_zh": "MacRumors",
+      "recommended_type": "rss",
+      "topics": ["tech-products"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "hourly",
+      "discovery_reason": "Leading Apple news source. Covered ChatGPT CarPlay integration, Apple AI features. Strong original reporting on Apple ecosystem.",
+      "matched_topics": ["OpenAI ChatGPT Apple CarPlay integration"]
+    },
+    {
+      "url": "https://appleinsider.com/",
+      "rss_url": "https://appleinsider.com/rss/news/",
+      "name": "AppleInsider",
+      "name_zh": "AppleInsider",
+      "recommended_type": "rss",
+      "topics": ["tech-products"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "Apple-focused tech publication. Covered ChatGPT CarPlay with iOS 26.4 requirement details.",
+      "matched_topics": ["OpenAI ChatGPT Apple CarPlay integration"]
+    },
+    {
+      "url": "https://dig.watch/",
+      "rss_url": null,
+      "name": "Digital Watch Observatory",
+      "name_zh": "数字观察",
+      "recommended_type": "community",
+      "topics": ["macro-policy", "security", "international"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "Geneva Internet Platform initiative tracking 50+ digital governance issues. Covered China deepfake livestream regulation, AI policy across jurisdictions.",
+      "matched_topics": ["China broadcast deepfake actor ban", "AI generated content regulation"]
+    },
+    {
+      "url": "https://www.chinalawtranslate.com/",
+      "rss_url": null,
+      "name": "China Law Translate",
+      "name_zh": "中国法律翻译",
+      "recommended_type": "community",
+      "topics": ["macro-policy", "international"],
+      "credibility_estimate": 0.85,
+      "language": "en",
+      "update_frequency": "weekly",
+      "discovery_reason": "English translations of Chinese laws and regulations. Authoritative source for AI labeling rules, deep synthesis regulations, tech policy translations.",
+      "matched_topics": ["China broadcast deepfake actor ban", "AI generated content regulation"]
+    },
+    {
+      "url": "https://iapp.org/",
+      "rss_url": null,
+      "name": "IAPP",
+      "name_zh": "国际隐私专业协会",
+      "recommended_type": "community",
+      "topics": ["macro-policy", "security"],
+      "credibility_estimate": 0.9,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "International Association of Privacy Professionals. Covers AI governance, deepfake regulations, data protection laws globally. Policy-neutral professional authority.",
+      "matched_topics": ["China broadcast deepfake actor ban", "AI generated content regulation"]
+    },
+    {
+      "url": "https://www.alibabacloud.com/blog",
+      "rss_url": null,
+      "name": "Alibaba Cloud Blog",
+      "name_zh": "阿里云官方博客",
+      "recommended_type": "official",
+      "topics": ["ai-models", "dev-tools", "tech-products"],
+      "credibility_estimate": 0.9,
+      "language": "en",
+      "update_frequency": "weekly",
+      "discovery_reason": "T1 official source for Wan2.7-Video, Qwen models, Alibaba AI strategy. Detailed technical blog posts on model capabilities.",
+      "matched_topics": ["Alibaba Wan2.7 video generation model", "Alibaba Qwen 3.6 Plus OpenRouter"]
+    },
+    {
+      "url": "https://winbuzzer.com/",
+      "rss_url": null,
+      "name": "WinBuzzer",
+      "name_zh": "WinBuzzer",
+      "recommended_type": "community",
+      "topics": ["tech-products", "ai-models"],
+      "credibility_estimate": 0.7,
+      "language": "en",
+      "update_frequency": "daily",
+      "discovery_reason": "Microsoft-focused tech news. Covered GLM-5V-Turbo launch, Windows AI features.",
+      "matched_topics": ["Zhipu GLM-5V-Turbo multimodal model"]
     }
   ]
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## [16.1.7] - 2026-04-06
+
+### Changed
+- data: add AIBase Daily seed and new candidate sources to pending-seeds.json
+- chore: disable research workflow toggle in planning config
+
 ## [16.1.6] - 2026-04-06
 
 ### Changed
