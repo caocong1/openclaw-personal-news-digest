@@ -18,8 +18,8 @@ Requirements for quick-check audit fixes. Each maps to roadmap phases.
 
 - [ ] **LOGIC-01**: Alert sort preserves `importance_score` as tiebreaker — the buggy second sort that erases LLM-derived importance is removed (B8)
 - [ ] **LOGIC-02**: Daily alert cap is enforced at 3 per SKILL.md spec — `MAX_ALERTS_PER_RUN` set to 3, remaining computed from state (B5)
-- [ ] **LOGIC-03**: Union-find cluster ID lookup uses `enumerate` instead of `alerts.index()` — eliminates O(n^2) and wrong-cluster bug with dict-equal records (B11)
-- [ ] **LOGIC-04**: Dollar-amount-only anchor no longer merges unrelated events — requires a second non-generic anchor for merge (B9)
+- [x] **LOGIC-03**: Union-find cluster ID lookup uses `enumerate` instead of `alerts.index()` — eliminates O(n^2) and wrong-cluster bug with dict-equal records (B11)
+- [x] **LOGIC-04**: Dollar-amount-only anchor no longer merges unrelated events — requires a second non-generic anchor for merge (B9)
 
 ### Dead Code Cleanup
 
@@ -66,8 +66,8 @@ Requirements for quick-check audit fixes. Each maps to roadmap phases.
 | INFRA-03 | Phase 20 | Complete |
 | LOGIC-01 | Phase 21 | Pending |
 | LOGIC-02 | Phase 21 | Pending |
-| LOGIC-03 | Phase 21 | Pending |
-| LOGIC-04 | Phase 21 | Pending |
+| LOGIC-03 | Phase 21 | Complete |
+| LOGIC-04 | Phase 21 | Complete |
 | CLEAN-01 | Phase 22 | Pending |
 | CLEAN-02 | Phase 22 | Pending |
 | CLEAN-03 | Phase 22 | Pending |

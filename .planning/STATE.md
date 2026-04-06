@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Quick-Check Audit Fixes
 status: unknown
-last_updated: "2026-04-06T03:25:02.055Z"
+last_updated: "2026-04-06T13:23:13.569Z"
 progress:
-  total_phases: 16
-  completed_phases: 14
-  total_plans: 34
-  completed_plans: 34
+  total_phases: 17
+  completed_phases: 15
+  total_plans: 36
+  completed_plans: 36
 ---
 
 # Project State
@@ -18,12 +18,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Replace "pushing messages to the user" with "continuously observing the world on the user's behalf" while preserving anti-echo-chamber exposure
-**Current focus:** v4.0 Quick-Check Audit Fixes — Phase 20 complete (2/2 plans)
+**Current focus:** v4.0 Quick-Check Audit Fixes — Phase 21 complete (2/2 plans)
 
 ## Current Position
 
 Milestone: `v4.0 Quick-Check Audit Fixes`
-Phase: 20 of 22 (P0 Infrastructure Fixes) — Complete
+Phase: 21 of 22 (P1 Logic Bug Fixes) — Complete
 Current Plan: 2 of 2 (done)
 Status: Phase Complete
 Progress: [██████████] 100%
@@ -31,14 +31,16 @@ Progress: [██████████] 100%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2 (v4.0)
+- Total plans completed: 4 (v4.0)
 - Average duration: 1.5min
-- Total execution time: 3min
+- Total execution time: 6min
 
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 20    | 01   | 2min     | 2     | 1     |
 | 20    | 02   | 1min     | 1     | 3     |
+| 21    | 01   | 1min     | 2     | 3     |
+| 21    | 02   | 2min     | 2     | 3     |
 
 ## Accumulated Context
 
@@ -51,6 +53,7 @@ Progress: [██████████] 100%
 - [20-01] Used .pipeline.lock (not .lock) to avoid collision with JSON-based lock from SKILL.md
 - [20-01] Exit code 0 for second concurrent instance (graceful yield, not error)
 - [20-02] Capture alert/digest content in variables to decouple generation from I/O ordering
+- [21-02] Dollar-only shared anchors require a second non-dollar anchor to confirm event relatedness
 
 ### Blockers
 
@@ -64,6 +67,6 @@ None
 
 ## Session
 
-Last Date: 2026-04-06T03:21:08Z
-Stopped At: Completed 20-02-PLAN.md (write ordering fix) -- Phase 20 complete
-Resume File: .planning/phases/20-p0-infrastructure-fixes/20-02-SUMMARY.md
+Last Date: 2026-04-06T11:17:30Z
+Stopped At: Completed 21-02-PLAN.md (union-find fix and dollar-anchor guard) -- Phase 21 complete
+Resume File: .planning/phases/21-p1-logic-bug-fixes/21-02-SUMMARY.md
