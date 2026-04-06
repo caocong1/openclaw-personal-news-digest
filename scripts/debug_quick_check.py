@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, sys, hashlib, re, warnings, fcntl
+import json, sys, hashlib, re, warnings, fcntl, os, tempfile
 from pathlib import Path
 from datetime import datetime
 import xml.etree.ElementTree as ET
@@ -34,6 +34,23 @@ MAX_PER_SOURCE_LINES = 12
 MAX_ALERTS_PER_RUN = 999
 ALERT_THRESHOLD = 0.85
 AI_MIN_ALERT_SCORE = 0.84
+
+
+def atomic_write_text(path: Path, text: str) -> None:
+    """Write text atomically via tmp-file + fsync + os.replace."""
+    fd, tmp = tempfile.mkstemp(dir=path.parent, suffix='.tmp')
+    try:
+        with os.fdopen(fd, 'w', encoding='utf-8') as f:
+            f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, str(path))
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
 
 
 def is_chinese(text: str) -> bool:
@@ -401,9 +418,7 @@ for s in SOURCES:
             entry['note'] = msg
     per.append(entry)
 
-with NEWS_FILE.open('w', encoding='utf-8') as f:
-    for r in news:
-        f.write(json.dumps(r, ensure_ascii=False) + '\n')
+atomic_write_text(NEWS_FILE, '\n'.join(json.dumps(r, ensure_ascii=False) for r in news) + '\n' if news else '')
 
 report = {
     '_schema_v': 1,
@@ -554,8 +569,8 @@ else:
             digest += [f"  原文标题: {r['title']}"]
     DIGEST_FILE.write_text('\n'.join(digest) + '\n', encoding='utf-8')
 
-STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-METRICS_FILE.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+atomic_write_text(STATE_FILE, json.dumps(state, ensure_ascii=False, indent=2) + '\n')
+atomic_write_text(METRICS_FILE, json.dumps(report, ensure_ascii=False, indent=2) + '\n')
 
 parts = []
 if out:

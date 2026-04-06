@@ -1,5 +1,11 @@
 # Changelog
 
+## [16.1.2] - 2026-04-06
+
+### Added
+- atomic_write_text helper using tmp+fsync+os.replace for crash-safe writes
+- All JSON state writes (STATE_FILE, METRICS_FILE, NEWS_FILE) now use atomic_write_text
+
 ## [16.1.1] - 2026-04-06
 
 ### Added
