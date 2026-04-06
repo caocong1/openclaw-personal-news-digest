@@ -1,5 +1,12 @@
 # Changelog
 
+## [16.1.6] - 2026-04-06
+
+### Changed
+- chore: remove dead constant MAX_ALERTS_PER_DAY = None (CLEAN-01 / B15)
+- chore: remove dead constant ALERT_THRESHOLD = 0.85 (CLEAN-02 / B14)
+- chore: remove dead function normalize_event_key() — deferred to v5.0 EVENT-01 (CLEAN-03 / B13)
+
 ## [16.1.5] - 2026-04-06
 
 ### Fixed
