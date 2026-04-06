@@ -1,5 +1,11 @@
 # Changelog
 
+## [16.1.4] - 2026-04-06
+
+### Fixed
+- Remove duplicate alert sort that erased importance_score tiebreaker (LOGIC-01 / B8)
+- Enforce daily alert cap of 3 per SKILL.md spec (LOGIC-02 / B5)
+
 ## [16.1.3] - 2026-04-06
 
 ### Fixed
