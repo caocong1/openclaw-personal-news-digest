@@ -19,9 +19,15 @@ Replace "pushing messages to the user" with "continuously observing the world on
 - Archived milestones: `v1.0 MVP`, `v2.0 Quality & Robustness`, `v3.0 Provenance & Source Discovery`.
 - The pipeline now runs from collection through provenance classification, source discovery, provenance-aware ranking, and explainable output delivery with full operator audit trails.
 
-## Next Milestone
+## Current Milestone: v4.0 Quick-Check Audit Fixes
 
-Not yet planned — use `/gsd:new-milestone` to start the next cycle.
+**Goal:** Fix all P0/P1 bugs and clean dead code in `scripts/debug_quick_check.py`, identified by a multi-CLI audit with ground-truth verification (7 CLI runs, 2 rounds, 12 confirmed bugs).
+
+**Target fixes:**
+- P0 infrastructure: flock concurrency guard, atomic state writes, state-before-alert write ordering
+- P1 logic: double-sort erasure of importance_score, 3-alert daily cap enforcement, O(n²) alerts.index fix, dollar-anchor merge guard
+- Dead code: unused constants and functions (~100-120 lines safely removable)
+- Deferred to future: classify.md tier migration (AI-first scoring), cross-run event suppression
 
 ## Requirements
 
