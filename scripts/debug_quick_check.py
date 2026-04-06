@@ -497,7 +497,9 @@ def _anchors(title, url=''):
 def _same_event(a, b):
     a1, a2 = _anchors(a.get('title',''), a.get('url','')), _anchors(b.get('title',''), b.get('url',''))
     shared = a1 & a2
-    if any(x.startswith('$') for x in shared): return True
+    dollar = [x for x in shared if x.startswith('$')]
+    non_dollar = [x for x in shared if not x.startswith('$')]
+    if dollar and non_dollar: return True
     ca = [x for x in shared if ' ' in x and any(c in x for c in ('openai','anthropic','microsoft','google','european','claude'))]
     if ca: return True
     codename = [x for x in shared if len(x) >= 3 and x not in _GEN and x not in _EXCL and not any(x.startswith(e) for e in ('apache','open-','openw'))]
@@ -524,8 +526,8 @@ for i in range(n):
 _final = []
 _seen_event = set()
 _seen_url = set(state['alerted_urls'])
-for a in alerts:
-    gid = _find(alerts.index(a))
+for idx, a in enumerate(alerts):
+    gid = _find(idx)
     cu = norm_url(a.get('url',''))
     if gid not in _seen_event and cu not in _seen_url:
         _final.append(a)
