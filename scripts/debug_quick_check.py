@@ -31,7 +31,7 @@ except OSError:
 
 MAX_ALERTS_PER_DAY = None
 MAX_PER_SOURCE_LINES = 12
-MAX_ALERTS_PER_RUN = 999
+MAX_ALERTS_PER_RUN = 3
 ALERT_THRESHOLD = 0.85
 AI_MIN_ALERT_SCORE = 0.84
 
@@ -473,11 +473,6 @@ state['alerts_sent'] = len(state['alerted_urls'])
 
 alerts = sorted(alerts, key=lambda x: (-float(x.get('ai_importance_score', x.get('importance_score', 0))), -float(x.get('importance_score', 0)), x.get('source_name', ''), x.get('title', '')))
 
-# Sort alerts by AI score descending
-alerts = sorted(alerts, key=lambda x: (
-    -float(x.get('ai_importance_score', x.get('importance_score', 0))),
-    x.get('source_name', ''), x.get('title', '')))
-
 # Event-level dedup via pairwise union-find
 import re as _re
 
@@ -538,7 +533,8 @@ for a in alerts:
         _seen_url.add(cu)
 alerts = _final
 
-selected_alerts = alerts[:MAX_ALERTS_PER_RUN]
+remaining = max(0, MAX_ALERTS_PER_RUN - state.get('alerts_sent', 0))
+selected_alerts = alerts[:remaining]
 out = []
 alert_content = ''
 digest_content = ''
