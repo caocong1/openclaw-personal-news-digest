@@ -115,6 +115,43 @@
 
 ---
 
+## Milestone: v4.0 - Quick-Check Audit Fixes
+
+**Shipped:** 2026-04-06
+**Phases:** 3 | **Plans:** 5
+
+### What Was Built
+- Crash-safety infrastructure: flock concurrency guard, atomic tmp+fsync+os.replace state writes, state-before-alert write ordering
+- Alert logic corrections: single-sort preserving importance_score tiebreaker, daily cap of 3, enumerate-based union-find cluster lookup, dollar-anchor merge guard
+- Dead code cleanup: removed 44 lines of unused constants and normalize_event_key() function
+
+### What Worked
+- Multi-CLI audit with ground-truth verification (7 CLI runs, 2 rounds) produced a precise bug inventory — zero false positives in the final 12 confirmed bugs
+- Tight phase scoping (P0/P1/cleanup) kept each phase under 3 minutes of execution time
+- All 5 plans executed with zero deviations — the audit-driven scope left no ambiguity
+- Phase dependency ordering (20 → 21, 22 independent) was clean and allowed correct sequencing
+
+### What Was Inefficient
+- The milestone audit ran before phases 21 and 22 executed, making it stale at completion time — had to verify manually that gaps were closed
+- REQUIREMENTS.md traceability table showed CLEAN-01/02/03 as "Pending" despite checkboxes being checked — inconsistency in the doc
+
+### Patterns Established
+- Multi-CLI audit as milestone scope driver: use multiple AI models for bug discovery, ground-truth verify, then scope milestone from confirmed findings
+- atomic_write_text pattern: tmp+fsync+os.replace for all JSON state file writes
+- enumerate-based identity loops instead of collection.index() when dict equality vs identity matters
+
+### Key Lessons
+1. Audit-scoped milestones (bugs in → fixes out) execute extremely fast because scope is predetermined and unambiguous.
+2. The audit should be re-run (or at minimum spot-checked) after all phases complete, not just before.
+3. For Python scripts with mutable dict collections, always use enumerate() instead of list.index() to avoid identity vs equality confusion.
+
+### Cost Observations
+- Fastest milestone yet: 3 phases, 5 plans, 9 tasks, all completed in a single day
+- Model mix: primarily opus for planning, sonnet for execution
+- Notable: audit-driven scope eliminated all planning overhead — went straight from audit findings to phase plans
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -124,9 +161,11 @@
 | v1.0 | 7 | 18 | Initial delivery with audit-driven gap closure |
 | v2.0 | 6 | 16 | Contract hardening, observability, and operator UX improvements |
 | v3.0 | 7 | 16 | Provenance tracking, automated source discovery, and operator hardening |
+| v4.0 | 3 | 5 | Multi-CLI audit-driven bug fixes with zero-ambiguity scope |
 
 ### Top Lessons (Verified Across Milestones)
 
 1. Front-loading architecture and contract decisions pays off across later milestones.
 2. Audits are only useful when the source-of-truth planning docs stay aligned with completed execution.
 3. Deterministic fixtures and explicit schema/version registries are essential for prompt/config-heavy systems.
+4. Audit-scoped milestones execute fastest because scope is predetermined — confirmed across v1.0 gap phases and v4.0 full milestone.

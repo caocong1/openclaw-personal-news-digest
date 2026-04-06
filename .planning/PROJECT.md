@@ -10,24 +10,12 @@ Replace "pushing messages to the user" with "continuously observing the world on
 
 ## Current State
 
-- Shipped `v3.0 Provenance & Source Discovery` on `2026-04-04`.
-- The system now tracks item provenance with T0-T4 source tiers, citation chains, propagation hops, and discrepancy logging through a first-class Provenance Stage.
-- Automated T1/T2 source discovery runs with rolling metrics, five-gate auto-enable evaluation, and three-trigger auto-disable — sources accumulate into `data/provenance/discovered-sources.json`.
-- Provenance influences ranking through a post-formula modifier (T1/T2 boost, T4 decay when direct coverage exists), event representative selection, tier-aware alert gating (T4 at 0.92, T0-T3 at 0.85), and provenance-aware digest/alert rendering.
-- Operator surface hardened with 5 auditable Python modules (`scripts/lib/`), append-only run journal, `pipeline_state` enum, automated smoke tests (`smoke-test.sh`), and cross-channel recovery matrix.
-- Backlog failure follow-up wired into SKILL.md — every error journal entry creates a backlog follow-up entry via `backlog_tools.append_failure_followup`.
-- Archived milestones: `v1.0 MVP`, `v2.0 Quality & Robustness`, `v3.0 Provenance & Source Discovery`.
-- The pipeline now runs from collection through provenance classification, source discovery, provenance-aware ranking, and explainable output delivery with full operator audit trails.
-
-## Current Milestone: v4.0 Quick-Check Audit Fixes
-
-**Goal:** Fix all P0/P1 bugs and clean dead code in `scripts/debug_quick_check.py`, identified by a multi-CLI audit with ground-truth verification (7 CLI runs, 2 rounds, 12 confirmed bugs).
-
-**Target fixes:**
-- P0 infrastructure: flock concurrency guard, atomic state writes, state-before-alert write ordering
-- P1 logic: double-sort erasure of importance_score, 3-alert daily cap enforcement, O(n²) alerts.index fix, dollar-anchor merge guard
-- Dead code: unused constants and functions (~100-120 lines safely removable)
-- Deferred to future: classify.md tier migration (AI-first scoring), cross-run event suppression
+- Shipped `v4.0 Quick-Check Audit Fixes` on `2026-04-06`.
+- Pipeline crash-safety hardened: flock concurrency guard prevents duplicate cron runs, atomic tmp+fsync+os.replace writes protect all state/metrics files, state-before-alert ordering prevents duplicate alerts after crash.
+- Alert logic corrected: single-sort preserves importance_score tiebreaker, daily cap enforced at 3, enumerate-based union-find fixes wrong-cluster bug, dollar-anchor guard prevents spurious event merges.
+- Dead code cleaned: removed unused `MAX_ALERTS_PER_DAY`, `ALERT_THRESHOLD`, and 42-line `normalize_event_key()` function (~44 lines removed).
+- Main pipeline script `scripts/debug_quick_check.py` at 567 LOC after cleanup.
+- Archived milestones: `v1.0 MVP`, `v2.0 Quality & Robustness`, `v3.0 Provenance & Source Discovery`, `v4.0 Quick-Check Audit Fixes`.
 
 ## Requirements
 
@@ -45,6 +33,9 @@ Replace "pushing messages to the user" with "continuously observing the world on
 - v3.0 Phase 14 delivered passive T1/T2 source discovery with rolling metrics, auto-enable/disable rules, generated source metadata, and discovery audit artifacts.
 - v3.0 Phase 15 delivered provenance-aware ranking, event representative selection, tier-aware alert gating, provenance-aware digest/alert rendering, weekly source-discovery reporting, and an end-to-end verification fixture.
 - v3.0 Phase 17 initialized the provenance data store (`data/provenance/`) with all 5 artifact files and a verification script, unblocking PROV-06, PIPE-01, PIPE-04, DISC-01, and PIPE-05 at runtime.
+- v4.0 hardened pipeline crash-safety with flock concurrency guard, atomic state writes, and state-before-alert write ordering (INFRA-01/02/03).
+- v4.0 fixed alert sort tiebreaker, daily cap enforcement, union-find cluster lookup, and dollar-anchor merge guard (LOGIC-01/02/03/04).
+- v4.0 removed dead constants and unused normalize_event_key() function (CLEAN-01/02/03).
 
 ### Active
 
@@ -59,6 +50,9 @@ Replace "pushing messages to the user" with "continuously observing the world on
 - Historical backfill of provenance metadata for pre-v3 news items. The milestone only guarantees provenance for items processed after rollout.
 - Standalone frontend or app UI work.
 - Multi-user support before the single-user operating model is proven.
+- classify.md tier migration (AI-first scoring) — deferred to v5.0 TIER-* requirements, needs shadow-mode validation.
+- Cross-run event suppression via normalize_event_key() — deferred to v5.0 EVENT-01, function removed but tracked for reactivation.
+- Transitive union-find guard (B10) — complex architectural change, better addressed by LOGIC-04 dollar-anchor fix + future tier migration.
 
 ## Context
 
@@ -93,6 +87,11 @@ Replace "pushing messages to the user" with "continuously observing the world on
 | Auto-enable newly discovered T1/T2 sources when quality gates pass | The core milestone value is replacing T4-heavy coverage without manual curation bottlenecks | Good |
 | Keep provenance as a post-formula modifier plus representative-selection layer | Lets ranking change without retuning the seven existing weighted dimensions | Good |
 | Keep provenance diagnostics internal while rendering user-facing tier/original-source/chain context | Adds trust context without leaking raw classifier internals into digest and alert output | Good |
+| Use .pipeline.lock (not .lock) for flock concurrency guard | Avoids collision with JSON-based lock from SKILL.md | Good |
+| Exit code 0 for second concurrent instance | Graceful yield — second cron is not an error condition | Good |
+| Capture alert/digest content in variables before reordered writes | Decouples content generation from I/O ordering without restructuring control flow | Good |
+| Dollar-only shared anchors require second non-dollar anchor for merge | Prevents spurious merges on common amounts like "$1B" | Good |
+| Pure deletion for dead code — no refactoring | Minimizes risk by only removing dead symbols, no restructuring | Good |
 | Resolve T1 disagreements in favor of URL rules and T2/T3/T4 disagreements in favor of LLM classification | Official domains are precision-friendly, while deeper propagation tiers need content understanding | Good |
 
 ## Evolution
@@ -113,4 +112,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-04 after completing v3.0 Provenance & Source Discovery*
+*Last updated: 2026-04-06 after v4.0 Quick-Check Audit Fixes milestone*

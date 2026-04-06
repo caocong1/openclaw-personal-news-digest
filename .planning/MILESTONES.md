@@ -1,5 +1,23 @@
 # Milestones
 
+## v4.0 Quick-Check Audit Fixes (Shipped: 2026-04-06)
+
+**Phases completed:** 3 phases, 5 plans, 9 tasks
+
+**Key accomplishments:**
+
+- Process-level flock prevents concurrent cron runs from corrupting state (INFRA-01)
+- Atomic tmp+fsync+os.replace writes ensure crash mid-write leaves valid state intact (INFRA-02)
+- State-before-alert write ordering eliminates duplicate alerts after crash (INFRA-03)
+- Single correct sort preserving importance_score tiebreaker + daily alert cap of 3 enforced (LOGIC-01/02)
+- Enumerate-based union-find eliminates wrong-cluster bug + dollar-anchor guard prevents spurious merges (LOGIC-03/04)
+- Removed 44 lines of dead code: 2 unused constants and normalize_event_key() function (CLEAN-01/02/03)
+
+**Stats:** 14 commits, 17 files changed, +1,902/-42 lines over 1 day (2026-04-06)
+**Source:** Multi-CLI audit report (7 CLI runs, 2 rounds, 12 confirmed bugs → 10 fixed, 2 out-of-scope)
+
+---
+
 ## v3.0 Provenance & Source Discovery (Shipped: 2026-04-04)
 
 **Phases completed:** 7 phases, 16 plans
