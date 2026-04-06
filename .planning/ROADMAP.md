@@ -76,7 +76,9 @@
   2. No more than 3 alerts fire per day, regardless of how many candidates exceed the threshold
   3. Union-find cluster ID lookup produces the correct cluster for every alert, even when two alert dicts are value-equal
   4. Two events sharing only a dollar-amount anchor (e.g. "$1B") are NOT merged unless they share a second non-generic anchor
-**Plans**: TBD
+**Plans**: 2 plans
+- [ ] 21-01-PLAN.md — Fix alert sort order and enforce daily alert cap (LOGIC-01, LOGIC-02)
+- [ ] 21-02-PLAN.md — Fix union-find cluster lookup and dollar-anchor merge guard (LOGIC-03, LOGIC-04)
 
 ### Phase 22: Dead Code Cleanup
 **Goal**: Unused constants and functions are removed, reducing noise for future audits
