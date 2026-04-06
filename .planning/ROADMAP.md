@@ -88,7 +88,8 @@
   1. `MAX_ALERTS_PER_DAY = None` constant no longer exists in the codebase
   2. `ALERT_THRESHOLD = 0.85` constant no longer exists in the codebase
   3. `normalize_event_key()` function (42 lines) no longer exists in the codebase — deferred activation tracked in v5.0 requirements (EVENT-01)
-**Plans**: TBD
+**Plans**: 1 plan
+- [ ] 22-01-PLAN.md — Remove dead constants and unused function (CLEAN-01, CLEAN-02, CLEAN-03)
 
 ## Progress
 
