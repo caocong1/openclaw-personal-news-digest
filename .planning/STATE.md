@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Quick-Check Audit Fixes
-status: roadmap_complete
-last_updated: "2026-04-06T00:00:00.000Z"
+status: executing
+last_updated: "2026-04-06T03:17:30.000Z"
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # Project State
@@ -18,21 +18,26 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Replace "pushing messages to the user" with "continuously observing the world on the user's behalf" while preserving anti-echo-chamber exposure
-**Current focus:** v4.0 Quick-Check Audit Fixes — roadmap complete, ready to plan Phase 20
+**Current focus:** v4.0 Quick-Check Audit Fixes — executing Phase 20, Plan 01 complete
 
 ## Current Position
 
 Milestone: `v4.0 Quick-Check Audit Fixes`
-Phase: 20 of 22 (P0 Infrastructure Fixes) — ready to plan
-Status: Roadmap complete
-Progress: [░░░░░░░░░░] 0%
+Phase: 20 of 22 (P0 Infrastructure Fixes) — Plan 02 next
+Current Plan: 2 of 2
+Status: Executing
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0 (v4.0)
-- Average duration: -
-- Total execution time: -
+- Total plans completed: 1 (v4.0)
+- Average duration: 2min
+- Total execution time: 2min
+
+| Phase | Plan | Duration | Tasks | Files |
+|-------|------|----------|-------|-------|
+| 20    | 01   | 2min     | 2     | 1     |
 
 ## Accumulated Context
 
@@ -42,6 +47,8 @@ Progress: [░░░░░░░░░░] 0%
 - Phase 20 must complete before Phase 21 (atomic_write_text helper from INFRA-02 used by INFRA-03 write ordering)
 - Phase 22 (dead code) is independent — can run in parallel or after Phase 21
 - Deferred to v5.0: classify.md tier migration, cross-run event suppression, normalize_event_key activation
+- [20-01] Used .pipeline.lock (not .lock) to avoid collision with JSON-based lock from SKILL.md
+- [20-01] Exit code 0 for second concurrent instance (graceful yield, not error)
 
 ### Blockers
 
@@ -55,6 +62,6 @@ None
 
 ## Session
 
-Last Date: 2026-04-06T00:00:00Z
-Stopped At: v4.0 roadmap created, ready to plan Phase 20
-Resume File: None
+Last Date: 2026-04-06T03:17:30Z
+Stopped At: Completed 20-01-PLAN.md (concurrency guard + atomic writes)
+Resume File: .planning/phases/20-p0-infrastructure-fixes/20-01-SUMMARY.md

@@ -10,8 +10,8 @@ Requirements for quick-check audit fixes. Each maps to roadmap phases.
 
 ### P0 Infrastructure (data loss / silent crash prevention)
 
-- [ ] **INFRA-01**: Concurrent cron runs are prevented via non-blocking file lock (`fcntl.flock`), second instance exits cleanly (B4)
-- [ ] **INFRA-02**: State and metrics files are written atomically via tmp+fsync+os.replace — mid-write crash never corrupts state (B1)
+- [x] **INFRA-01**: Concurrent cron runs are prevented via non-blocking file lock (`fcntl.flock`), second instance exits cleanly (B4)
+- [x] **INFRA-02**: State and metrics files are written atomically via tmp+fsync+os.replace — mid-write crash never corrupts state (B1)
 - [ ] **INFRA-03**: State file is persisted BEFORE alert file is published — crash between writes never causes duplicate alerts on next run (B2)
 
 ### P1 Logic Bugs (incorrect behavior)
@@ -61,8 +61,8 @@ Requirements for quick-check audit fixes. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 20 | Pending |
-| INFRA-02 | Phase 20 | Pending |
+| INFRA-01 | Phase 20 | Complete |
+| INFRA-02 | Phase 20 | Complete |
 | INFRA-03 | Phase 20 | Pending |
 | LOGIC-01 | Phase 21 | Pending |
 | LOGIC-02 | Phase 21 | Pending |

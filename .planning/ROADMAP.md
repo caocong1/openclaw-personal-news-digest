@@ -112,6 +112,6 @@
 | 17. Initialize Provenance Data Store | 1/1 | Complete | 2026-04-03 |
 | 18. Wire Backlog Failure Follow-up | 1/1 | Complete | 2026-04-04 |
 | 19. Add Missing E2E Fixture | 1/1 | Complete | 2026-04-04 |
-| 20. P0 Infrastructure Fixes | 0/? | Not started | - |
+| 20. P0 Infrastructure Fixes | 1/2 | In Progress|  |
 | 21. P1 Logic Bug Fixes | 0/? | Not started | - |
 | 22. Dead Code Cleanup | 0/? | Not started | - |
