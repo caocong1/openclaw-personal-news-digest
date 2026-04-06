@@ -1,5 +1,10 @@
 # Changelog
 
+## [16.1.8] - 2026-04-06
+
+### Fixed
+- fix: change alert cap from daily cumulative to per-run limit — URL dedup already prevents re-sending
+
 ## [16.1.7] - 2026-04-06
 
 ### Changed

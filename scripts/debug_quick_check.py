@@ -491,8 +491,7 @@ for idx, a in enumerate(alerts):
         _seen_url.add(cu)
 alerts = _final
 
-remaining = max(0, MAX_ALERTS_PER_RUN - state.get('alerts_sent', 0))
-selected_alerts = alerts[:remaining]
+selected_alerts = alerts[:MAX_ALERTS_PER_RUN]
 out = []
 alert_content = ''
 digest_content = ''
