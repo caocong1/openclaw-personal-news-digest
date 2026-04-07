@@ -33,7 +33,7 @@ Each profile maps onto the same four OpenClaw cron jobs by `job_name`: `news-dai
 
 ## Daily Digest Job
 
-Runs the full pipeline once per day at 08:00 CST (Asia/Shanghai). Collects RSS, deduplicates, classifies/summarizes, scores, generates digest, pushes to chat channel.
+Runs the full AI-native pipeline once per day at 08:00 CST (Asia/Shanghai). Executes the Collection, Provenance, Processing, Source Discovery, and Output phases, then pushes the generated digest to the chat channel.
 
 ```json
 {
@@ -42,7 +42,7 @@ Runs the full pipeline once per day at 08:00 CST (Asia/Shanghai). Collects RSS, 
   "sessionTarget": "isolated",
   "payload": {
     "kind": "agentTurn",
-    "message": "Execute the daily news digest pipeline: collect RSS sources, deduplicate, classify/summarize new items, score and rank, generate daily digest, update metrics.",
+    "message": "Execute the AI-native daily news digest pipeline: run Bootstrap/lock, Collection, Provenance, Processing, Source Discovery, and Output phases; score and rank items, generate the daily digest, update daily metrics, release the lock, and deliver the complete digest.",
     "lightContext": false,
     "timeoutSeconds": 600
   },
@@ -56,7 +56,7 @@ Runs the full pipeline once per day at 08:00 CST (Asia/Shanghai). Collects RSS, 
 
 ## Quick Check Job (Phase 1+)
 
-Runs every 2 hours to detect breaking news. If any item scores importance >= 0.85, generates and delivers a breaking news alert. Otherwise does nothing.
+Runs every 2 hours to detect breaking news with AI-native alert scoring. It runs Collection + Processing, evaluates processed candidates with `references/prompts/alert-score.md`, applies the existing alert gates, and only delivers a fresh alert when an item is breaking and crosses the alert threshold.
 
 ```json
 {
@@ -65,7 +65,7 @@ Runs every 2 hours to detect breaking news. If any item scores importance >= 0.8
   "sessionTarget": "isolated",
   "payload": {
     "kind": "agentTurn",
-    "message": "Quick news check: collect RSS sources, deduplicate, classify new items only. If any item has importance_score >= 0.85, generate and deliver a breaking news alert. Otherwise, do nothing.",
+    "message": "Execute the AI-native quick news check: run Collection + Processing, batch today's complete items through references/prompts/alert-score.md, apply roundup, already-alerted URL, daily cap, and per-run cap gates, then generate and deliver a fresh breaking news alert only when is_breaking is true and alert_score >= 0.85. If no item qualifies, reply with nothing.",
     "lightContext": false,
     "timeoutSeconds": 300
   },
@@ -79,7 +79,7 @@ Runs every 2 hours to detect breaking news. If any item scores importance >= 0.8
 
 ## Weekly Health Inspection Job (Phase 2+)
 
-Runs full health inspection and data lifecycle management every Monday at 03:00 CST. Executes health-check.sh in weekly mode (daily checks + MON-03 inspection checklist) followed by data-archive.sh for TTL-based cleanup. Only delivers a report if alerts or warnings are found.
+Runs full health inspection and data lifecycle management every Monday at 03:00 CST. Reviews recent run metrics, source health, lock/backlog state, alert/digest outputs, and data retention needs. Only delivers a report if alerts or warnings are found.
 
 ```json
 {
@@ -88,7 +88,7 @@ Runs full health inspection and data lifecycle management every Monday at 03:00 
   "sessionTarget": "isolated",
   "payload": {
     "kind": "agentTurn",
-    "message": "Weekly health inspection and data lifecycle management. Steps: 1) Run bash scripts/health-check.sh {baseDir} --mode weekly. 2) Run bash scripts/data-archive.sh {baseDir}. 3) Report findings via delivery channel.",
+    "message": "Run the AI-native weekly health inspection and data lifecycle review: inspect recent daily metrics, source health trends, lock/backlog state, alert and digest outputs, and retention cleanup needs; report findings via the delivery channel only when alerts or warnings are found.",
     "lightContext": false,
     "timeoutSeconds": 300
   },
@@ -138,7 +138,7 @@ Key config notes:
 
 - **`lightContext: false`** -- REQUIRED. When set to `true`, workspace skills (SKILL.md) are NOT loaded into the session context. The agent would have no instructions and the pipeline would not execute. This was identified as a critical pitfall during research.
 - **`sessionTarget: "isolated"`** -- Each cron run gets a clean, independent session. This prevents state leakage between runs (e.g., stale variables, partial context from previous failures).
-- **`timeoutSeconds: 600`** (10 min) for daily digest; `300` (5 min) for quick check. The daily digest processes ~50 items with LLM calls and needs more time. Quick check only classifies new items.
+- **`timeoutSeconds: 600`** (10 min) for daily digest; `300` (5 min) for quick check. The daily digest processes ~50 items across the full AI-native pipeline and needs more time. Quick check runs Collection + Processing plus AI-native alert scoring over today's completed items.
 
 ### Delivery Settings
 

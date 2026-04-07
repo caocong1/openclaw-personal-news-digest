@@ -44,27 +44,15 @@ When stripping HTML from RSS descriptions or extracted content:
 - Do not discard upstream URLs from `content_snippet` during cleanup.
 - Keep this as a collection guarantee so downstream provenance and citation extraction can rely on stable `content_snippet` input.
 
-### Fallback Method: exec + feedparser
+### Fallback Method: Agent-Native LLM Extraction
 
-If `web_fetch` text mode returns mangled content (XML tags stripped, items merged into single block):
+If `web_fetch` text mode returns mangled content (XML tags stripped, items merged into a single block), keep the pipeline agent-native instead of calling an external runtime:
 
-```bash
-python3 -c "
-import feedparser, json, sys
-feed = feedparser.parse(sys.argv[1])
-items = []
-for entry in feed.entries:
-    items.append({
-        'title': entry.get('title', ''),
-        'url': entry.get('link', ''),
-        'description': entry.get('summary', ''),
-        'published': entry.get('published', '')
-    })
-print(json.dumps(items, ensure_ascii=False))
-" "FEED_URL"
-```
-
-Use `exec` to run this command. Parse the JSON output to get structured items.
+1. Retry `web_fetch(url=source.url, extractMode="text")` once and preserve the raw fetched text exactly as returned.
+2. Ask the LLM to extract a JSON array of feed items from the raw text, with fields: `title`, `url`, `description`, and `published`.
+3. Instruct the LLM to use only evidence visible in the fetched feed text, preserve upstream link targets as `Original link: <url>` lines inside `description` when present, and leave missing fields as empty strings.
+4. Parse the LLM JSON response into structured items and continue with the same field mapping table above.
+5. If the LLM response is invalid JSON, retry once. If it still fails, skip the source for this run and set `stats.last_error` to `"parse_error"`.
 
 ### Language Detection
 

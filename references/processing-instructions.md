@@ -763,7 +763,7 @@ Cross-language event merging is allowed -- the same event reported in both Chine
 
 ## Section 1C: Event Merging (EVT-01)
 
-After title dedup, run event merging for all items with `dedup_status: "unique"`. This is a 3-step funnel that progressively narrows candidate events to minimize LLM calls while maintaining merge accuracy.
+After title dedup, run event merging for all items with `dedup_status: "unique"`. This is a 3-step funnel that progressively narrows candidate events to minimize LLM calls while maintaining merge accuracy. Candidate filtering is only a cost-control step; the final same-event decision is an LLM similarity assessment.
 
 ### Step 1 -- Topic Pre-filter
 
@@ -781,7 +781,7 @@ After title dedup, run event merging for all items with `dedup_status: "unique"`
 4. If no candidates remain after this step, proceed directly to "new event" creation (skip Step 3)
 5. Expected: 5-20 candidates -> 1-5 candidates
 
-### Step 3 -- LLM Precise Merge
+### Step 3 -- LLM Similarity Assessment
 
 1. Use `references/prompts/merge-event.md` with the 1-5 candidate events
 2. Use **strong model tier** per COST-04 (event merging requires nuanced reasoning about whether news reports the same core event)

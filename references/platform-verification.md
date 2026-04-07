@@ -53,9 +53,9 @@ exec("echo hello from exec")
 
 2. Expected result: Returns `hello from exec` without any approval dialog.
 
-3. Test Python availability (needed for feedparser fallback):
+3. Test basic structured stdout handling for any future non-collection shell checks:
 ```
-exec("python3 -c \"import json; print(json.dumps({'test': True}))\"")
+exec("printf '{\"test\": true}\\n'")
 ```
 
 4. Expected result: Returns `{"test": true}`
@@ -64,7 +64,7 @@ exec("python3 -c \"import json; print(json.dumps({'test': True}))\"")
 
 **Fail action:**
 - If approval is required: Check if the platform has an `exec.ask` setting. Set to `"off"` for cron sessions.
-- If Python is not available: The pipeline can still work (web_fetch + LLM parsing), but the feedparser fallback in references/data-models.md will not function. Document this limitation.
+- If structured stdout handling fails: Check isolated-session shell availability and quoting behavior. RSS and page parsing remain agent-native (`web_fetch` + LLM extraction) and do not require a local runtime dependency.
 
 ---
 

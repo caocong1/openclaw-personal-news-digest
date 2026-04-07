@@ -1,5 +1,22 @@
 # Changelog
 
+## [16.2.0] - 2026-04-07
+
+### Added
+- feat(prompts): create translate.md — AI batch title translation template (non-Chinese to Chinese)
+- feat(prompts): create alert-score.md — AI breaking news importance scoring template for Quick-Check
+
+### Changed
+- refactor(skill): rewrite Collection Phase for pure agent-native fetching (web_fetch/browser/web_search, no Python)
+- refactor(skill): rewrite Processing Phase with LLM translate batch step and LLM event similarity dedup
+- refactor(skill): rewrite Quick-Check Flow with alert-score.md assessment and summarize.md alert generation
+- docs(cron): verify and update cron-configs.md for pure agentTurn triggers
+- docs(references): remove Python-specific instructions, update to agent-native approach
+
+### Removed
+- chore(cleanup): delete debug_quick_check.py (566-line Python pipeline script)
+- Remove all Python/regex/fcntl/urllib references from SKILL.md and reference docs
+
 ## [16.1.9] - 2026-04-06
 
 ### Changed

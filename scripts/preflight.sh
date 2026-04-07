@@ -9,7 +9,7 @@
 #   4. No baseDir drift (workspace root != skill root)
 #
 # Exit code: 0 if all checks pass, 1 if any fail
-# Designed to be sourced or called from run-quick-check.sh / run-daily.sh
+# Designed to be sourced or called from other pipeline scripts
 
 set -euo pipefail
 

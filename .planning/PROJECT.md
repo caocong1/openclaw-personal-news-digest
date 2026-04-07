@@ -14,7 +14,7 @@ Replace "pushing messages to the user" with "continuously observing the world on
 - Pipeline crash-safety hardened: flock concurrency guard prevents duplicate cron runs, atomic tmp+fsync+os.replace writes protect all state/metrics files, state-before-alert ordering prevents duplicate alerts after crash.
 - Alert logic corrected: single-sort preserves importance_score tiebreaker, daily cap enforced at 3, enumerate-based union-find fixes wrong-cluster bug, dollar-anchor guard prevents spurious event merges.
 - Dead code cleaned: removed unused `MAX_ALERTS_PER_DAY`, `ALERT_THRESHOLD`, and 42-line `normalize_event_key()` function (~44 lines removed).
-- Main pipeline script `scripts/debug_quick_check.py` at 567 LOC after cleanup.
+- Pipeline migrated to pure AI-agent-native architecture (no Python pipeline scripts).
 - Archived milestones: `v1.0 MVP`, `v2.0 Quality & Robustness`, `v3.0 Provenance & Source Discovery`, `v4.0 Quick-Check Audit Fixes`.
 
 ## Requirements
