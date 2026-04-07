@@ -1,3 +1,4 @@
+<!-- prompt_version: filter-search-v2 -->
 # Search Result Filter Prompt Template
 
 ## Instructions
@@ -19,7 +20,7 @@ _(Note: Each result includes `title`, `url`, `snippet`, separated by `---`.)_
 
 1. **KEEP**: Genuine news articles, analysis pieces, official announcements, research reports
 2. **DISCARD**: Product advertisements, marketing landing pages, forum posts with no substance, job listings, event registration pages
-3. **DISCARD**: Results that appear older than 48 hours based on visible date cues in the title or snippet (e.g., dates, "last month", "last year")
+3. **DISCARD**: Results that appear older than 24 hours based on visible date cues in the title or snippet (e.g., dates, "last month", "last year", "yesterday")
 4. **DISCARD**: Results clearly unrelated to the source topic context
 5. **DISCARD**: Duplicate or near-duplicate results (same story from different outlets -- keep the most authoritative source)
 6. **KEEP with caution**: Opinion pieces and editorials if they contain substantive analysis (not pure clickbait)

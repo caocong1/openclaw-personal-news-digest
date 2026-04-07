@@ -1,5 +1,14 @@
 # Changelog
 
+## [16.3.0] - 2026-04-07
+
+### Added
+- feat(collection): add 24-hour freshness gate — discard items with `published_at` older than 24h before writing to JSONL (SKILL.md step 6b, collection-instructions.md Section 2B)
+
+### Changed
+- feat(prompts): alert-score.md now receives `published_at` field; LLM uses publication time as hard urgency signal
+- fix(prompts): filter-search.md tighten stale result discard from 48h to 24h
+
 ## [16.2.0] - 2026-04-07
 
 ### Added

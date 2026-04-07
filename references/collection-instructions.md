@@ -61,6 +61,39 @@ If `web_fetch` text mode returns mangled content (XML tags stripped, items merge
 
 ---
 
+## Section 2B: Freshness Gate
+
+### Purpose
+
+Hard time-based filter that discards stale items before they enter the pipeline. This is the primary defense against old articles appearing in digests and alerts.
+
+### When to Run
+
+After URL dedup (Collection Phase step 6), before writing items to JSONL (step 7). Referenced from SKILL.md Collection Phase step 6b.
+
+### Filter Rule
+
+For each item surviving dedup:
+
+1. Determine item age: `age_hours = (current_time - reference_time) / 3600`
+   - `reference_time` = `published_at` if present and valid ISO8601
+   - `reference_time` = `fetched_at` if `published_at` is null or unparseable
+2. If `age_hours > 24`: **discard** — do NOT write to JSONL
+3. If `age_hours <= 24`: **keep** — proceed to write
+
+### Edge Cases
+
+- **`published_at` is null**: Use `fetched_at` as fallback. Since `fetched_at` is always set to current time during collection, these items always pass the gate. This is acceptable — items without publication dates are assumed fresh.
+- **`published_at` is in the future**: Keep the item (clock skew or timezone issue, not a staleness problem).
+- **`published_at` format varies**: Parse ISO8601 with timezone. If timezone is missing, assume UTC.
+
+### Counters
+
+- Increment `freshness_filtered` in per-source metrics for each discarded item
+- Emit run_log entry: `step="freshness_gate"`, `details={filtered_count, oldest_discarded_age_hours}`
+
+---
+
 ## Section 2: URL Normalization Rules
 
 Apply these rules **in order** to every collected URL before computing its hash:

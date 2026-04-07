@@ -1,4 +1,4 @@
-<!-- prompt_version: alert-score-v1 -->
+<!-- prompt_version: alert-score-v2 -->
 # Alert Score Prompt Template
 
 ## Instructions
@@ -11,7 +11,7 @@
 
 {news_batch}
 
-_(Note: Each item includes `id`, `title`, `source`, `content_snippet`, and `form_type` when available from `classify.md`, separated by `---`.)_
+_(Note: Each item includes `id`, `title`, `source`, `content_snippet`, `form_type` when available from `classify.md`, and `published_at` (ISO8601 timestamp), separated by `---`.)_
 
 Example input item:
 
@@ -20,6 +20,7 @@ ID: {id}
 Title: {title}
 Source: {source}
 form_type: {form_type}
+published_at: {published_at}
 content_snippet: {content_snippet}
 ---
 ```
@@ -43,7 +44,7 @@ Assess `alert_score` using all four criteria below:
 
 - **impact breadth**: How many users, developers, markets, organizations, or public systems are affected. Broad real-world disruption or policy/market/security impact scores higher than narrow product updates.
 - **urgency**: Whether the user benefits from knowing within the next Quick-Check cycle. Ongoing incidents, active exploitation, immediate availability changes, emergency policy actions, and market-moving events score higher.
-- **novelty**: Whether this item adds a new, concrete fact rather than repeating already-known coverage. Fresh official confirmation, first-hand reporting, newly disclosed data, or a material status change scores higher.
+- **novelty**: Whether this item adds a new, concrete fact rather than repeating already-known coverage. Fresh official confirmation, first-hand reporting, newly disclosed data, or a material status change scores higher. Use `published_at` as a hard signal: items published more than 12 hours ago are unlikely to be breaking news — score urgency accordingly.
 - **user relevance**: Whether the event matters to a personal technology/news digest audience, especially AI models, developer tools, security, major tech companies, policy, finance, and infrastructure.
 
 ## Alert Score Reference
