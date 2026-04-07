@@ -1,5 +1,17 @@
 # Changelog
 
+## [16.4.0] - 2026-04-07
+
+### Added
+- feat(skill): add Standing Orders Language mandate — all output (digests, alerts, status messages) must be in Chinese
+- feat(output): add Quick-Check Scored Items Report template (【速览】format showing all items with scores)
+
+### Changed
+- feat(skill): Quick-Check Flow removes alert_score threshold gate (0.85) and daily cap gate — all scored items are output
+- feat(skill): Quick-Check per-run cap raised from 20 to 50
+- feat(processing): Section 5A disables threshold, form_type filter, and daily cap gates; URL dedup remains active
+- feat(processing): alert_log entries use `alert_type: "scored_report"` for new output format
+
 ## [16.3.0] - 2026-04-07
 
 ### Added

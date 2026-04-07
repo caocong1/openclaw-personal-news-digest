@@ -1334,44 +1334,32 @@ Step 0: Event-level alert suppression (PIPE-02)
 
 Rationale note: Event-level suppression prevents multiple alerts for the same event in one day. This is especially important when both T1 and T4 items exist for the same event -- the first alert (whichever tier arrives first) is sufficient.
 
-Step 0A: Tier-aware threshold adjustment (PIPE-02)
-- Look up ProvenanceRecord for item via `NewsItem.id -> data/provenance/provenance-db.json`
-- If record exists and `record.tier == "T4"`:
-  - `effective_threshold = 0.92`
-- Else:
-  - `effective_threshold = 0.85` (standard threshold, unchanged for T0-T3 items and items without provenance)
-- Item has `importance_score >= effective_threshold`?
-  - NO  -> skip (below tier-adjusted threshold)
-  - YES -> continue to Step 1
+Step 0A: Tier-aware threshold adjustment — DISABLED
+- Score threshold filtering is disabled. All scored items pass through regardless of `alert_score` or `is_breaking` value.
+- The tier-aware thresholds (0.85 / 0.92) are preserved in alert-score.md as reference calibration but are NOT used as gates.
+- Rationale: User wants to observe score distributions before setting a threshold.
 
-Rationale note: T4 aggregated content must clear a higher bar (0.92 vs 0.85) because aggregation is less likely to represent genuinely breaking news the user has not already seen from a direct source.
-
-1. Item `form_type` is `"news"` or `"announcement"`?
-   NO  -> skip (only factual content triggers alerts)
-   YES -> continue
+1. Form type filter — DISABLED
+   All `form_type` values pass through (not limited to `news`/`announcement`).
 
 2. Read `data/alerts/alert-state-{today YYYY-MM-DD}.json` if not already loaded in Step 0
    If file not found: initialize `{ _schema_v: 1, date: today, alerts_sent: 0, max_alerts: 3, alerted_urls: [], alert_log: [] }`
 
-3. `alerts_sent >= max_alerts` (3)?
-   YES -> skip (daily cap reached)
-   NO  -> continue
+3. Daily cap gate — DISABLED
+   The `max_alerts` field in alert-state is ignored. All scored items pass through.
 
 4. Item URL already in `alerted_urls`?
-   YES -> skip (URL dedup)
+   YES -> skip (URL dedup — still active)
    NO  -> continue
 
-5. Item has `event_id` AND event has `last_alerted_at` (not null)?
-   YES -> DELTA ALERT path (see Section 5B in Plan 10-02)
-   NO  -> STANDARD ALERT path (step 6)
+5. All surviving items proceed to output rendering.
+   Generate report using **Quick-Check Scored Items Report** template from `references/output-templates.md` (all items, sorted by `alert_score` descending).
 
-STANDARD ALERT (ALERT-06 fallback):
-6. Generate alert using Breaking News Alert template from `references/output-templates.md`
-7. Update alert-state file:
-   - Increment `alerts_sent`
-   - Append URL to `alerted_urls`
-   - Append entry to `alert_log`: `{ news_id, event_id: item.event_id or null, url, title, importance_score, alert_type: "standard", sent_at: now ISO8601 }`
-8. Atomic write alert-state file (tmp + rename)
+6. Update alert-state file:
+   - Increment `alerts_sent` by count of output items
+   - Append all output URLs to `alerted_urls`
+   - Append entry per item to `alert_log`: `{ news_id, event_id: item.event_id or null, url, title, alert_score, alert_type: "scored_report", sent_at: now ISO8601 }`
+7. Atomic write alert-state file (tmp + rename)
 
 ### DailyMetrics Derivation
 

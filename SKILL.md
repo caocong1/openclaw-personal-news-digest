@@ -3,7 +3,7 @@ name: news-digest
 description: Personalized news research and delivery system
 user-invocable: true
 metadata: {"openclaw":{"always":true}}
-_skill_version: "16.3.0"
+_skill_version: "16.4.0"
 minimum_openclaw_version: "1.4.0"
 ---
 
@@ -88,15 +88,21 @@ Run source discovery accumulation after the Processing Phase has produced event-
 
 Triggered by quick-check cron (every 2h):
 1. Run Collection + Processing phases (same as daily). Processing Phase step 3.6 has already populated `translated_title` for non-Chinese titles via `{baseDir}/references/prompts/translate.md`; Quick-Check must use that field when present and must not overwrite `title`.
-2. **Breaking news scan**: After Collection + Processing complete, take today's processed items with `processing_status: "complete"` and run them in 5-10 item batches through `{baseDir}/references/prompts/alert-score.md` using each item's `id`, `title`, `source`, `content_snippet`, and `form_type`. For each result, only continue when `is_breaking: true` AND `alert_score >= 0.85`; this is the sole Quick-Check alert-threshold assessment. Preserve the `form_type` filter exactly: only items classified as `news` or `announcement` may continue (as required by `{baseDir}/references/prompts/alert-score.md` and `{baseDir}/references/processing-instructions.md` Section 5A).
-   a. **Roundup gate**: If item has `is_roundup: true` OR item title matches any pattern in `{baseDir}/config/roundup-patterns.json` (case-insensitive), skip this item — roundup/collection items must never fire alerts. Log skip reason: "roundup_suppressed".
-   b. **Already-alerted URL gate**: Read `{baseDir}/data/alerts/alert-state-{today YYYY-MM-DD}.json`. If item URL already in `alerted_urls`, skip.
-   c. **Daily cap gate**: Read or initialize `{baseDir}/data/alerts/alert-state-{today YYYY-MM-DD}.json` using the Section 5A schema. If `alerts_sent >= max_alerts` (3), skip; otherwise continue through the unified alert decision tree from `{baseDir}/references/processing-instructions.md` Section 5A. The decision tree reads/writes alert-state as authoritative source (initializes file if absent), keeps URL dedup and form_type checks in place, and routes to standard or delta alert path.
-   d. **Per-run cap**: Keep at most 20 qualifying alert items in one quick-check run before alert rendering; this run cap must not override the 3-alert daily cap from Section 5A.
-3. If qualifying items: read `{baseDir}/references/prompts/summarize.md` and generate the Chinese `{1-sentence summary}` for each alert item before rendering the existing Breaking News Alert or Delta Alert template; use `translated_title` for non-Chinese display when available while preserving original `title`. Write to `{baseDir}/output/latest-alert.md` atomically (same-directory tmp then rename), update alert-state and metrics per Section 5A / Output Phase derivation, and output the full alert text as your reply. If none: reply with nothing (empty response). **Do NOT reuse a stale `output/latest-alert.md` from a previous run** — if no new alert is generated this run, do not output anything.
+2. **News scan & score**: After Collection + Processing complete, take today's processed items with `processing_status: "complete"` and run them in 5-10 item batches through `{baseDir}/references/prompts/alert-score.md` using each item's `id`, `title`, `source`, `content_snippet`, and `form_type`. **All scored items continue regardless of `alert_score` value or `is_breaking` flag** — no score threshold filtering. All `form_type` values pass through (not limited to `news`/`announcement`).
+   a. **Roundup gate**: If item has `is_roundup: true` OR item title matches any pattern in `{baseDir}/config/roundup-patterns.json` (case-insensitive), skip this item — roundup/collection items must never appear in output. Log skip reason: "roundup_suppressed".
+   b. **Already-reported URL gate**: Read `{baseDir}/data/alerts/alert-state-{today YYYY-MM-DD}.json`. If item URL already in `alerted_urls`, skip.
+   c. **Daily cap gate**: DISABLED — all scored items pass through. The `max_alerts` field in alert-state is ignored during output gating.
+   d. **Per-run cap**: Keep at most 50 scored items in one quick-check run before rendering.
+3. If any scored items remain after gates: read `{baseDir}/references/prompts/summarize.md` and generate the Chinese `{1-sentence summary}` for each item; use `translated_title` for non-Chinese display when available while preserving original `title`. Render using the **Quick-Check Scored Items Report** template from `{baseDir}/references/output-templates.md` (items sorted by `alert_score` descending). Write to `{baseDir}/output/latest-alert.md` atomically (same-directory tmp then rename), update alert-state (append all output URLs to `alerted_urls`, increment `alerts_sent` by count of output items), and output the full report text as your reply. If no items after gates: reply with nothing (empty response). **Do NOT reuse a stale `output/latest-alert.md` from a previous run** — if no new report is generated this run, do not output anything.
 4. Release lock.
 
 ## Standing Orders
+
+### Language
+- All user-facing output (digests, alerts, reports, status messages) MUST be in Chinese.
+- Pipeline execution status messages (e.g., "正在采集...", "处理完成") MUST also be in Chinese.
+- Internal data fields (JSON keys, enum values, processing_status) remain in English.
+- When outputting your reply, use Chinese exclusively. Do not mix English sentences into user-visible output.
 
 ### Authorization Scope
 - Execute news collection and output generation on cron trigger

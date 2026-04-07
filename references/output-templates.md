@@ -126,6 +126,36 @@ If 0 items are available (all filtered, all duplicates, or source failure):
 
 ---
 
+## Quick-Check Scored Items Report
+
+**Trigger condition:** Quick-Check flow outputs ALL scored items (score threshold and daily cap disabled). This is the primary Quick-Check output template.
+
+**Report format:**
+```
+【速览】{date} {HH:MM}
+
+{For each item, sorted by alert_score descending:}
+■ {alert_score} | {title}
+{1-sentence Chinese summary}
+来源: {source_name} | {form_type_display} | {tier_display}
+
+{Repeat for all items, separated by blank line}
+---
+共 {total_count} 条 | 来源: {source_count} 个
+```
+
+**Rendering rules:**
+- `title`: Use `translated_title` when available; otherwise use original `title`
+- `alert_score`: Display as-is (e.g., `0.82`), no rounding
+- `form_type_display`: Use form_type Display Mapping (新闻, 分析, 观点, 公告, 其他)
+- `tier_display`: Use tier Display Mapping (一手来源, 直接来源, etc.); if no provenance record, use `未分类`
+- Sort strictly by `alert_score` descending
+- No item limit beyond the per-run cap (50) in SKILL.md step 2d
+
+**No-output behavior:** If 0 items remain after roundup and URL dedup gates, produce NO output. Silence means nothing new.
+
+---
+
 ## Delta Alert (Event Update)
 
 **Trigger condition:** Unified alert decision tree (Section 5A of processing-instructions.md) routes to delta path when item has event_id AND event has last_alerted_at.
