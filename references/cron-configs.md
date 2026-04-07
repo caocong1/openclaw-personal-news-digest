@@ -67,7 +67,7 @@ Runs every 2 hours to detect breaking news with AI-native alert scoring. It runs
     "kind": "agentTurn",
     "message": "Execute the AI-native quick news check: run Collection + Processing, apply freshness gate (skip items > 24h old), then score all remaining complete items through references/prompts/alert-score.md and render the full Quick-Check Scored Items Report to Discord. If no items after gates, do nothing.",
     "lightContext": false,
-    "timeoutSeconds": 600
+    "timeoutSeconds": 3600
   }
 }
 ```
@@ -133,7 +133,7 @@ Key config notes:
 
 - **`lightContext: false`** -- REQUIRED. When set to `true`, workspace skills (SKILL.md) are NOT loaded into the session context. The agent would have no instructions and the pipeline would not execute. This was identified as a critical pitfall during research.
 - **`sessionTarget: "isolated"`** -- Each cron run gets a clean, independent session. This prevents state leakage between runs (e.g., stale variables, partial context from previous failures).
-- **`timeoutSeconds: 600`** (10 min) for daily digest; `300` (5 min) for quick check. The daily digest processes ~50 items across the full AI-native pipeline and needs more time. Quick check runs Collection + Processing plus AI-native alert scoring over today's completed items.
+- **`timeoutSeconds: 600`** (10 min) for daily digest; `3600` (60 min) for quick check (full output mode with AI-native scoring needs more time). The daily digest processes ~50 items across the full AI-native pipeline and needs more time. Quick check runs Collection + Processing plus AI-native alert scoring over today's completed items.
 
 ### Delivery Settings
 

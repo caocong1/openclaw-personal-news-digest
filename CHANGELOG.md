@@ -4,7 +4,7 @@
 
 ### Fixed
 - fix(quick-check): add freshness gate to Quick-Check Flow step 2 — filter items with age > 24h before scoring (ND-20260407-01)
-- fix(cron): Quick-Check job timeout increased from 300s to 600s (ND-20260407-02)
+- fix(cron): Quick-Check job timeout increased from 300s to 3600s (ND-20260407-02)
 
 ### Changed
 - fix(delivery): Quick-Check Flow step 3 now uses `message action=send channel=discord target=#新闻` for delivery instead of relying on cron announce (ND-20260407-02)
