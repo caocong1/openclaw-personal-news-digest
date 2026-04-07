@@ -65,14 +65,9 @@ Runs every 2 hours to detect breaking news with AI-native alert scoring. It runs
   "sessionTarget": "isolated",
   "payload": {
     "kind": "agentTurn",
-    "message": "Execute the AI-native quick news check: run Collection + Processing, batch today's complete items through references/prompts/alert-score.md, apply roundup, already-alerted URL, daily cap, and per-run cap gates, then generate and deliver a fresh breaking news alert only when is_breaking is true and alert_score >= 0.85. If no item qualifies, reply with nothing.",
+    "message": "Execute the AI-native quick news check: run Collection + Processing, apply freshness gate (skip items > 24h old), then score all remaining complete items through references/prompts/alert-score.md and render the full Quick-Check Scored Items Report to Discord. If no items after gates, do nothing.",
     "lightContext": false,
-    "timeoutSeconds": 300
-  },
-  "delivery": {
-    "mode": "announce",
-    "channel": "telegram",
-    "to": "{target_chat_id}"
+    "timeoutSeconds": 600
   }
 }
 ```

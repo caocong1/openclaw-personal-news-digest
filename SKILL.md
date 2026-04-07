@@ -3,7 +3,7 @@ name: news-digest
 description: Personalized news research and delivery system
 user-invocable: true
 metadata: {"openclaw":{"always":true}}
-_skill_version: "16.4.0"
+_skill_version: "16.5.0"
 minimum_openclaw_version: "1.4.0"
 ---
 
@@ -89,11 +89,12 @@ Run source discovery accumulation after the Processing Phase has produced event-
 Triggered by quick-check cron (every 2h):
 1. Run Collection + Processing phases (same as daily). Processing Phase step 3.6 has already populated `translated_title` for non-Chinese titles via `{baseDir}/references/prompts/translate.md`; Quick-Check must use that field when present and must not overwrite `title`.
 2. **News scan & score**: After Collection + Processing complete, take today's processed items with `processing_status: "complete"` and run them in 5-10 item batches through `{baseDir}/references/prompts/alert-score.md` using each item's `id`, `title`, `source`, `content_snippet`, and `form_type`. **All scored items continue regardless of `alert_score` value or `is_breaking` flag** — no score threshold filtering. All `form_type` values pass through (not limited to `news`/`announcement`).
-   a. **Roundup gate**: If item has `is_roundup: true` OR item title matches any pattern in `{baseDir}/config/roundup-patterns.json` (case-insensitive), skip this item — roundup/collection items must never appear in output. Log skip reason: "roundup_suppressed".
-   b. **Already-reported URL gate**: Read `{baseDir}/data/alerts/alert-state-{today YYYY-MM-DD}.json`. If item URL already in `alerted_urls`, skip.
-   c. **Daily cap gate**: DISABLED — all scored items pass through. The `max_alerts` field in alert-state is ignored during output gating.
-   d. **Per-run cap**: Keep at most 50 scored items in one quick-check run before rendering.
-3. If any scored items remain after gates: read `{baseDir}/references/prompts/summarize.md` and generate the Chinese `{1-sentence summary}` for each item; use `translated_title` for non-Chinese display when available while preserving original `title`. Render using the **Quick-Check Scored Items Report** template from `{baseDir}/references/output-templates.md` (items sorted by `alert_score` descending). Write to `{baseDir}/output/latest-alert.md` atomically (same-directory tmp then rename), update alert-state (append all output URLs to `alerted_urls`, increment `alerts_sent` by count of output items), and output the full report text as your reply. If no items after gates: reply with nothing (empty response). **Do NOT reuse a stale `output/latest-alert.md` from a previous run** — if no new report is generated this run, do not output anything.
+   a. **Freshness gate**: Before scoring, filter out stale items. For each `processing_status: "complete"` item, compute `age_hours = (current_time - reference_time) / 3600` where `reference_time` = `published_at` if present else `fetched_at`. If `age_hours > 24`, skip the item — do NOT include it in scoring. Log skip reason: "freshness_suppressed".
+   b. **Roundup gate**: If item has `is_roundup: true` OR item title matches any pattern in `{baseDir}/config/roundup-patterns.json` (case-insensitive), skip this item — roundup/collection items must never appear in output. Log skip reason: "roundup_suppressed".
+   c. **Already-reported URL gate**: Read `{baseDir}/data/alerts/alert-state-{today YYYY-MM-DD}.json`. If item URL already in `alerted_urls`, skip.
+   d. **Daily cap gate**: DISABLED — all scored items pass through. The `max_alerts` field in alert-state is ignored during output gating.
+   e. **Per-run cap**: Keep at most 50 scored items in one quick-check run before rendering.
+3. If any scored items remain after gates: read `{baseDir}/references/prompts/summarize.md` and generate the Chinese `{1-sentence summary}` for each item; use `translated_title` for non-Chinese display when available while preserving original `title`. Render using the **Quick-Check Scored Items Report** template from `{baseDir}/references/output-templates.md` (items sorted by `alert_score` descending). Write to `{baseDir}/output/latest-alert.md` atomically (same-directory tmp then rename), update alert-state (append all output URLs to `alerted_urls`, increment `alerts_sent` by count of output items), and send the full report to Discord using `message action=send channel=discord target=#新闻 message=<report_text>`. If no items after gates: do nothing (no message sent).
 4. Release lock.
 
 ## Standing Orders
